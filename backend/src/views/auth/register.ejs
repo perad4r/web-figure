@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Đăng ký</title>
+  </head>
+  <body>
+    <h1>Đăng ký</h1>
+    <% if (error) { %><p style="color:red"><%= error %></p><% } %>
+    <form method="post" action="/dang-ky">
+      <div>
+        <label>Tên</label>
+        <input type="text" name="ten" required />
+      </div>
+      <div>
+        <label>Email</label>
+        <input type="email" name="email" required />
+      </div>
+      <div>
+        <label>Mật khẩu</label>
+        <input type="password" name="password" required />
+      </div>
+      <div>
+        <label>Nhập lại mật khẩu</label>
+        <input type="password" name="password_confirmation" required />
+      </div>
+      <div>
+        <label>Phone</label>
+        <input type="text" name="phone" />
+      </div>
+      <div>
+        <label>Address</label>
+        <textarea name="address"></textarea>
+      </div>
+      <button type="submit">Register</button>
+    </form>
+  </body>
+</html>
+

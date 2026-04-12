@@ -1,0 +1,22 @@
+const BaseModel = require('./BaseModel');
+
+class TheLoai extends BaseModel {
+  static get tableName() {
+    return 'the_loais';
+  }
+
+  static get relationMappings() {
+    const Hang = require('./Hang');
+
+    return {
+      products: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Hang,
+        join: { from: 'the_loais.id', to: 'hangs.the_loai_id' },
+      },
+    };
+  }
+}
+
+module.exports = TheLoai;
+

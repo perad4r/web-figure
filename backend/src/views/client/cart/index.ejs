@@ -1,0 +1,93 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container py-4">
+  <h1 class="h4 mb-3">Giỏ hàng</h1>
+
+  <% if (error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+
+  <% if (!items || items.length === 0) { %>
+    <div class="alert alert-secondary">Giỏ hàng trống.</div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Sản phẩm</th>
+            <th>Biến thể</th>
+            <th class="text-end">Giá</th>
+            <th class="text-end">SL</th>
+            <th class="text-end">Tạm tính</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach((it) => { %>
+            <tr>
+              <td>
+                <div class="fw-semibold"><%= it.variant?.product?.ten || 'SP' %></div>
+              </td>
+              <td>
+                <span class="text-muted">
+                  <%= it.variant?.color?.ten || '?' %> / <%= it.variant?.size?.ten || '?' %>
+                </span>
+              </td>
+              <td class="text-end"><%= Number(it.variant?.gia || 0).toLocaleString('vi-VN') %> đ</td>
+              <td class="text-end">
+                <form method="post" action="/giohangs/<%= it.id %>" class="d-flex justify-content-end gap-2">
+                  <input type="hidden" name="_method" value="PUT" />
+                  <input class="form-control form-control-sm" style="width: 84px" type="number" name="so_luong" min="1" value="<%= it.so_luong %>" />
+                  <button class="btn btn-sm btn-outline-primary" type="submit">Update</button>
+                </form>
+              </td>
+              <td class="text-end"><%= (Number(it.variant?.gia || 0) * Number(it.so_luong || 0)).toLocaleString('vi-VN') %> đ</td>
+              <td class="text-end">
+                <form method="post" action="/giohangs/<%= it.id %>" class="d-inline">
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <div class="h5">Tổng: <%= Number(total || 0).toLocaleString('vi-VN') %> đ</div>
+    </div>
+
+    <hr />
+
+    <h2 class="h6">Checkout</h2>
+    <form method="post" action="/giohangs/checkout" class="row g-2">
+      <div class="col-md-6">
+        <label class="form-label">Tên</label>
+        <input class="form-control" name="ten_khach_hang" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">SĐT</label>
+        <input class="form-control" name="phone" required />
+      </div>
+      <div class="col-12">
+        <label class="form-label">Địa chỉ</label>
+        <input class="form-control" name="dia_chi" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input class="form-control" name="email" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Ghi chú</label>
+        <input class="form-control" name="ghi_chu" />
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">Tạo đơn hàng</button>
+      </div>
+    </form>
+  <% } %>
+</main>
+
+<%- include('../partials/foot') %>

@@ -1,0 +1,74 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container py-4">
+  <div class="mb-3">
+    <a href="/san-pham" class="text-decoration-none">&larr; Back</a>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-5">
+      <% if (product.hinh_anh) { %>
+        <img class="img-fluid rounded border" src="<%= product.hinh_anh.startsWith('/') ? product.hinh_anh : ('/uploads/' + product.hinh_anh) %>" alt="" />
+      <% } else { %>
+        <div class="bg-light rounded border" style="height: 360px;"></div>
+      <% } %>
+    </div>
+    <div class="col-md-7">
+      <h1 class="h4"><%= product.ten %></h1>
+      <div class="text-muted mb-2"><%= product.theLoai ? product.theLoai.ten : '' %></div>
+    <div class="h5 mb-3"><%= Number(product.gia).toLocaleString('vi-VN') %> đ</div>
+
+    <% if (user && product.variants && product.variants.length > 0) { %>
+      <form method="post" action="/giohangs" class="row g-2 align-items-end mb-3">
+        <div class="col-md-7">
+          <label class="form-label">Chọn biến thể</label>
+          <select class="form-select" name="variant_id" required>
+            <% product.variants.forEach((v) => { %>
+              <option value="<%= v.id %>">
+                <%= v.color ? v.color.ten : '?' %> / <%= v.size ? v.size.ten : '?' %>
+                — <%= Number(v.gia).toLocaleString('vi-VN') %> đ (stock <%= v.ton_kho %>)
+              </option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Số lượng</label>
+          <input class="form-control" type="number" name="so_luong" min="1" value="1" />
+        </div>
+        <div class="col-md-2 d-grid">
+          <button class="btn btn-primary" type="submit">Add</button>
+        </div>
+      </form>
+    <% } %>
+
+    <% if (product.mo_ta) { %>
+      <div class="mb-3"><%= product.mo_ta %></div>
+    <% } %>
+
+      <h2 class="h6 mt-4">Biến thể</h2>
+      <% if (!product.variants || product.variants.length === 0) { %>
+        <div class="text-muted">Chưa có biến thể.</div>
+      <% } else { %>
+        <div class="list-group">
+          <% product.variants.forEach((v) => { %>
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <div class="fw-semibold">
+                  <%= v.color ? v.color.ten : 'Màu?' %> /
+                  <%= v.size ? v.size.ten : 'Size?' %>
+                </div>
+                <div class="small text-muted">Tồn kho: <%= v.ton_kho %></div>
+              </div>
+              <div class="text-end">
+                <div><%= Number(v.gia).toLocaleString('vi-VN') %> đ</div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/foot') %>
