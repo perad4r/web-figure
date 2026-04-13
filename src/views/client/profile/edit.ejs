@@ -1,0 +1,32 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container py-4">
+  <h1 class="h4 mb-3">Hồ sơ</h1>
+
+  <% if (error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+
+  <form method="post" action="/ho-so" class="row g-2">
+    <input type="hidden" name="_method" value="PUT" />
+    <div class="col-md-6">
+      <label class="form-label">Tên</label>
+      <input class="form-control" name="ten" value="<%= user.ten %>" required />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Phone</label>
+      <input class="form-control" name="phone" value="<%= user.phone || '' %>" />
+    </div>
+    <div class="col-12">
+      <label class="form-label">Address</label>
+      <textarea class="form-control" name="address"><%= user.address || '' %></textarea>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+  </form>
+</main>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/foot') %>

@@ -1,0 +1,80 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container pb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Users</h1>
+    <div class="d-flex gap-2">
+      <form method="get" action="/admin/users" class="d-flex gap-2">
+        <% if (showDeleted) { %><input type="hidden" name="deleted" value="1" /><% } %>
+        <input class="form-control form-control-sm" name="q" value="<%= q || '' %>" placeholder="email..." />
+        <button class="btn btn-sm btn-outline-secondary" type="submit">Search</button>
+      </form>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/users">Active</a>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/users?deleted=1">Deleted</a>
+      <a class="btn btn-primary btn-sm" href="/admin/users/new">New</a>
+    </div>
+  </div>
+
+  <% if (!rows || rows.length === 0) { %>
+    <div class="alert alert-secondary">Empty.</div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% rows.forEach((u) => { %>
+            <tr>
+              <td><%= u.id %></td>
+              <td><%= u.email %></td>
+              <td><%= u.ten %></td>
+              <td><%= u.role %></td>
+              <td><%= u.status ? 'active' : 'disabled' %></td>
+              <td class="text-end">
+                <% if (!showDeleted) { %>
+                  <a class="btn btn-sm btn-outline-secondary" href="/admin/users/<%= u.id %>/edit">Edit</a>
+                  <form method="post" action="/admin/users/<%= u.id %>/toggle" class="d-inline">
+                    <input type="hidden" name="_method" value="PATCH" />
+                    <button class="btn btn-sm btn-outline-primary" type="submit">Toggle</button>
+                  </form>
+                  <form method="post" action="/admin/users/<%= u.id %>" class="d-inline">
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                  </form>
+                <% } else { %>
+                  <form method="post" action="/admin/users/<%= u.id %>/restore" class="d-inline">
+                    <input type="hidden" name="_method" value="PATCH" />
+                    <button class="btn btn-sm btn-outline-success" type="submit">Restore</button>
+                  </form>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="text-muted small">Page <%= page %></div>
+    <div class="d-flex gap-2">
+      <% if (page > 1) { %>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/users?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', q: q || '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Prev</a>
+      <% } %>
+      <% if (hasNext) { %>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/users?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', q: q || '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Next</a>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/foot') %>

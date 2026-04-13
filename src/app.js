@@ -1,0 +1,65 @@
+require('dotenv').config();
+
+const path = require('path');
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+
+const { initDatabase } = require('./config/database');
+const { createSessionMiddleware } = require('./config/session');
+const loadUser = require('./middleware/loadUser');
+const loadCategories = require('./middleware/loadCategories');
+const routes = require('./routes');
+
+const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        'default-src': ["'self'"],
+        'base-uri': ["'self'"],
+        'object-src': ["'none'"],
+        'frame-ancestors': ["'self'"],
+        'script-src': ["'self'", 'https://cdn.jsdelivr.net', 'https://code.jquery.com'],
+        'style-src': ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com'],
+        'font-src': ["'self'", 'https://fonts.gstatic.com', 'https://cdn.jsdelivr.net', 'data:'],
+        'img-src': ["'self'", 'data:'],
+        'connect-src': ["'self'", 'https://cdn.jsdelivr.net'],
+      },
+    },
+  }),
+);
+app.use(cors());
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+const methodOverride = require('./middleware/methodOverride');
+app.use(methodOverride);
+
+const knex = initDatabase();
+app.use(createSessionMiddleware(knex));
+const flash = require('./middleware/flash');
+app.use(flash);
+app.use(loadUser);
+app.use(loadCategories);
+
+app.use('/uploads', express.static(path.join(__dirname, '..', 'public', 'uploads')));
+
+const assetsDir = path.join(__dirname, '..', 'public', 'assets');
+app.use('/assets', express.static(assetsDir));
+
+app.use(routes);
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
+
+module.exports = { app, knex };

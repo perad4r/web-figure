@@ -1,0 +1,88 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container pb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Variants</h1>
+    <div class="d-flex gap-2">
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/variants">Active</a>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/variants?deleted=1">Deleted</a>
+      <a class="btn btn-primary btn-sm" href="/admin/variants/new">New</a>
+    </div>
+  </div>
+
+  <form method="get" action="/admin/variants" class="row g-2 mb-3">
+    <% if (showDeleted) { %><input type="hidden" name="deleted" value="1" /><% } %>
+    <div class="col-md-6">
+      <select class="form-select form-select-sm" name="hang_id">
+        <option value="">All products</option>
+        <% products.forEach((p) => { %>
+          <option value="<%= p.id %>" <%= hangId === p.id ? 'selected' : '' %>><%= p.ten %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-sm btn-outline-secondary" type="submit">Filter</button>
+    </div>
+  </form>
+
+  <% if (!rows || rows.length === 0) { %>
+    <div class="alert alert-secondary">Empty.</div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Color</th>
+            <th>Size</th>
+            <th class="text-end">Price</th>
+            <th class="text-end">Stock</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% rows.forEach((r) => { %>
+            <tr>
+              <td><%= r.id %></td>
+              <td><%= r.product?.ten || '' %></td>
+              <td><%= r.color?.ten || '' %></td>
+              <td><%= r.size?.ten || '' %></td>
+              <td class="text-end"><%= Number(r.gia || 0).toLocaleString('vi-VN') %></td>
+              <td class="text-end"><%= r.ton_kho %></td>
+              <td class="text-end">
+                <% if (!showDeleted) { %>
+                  <a class="btn btn-sm btn-outline-secondary" href="/admin/variants/<%= r.id %>/edit">Edit</a>
+                  <form method="post" action="/admin/variants/<%= r.id %>" class="d-inline">
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                  </form>
+                <% } else { %>
+                  <form method="post" action="/admin/variants/<%= r.id %>/restore" class="d-inline">
+                    <input type="hidden" name="_method" value="PATCH" />
+                    <button class="btn btn-sm btn-outline-success" type="submit">Restore</button>
+                  </form>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="text-muted small">Page <%= page %></div>
+    <div class="d-flex gap-2">
+      <% if (page > 1) { %>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/variants?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', hang_id: hangId ? String(hangId) : '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Prev</a>
+      <% } %>
+      <% if (hasNext) { %>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/variants?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', hang_id: hangId ? String(hangId) : '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Next</a>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/foot') %>

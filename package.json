@@ -1,0 +1,43 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "db": "node scripts/db.js",
+    "api-smoke": "node scripts/api-smoke.js",
+    "knex": "knex --knexfile ./knexfile.js",
+    "migrate": "npm run knex -- migrate:latest",
+    "migrate:make": "npm run knex -- migrate:make",
+    "seed": "npm run knex -- seed:run",
+    "seed:make": "npm run knex -- seed:make"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=20"
+  },
+  "private": true,
+  "dependencies": {
+    "@payos/node": "^2.0.5",
+    "bcryptjs": "^3.0.3",
+    "connect-session-knex": "^5.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "helmet": "^8.1.0",
+    "knex": "^3.2.9",
+    "morgan": "^1.10.1",
+    "multer": "^2.1.1",
+    "mysql2": "^3.22.0",
+    "objection": "^3.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

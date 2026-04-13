@@ -1,0 +1,51 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container pb-5" style="max-width: 720px;">
+  <h1 class="h4 mb-3">Edit User</h1>
+
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <form method="post" action="/admin/users/<%= row.id %>" class="vstack gap-2">
+    <input type="hidden" name="_method" value="PUT" />
+    <div>
+      <label class="form-label">Name</label>
+      <input class="form-control" name="ten" value="<%= row.ten || '' %>" required />
+    </div>
+    <div>
+      <label class="form-label">Email</label>
+      <input class="form-control" name="email" type="email" value="<%= row.email || '' %>" required />
+    </div>
+    <div>
+      <label class="form-label">Password (leave blank to keep)</label>
+      <input class="form-control" name="password" type="password" />
+    </div>
+    <div>
+      <label class="form-label">Phone</label>
+      <input class="form-control" name="phone" value="<%= row.phone || '' %>" />
+    </div>
+    <div>
+      <label class="form-label">Address</label>
+      <textarea class="form-control" name="address"><%= row.address || '' %></textarea>
+    </div>
+    <div>
+      <label class="form-label">Role</label>
+      <select class="form-select" name="role" required>
+        <option value="0" <%= Number(row.role) === 0 ? 'selected' : '' %>>Admin</option>
+        <option value="1" <%= Number(row.role) === 1 ? 'selected' : '' %>>Customer</option>
+        <option value="2" <%= Number(row.role) === 2 ? 'selected' : '' %>>Staff</option>
+      </select>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="status" value="1" <%= row.status ? 'checked' : '' %> />
+      <label class="form-check-label">Active</label>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Save</button>
+      <a class="btn btn-outline-secondary" href="/admin/users">Cancel</a>
+    </div>
+  </form>
+</main>
+
+<%- include('../partials/foot') %>
+

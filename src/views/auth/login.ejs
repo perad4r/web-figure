@@ -1,0 +1,28 @@
+<%- include('../client/partials/head', { title: 'Đăng nhập' }) %>
+<%- include('../client/partials/nav') %>
+
+<main class="container py-5" style="max-width: 520px;">
+  <div class="section-header">
+    <h1 class="h5 mb-0">Đăng nhập</h1>
+  </div>
+
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <form method="post" action="/dang-nhap" class="vstack gap-3">
+    <div>
+      <label class="form-label">Email</label>
+      <input class="form-control" type="email" name="email" required />
+    </div>
+    <div>
+      <label class="form-label">Mật khẩu</label>
+      <input class="form-control" type="password" name="password" required />
+    </div>
+    <button class="btn pm-btn-red" type="submit">Login</button>
+    <div class="text-muted small">
+      Chưa có tài khoản? <a class="link-secondary" href="/dang-ky">Đăng ký</a>
+    </div>
+  </form>
+</main>
+
+<%- include('../client/partials/footer') %>
+<%- include('../client/partials/foot') %>

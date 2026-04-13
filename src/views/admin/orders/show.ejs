@@ -1,0 +1,56 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container pb-5" style="max-width: 980px;">
+  <h1 class="h4 mb-3">Order #<%= row.id %></h1>
+
+  <div class="mb-3">
+    <div><span class="text-muted">User:</span> <%= row.user ? row.user.email : '' %></div>
+    <div><span class="text-muted">Total:</span> <%= Number(row.gia || 0).toLocaleString('vi-VN') %> đ</div>
+    <div><span class="text-muted">PayOS:</span> <%= row.payos_status || '' %></div>
+  </div>
+
+  <div class="d-flex gap-2 flex-wrap mb-3">
+    <form method="post" action="/admin/orders/<%= row.id %>/status" class="d-flex gap-2">
+      <input type="hidden" name="_method" value="PATCH" />
+      <select class="form-select form-select-sm" name="status" style="width: 200px">
+        <% Object.entries(statusOptions).forEach(([k, v]) => { %>
+          <option value="<%= v %>" <%= v === row.status ? 'selected' : '' %>><%= k %> (<%= v %>)</option>
+        <% }) %>
+      </select>
+      <button class="btn btn-sm btn-outline-primary" type="submit">Update status</button>
+    </form>
+
+    <% if (payosEnabled) { %>
+    <% if (payosEnabled) { %>
+      <a class="btn btn-sm btn-outline-success" href="/admin/orders/<%= row.id %>/payos">Create/Go PayOS</a>
+    <% } %>
+    <% } %>
+  </div>
+
+  <h2 class="h6">Details</h2>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Variant</th>
+          <th class="text-end">Price</th>
+          <th class="text-end">Qty</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% (row.details || []).forEach((d) => { %>
+          <tr>
+            <td><%= d.product?.ten || '' %></td>
+            <td class="text-muted"><%= d.color?.ten || '?' %> / <%= d.size?.ten || '?' %></td>
+            <td class="text-end"><%= Number(d.gia || 0).toLocaleString('vi-VN') %></td>
+            <td class="text-end"><%= d.so_luong %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<%- include('../partials/foot') %>

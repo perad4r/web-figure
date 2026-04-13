@@ -1,0 +1,33 @@
+<footer class="pm-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <img src="/assets/img/logo.png" alt="PMFigure" style="height: 34px;" />
+          <div class="fw-semibold">PMFigure</div>
+        </div>
+        <div class="text-muted">Theme reference: pmfigure.vn</div>
+      </div>
+      <div class="col-md-4">
+        <h6>Hỗ trợ</h6>
+        <div class="text-muted">Hotline: (todo)</div>
+        <div class="text-muted">Email: (todo)</div>
+      </div>
+      <div class="col-md-4">
+        <h6>Liên kết</h6>
+        <div><a class="link-secondary text-decoration-none" href="/san-pham">Sản phẩm</a></div>
+        <% if (user) { %>
+          <div><a class="link-secondary text-decoration-none" href="/giohangs">Giỏ hàng</a></div>
+          <div><a class="link-secondary text-decoration-none" href="/lich-su-don-hang">Đơn hàng</a></div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom mt-4">
+    <div class="container d-flex justify-content-between">
+      <div>© <%= new Date().getFullYear() %> PMFigure</div>
+      <div class="text-muted">Node.js SSR</div>
+    </div>
+  </div>
+</footer>
+

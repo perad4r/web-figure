@@ -1,0 +1,55 @@
+<header class="pm-header">
+  <div class="container d-flex justify-content-between align-items-center gap-3">
+    <div class="d-flex align-items-center gap-2">
+      <img src="/assets/img/logo.png" alt="PMFigure" height="40" />
+      <div class="fw-bold mb-0">PMFigure</div>
+    </div>
+
+    <form class="input-group" method="get" action="/san-pham" style="max-width: 560px;">
+      <input type="text" class="form-control" name="q" placeholder="Tìm kiếm sản phẩm..." />
+      <button class="btn btn-light" type="submit">Tìm kiếm</button>
+    </form>
+
+    <div class="d-flex align-items-center gap-3">
+      <div>
+        <a class="text-white text-decoration-none" href="/giohangs">
+          Giỏ hàng <span class="badge bg-white text-danger"><%= cartCount || 0 %></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="pm-nav py-2 mb-4">
+  <div class="container d-flex align-items-center flex-wrap gap-2">
+    <div class="position-relative">
+      <button id="categoryComp" class="btn btn-outline-secondary me-2">
+        <i class="bi bi-list"></i> Danh mục
+      </button>
+      <div id="category-menu" class="p-3 shadow">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/san-pham" class="text-decoration-none text-dark d-block py-1">Tất cả sản phẩm</a></li>
+          <% (categories || []).forEach((c) => { %>
+            <li><a href="/san-pham?the_loai_id=<%= c.id %>" class="text-decoration-none text-dark d-block py-1"><%= c.ten %></a></li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+
+    <a href="/san-pham" class="nav-link px-3 fw-bold border-bottom border-danger">Trang chủ</a>
+    <a href="#" class="nav-link px-3">Facebook</a>
+
+    <div class="ms-auto d-flex gap-2">
+      <% if (user) { %>
+        <a class="btn btn-sm btn-outline-secondary" href="/lich-su-don-hang">Đơn hàng</a>
+        <a class="btn btn-sm btn-outline-secondary" href="/ho-so">Hồ sơ</a>
+        <form method="post" action="/dang-xuat" class="mb-0">
+          <button class="btn btn-sm btn-outline-secondary" type="submit">Đăng xuất</button>
+        </form>
+      <% } else { %>
+        <a class="btn btn-sm btn-outline-secondary" href="/dang-nhap">Đăng nhập</a>
+        <a class="btn btn-sm pm-btn-red" href="/dang-ky">Đăng ký</a>
+      <% } %>
+    </div>
+  </div>
+</nav>

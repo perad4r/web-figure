@@ -1,0 +1,60 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container pb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Orders</h1>
+    <form method="get" action="/admin/orders" class="d-flex gap-2">
+      <input class="form-control form-control-sm" style="width: 120px" name="q" value="<%= q || '' %>" placeholder="order id" />
+      <input class="form-control form-control-sm" style="width: 120px" name="status" value="<%= status === null ? '' : status %>" placeholder="status" />
+      <button class="btn btn-sm btn-outline-secondary" type="submit">Filter</button>
+    </form>
+  </div>
+
+  <% if (!rows || rows.length === 0) { %>
+    <div class="alert alert-secondary">Empty.</div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>User</th>
+            <th class="text-end">Total</th>
+            <th>Status</th>
+            <th>PayOS</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% rows.forEach((o) => { %>
+            <tr>
+              <td><%= o.id %></td>
+              <td><%= o.user ? o.user.email : '' %></td>
+              <td class="text-end"><%= Number(o.gia || 0).toLocaleString('vi-VN') %></td>
+              <td><%= o.status %></td>
+              <td><%= o.payos_status || '' %></td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary" href="/admin/orders/<%= o.id %>">View</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="text-muted small">Page <%= page %></div>
+    <div class="d-flex gap-2">
+      <% if (page > 1) { %>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/orders?<%= new URLSearchParams({ q: q || '', status: status === null ? '' : String(status), page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Prev</a>
+      <% } %>
+      <% if (hasNext) { %>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/orders?<%= new URLSearchParams({ q: q || '', status: status === null ? '' : String(status), page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Next</a>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/foot') %>

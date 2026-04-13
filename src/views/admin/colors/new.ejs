@@ -1,0 +1,25 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container pb-5" style="max-width: 720px;">
+  <h1 class="h4 mb-3">New Color</h1>
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <form method="post" action="/admin/colors" class="vstack gap-2">
+    <div>
+      <label class="form-label">Name</label>
+      <input class="form-control" name="ten" required />
+    </div>
+    <div>
+      <label class="form-label">Hex</label>
+      <input class="form-control" name="hex_code" placeholder="#FF0000" />
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Create</button>
+      <a class="btn btn-outline-secondary" href="/admin/colors">Cancel</a>
+    </div>
+  </form>
+</main>
+
+<%- include('../partials/foot') %>
+

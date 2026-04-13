@@ -1,0 +1,100 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<section class="container py-4">
+  <div class="row align-items-center g-3">
+    <div class="col-lg-6">
+      <h1 class="h3 mb-2">PMFigure Store</h1>
+      <div class="text-muted mb-3">Pink/red theme + SSR EJS.</div>
+      <form class="d-flex gap-2" method="get" action="/san-pham">
+        <input class="form-control" type="text" name="q" value="<%= q || '' %>" placeholder="Tìm kiếm sản phẩm..." />
+        <button class="btn pm-btn-red" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+    </div>
+    <div class="col-lg-6 text-center">
+      <img class="img-fluid" style="max-height: 260px" src="/assets/img/hero.png" alt="Hero" />
+    </div>
+  </div>
+</section>
+
+<main class="container pb-5">
+  <div class="section-header">
+    <h2 class="h5 mb-0">Sản phẩm</h2>
+  </div>
+
+  <% if (!products || products.length === 0) { %>
+    <div class="alert alert-secondary">Chưa có sản phẩm.</div>
+  <% } else { %>
+    <div class="row g-3">
+      <% products.forEach((p) => { %>
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card product-card h-100">
+            <a class="text-decoration-none" href="/san-pham/<%= p.id %>">
+              <% if (p.hinh_anh) { %>
+                <img class="card-img-top" src="<%= p.hinh_anh.startsWith('/') ? p.hinh_anh : ('/uploads/' + p.hinh_anh) %>" alt="" />
+              <% } else { %>
+                <div class="bg-light" style="height: 180px;"></div>
+              <% } %>
+              <div class="card-body text-body">
+                <div class="fw-semibold"><%= p.ten %></div>
+                <div class="text-muted small"><%= p.theLoai ? p.theLoai.ten : '' %></div>
+                <div class="mt-2 price"><%= Number(p.gia).toLocaleString('vi-VN') %> đ</div>
+              </div>
+            </a>
+            <div class="card-footer bg-white border-0 pt-0">
+              <% if (user) { %>
+                <button class="btn btn-sm pm-btn-red w-100 js-quickadd" data-product-id="<%= p.id %>">Chọn mua</button>
+              <% } else { %>
+                <a class="btn btn-sm btn-outline-secondary w-100" href="/dang-nhap">Đăng nhập để mua</a>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <div class="d-flex justify-content-between align-items-center mt-4">
+    <div class="text-muted small">Page <%= page %></div>
+    <div class="d-flex gap-2">
+      <% if (page > 1) { %>
+        <a class="btn btn-sm btn-outline-secondary" href="/san-pham?<%= new URLSearchParams({ q: q || '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Prev</a>
+      <% } %>
+      <% if (hasNext) { %>
+        <a class="btn btn-sm btn-outline-secondary" href="/san-pham?<%= new URLSearchParams({ q: q || '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Next</a>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<div class="modal fade" id="quickAddModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Quick add</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="qaError" class="alert alert-danger d-none"></div>
+        <form id="qaForm" class="vstack gap-2">
+          <input type="hidden" name="product_id" id="qaProductId" />
+          <div>
+            <label class="form-label">Variant</label>
+            <select class="form-select" name="variant_id" id="qaVariant" required></select>
+          </div>
+          <div>
+            <label class="form-label">Qty</label>
+            <input class="form-control" type="number" name="so_luong" id="qaQty" min="1" value="1" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="qaSubmit">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/foot') %>

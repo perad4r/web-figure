@@ -1,0 +1,59 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container pb-5" style="max-width: 820px;">
+  <h1 class="h4 mb-3">Edit Variant</h1>
+  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <form method="post" action="/admin/variants/<%= row.id %>" class="vstack gap-2" enctype="multipart/form-data">
+    <input type="hidden" name="_method" value="PUT" />
+    <div class="row g-2">
+      <div class="col-md-6">
+        <label class="form-label">Product</label>
+        <select class="form-select" name="hang_id" required>
+          <% products.forEach((p) => { %>
+            <option value="<%= p.id %>" <%= p.id === row.hang_id ? 'selected' : '' %>><%= p.ten %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Color</label>
+        <select class="form-select" name="mau_id" required>
+          <% colors.forEach((c) => { %>
+            <option value="<%= c.id %>" <%= c.id === row.mau_id ? 'selected' : '' %>><%= c.ten %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Size</label>
+        <select class="form-select" name="kich_co_id" required>
+          <% sizes.forEach((s) => { %>
+            <option value="<%= s.id %>" <%= s.id === row.kich_co_id ? 'selected' : '' %>><%= s.ten %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+    <div class="row g-2">
+      <div class="col-md-6">
+        <label class="form-label">Replace Image</label>
+        <input class="form-control" type="file" name="image" />
+        <% if (row.hinh_anh) { %><div class="form-text">Current: <code><%= row.hinh_anh %></code></div><% } %>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Price</label>
+        <input class="form-control" type="number" name="gia" value="<%= row.gia %>" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Stock</label>
+        <input class="form-control" type="number" name="ton_kho" value="<%= row.ton_kho %>" />
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Save</button>
+      <a class="btn btn-outline-secondary" href="/admin/variants">Cancel</a>
+    </div>
+  </form>
+</main>
+
+<%- include('../partials/foot') %>
+
