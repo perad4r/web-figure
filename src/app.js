@@ -88,6 +88,7 @@ app.use(loadCategories);
 
 app.use('/uploads', express.static(path.join(__dirname, '..', 'public', 'uploads')));
 app.use('/favicons', express.static(path.join(__dirname, '..', 'public', 'favicons')));
+app.get('/favicon.ico', (req, res) => res.redirect(302, '/favicons/favicon.ico'));
 
 const assetsDir = path.join(__dirname, '..', 'public', 'assets');
 app.use('/assets', express.static(assetsDir));
