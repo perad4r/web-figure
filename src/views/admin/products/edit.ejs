@@ -2,18 +2,18 @@
 <%- include('../partials/nav') %>
 
 <main class="container pb-5" style="max-width: 820px;">
-  <h1 class="h4 mb-3">Sửa sản phẩm</h1>
+  <h1 class="h4 mb-3">S?a s?n ph?m</h1>
   <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
 
-  <form method="post" action="/admin/products/<%= row.id %>" class="vstack gap-2" enctype="multipart/form-data">
+  <form method="post" action="/admin/products/<%= row.id %>?_method=PUT" class="vstack gap-2" enctype="multipart/form-data">
     <input type="hidden" name="_method" value="PUT" />
     <div>
-      <label class="form-label">Tên</label>
+      <label class="form-label">T?n</label>
       <input class="form-control" name="ten" value="<%= row.ten %>" required />
     </div>
     <div class="row g-2">
       <div class="col-md-6">
-        <label class="form-label">Danh mục</label>
+        <label class="form-label">Danh m?c</label>
         <select class="form-select" name="the_loai_id" required>
           <% categories.forEach((c) => { %>
             <option value="<%= c.id %>" <%= c.id === row.the_loai_id ? 'selected' : '' %>><%= c.ten %></option>
@@ -21,28 +21,28 @@
         </select>
       </div>
       <div class="col-md-3">
-        <label class="form-label">Giá</label>
+        <label class="form-label">Gi?</label>
         <input class="form-control" type="number" name="gia" value="<%= row.gia %>" />
       </div>
       <div class="col-md-3">
-        <label class="form-label">Tồn kho</label>
+        <label class="form-label">T?n kho</label>
         <input class="form-control" type="number" name="ton_kho" value="<%= row.ton_kho %>" />
       </div>
     </div>
     <div>
-      <label class="form-label">Thay ảnh</label>
+      <label class="form-label">Thay ?nh</label>
       <input class="form-control" type="file" name="image" />
       <% if (row.hinh_anh) { %>
-        <div class="form-text">Hiện tại: <code><%= row.hinh_anh %></code></div>
+        <div class="form-text">Hi?n t?i: <code><%= row.hinh_anh %></code></div>
       <% } %>
     </div>
     <div>
-      <label class="form-label">Mô tả</label>
+      <label class="form-label">M? t?</label>
       <textarea class="form-control" name="mo_ta"><%= row.mo_ta || '' %></textarea>
     </div>
     <div class="d-flex gap-2">
-      <button class="btn btn-primary" type="submit">Lưu</button>
-      <a class="btn btn-outline-secondary" href="/admin/products">Hủy</a>
+      <button class="btn btn-primary" type="submit">L?u</button>
+      <a class="btn btn-outline-secondary" href="/admin/products">H?y</a>
     </div>
   </form>
 </main>

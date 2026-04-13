@@ -4,43 +4,27 @@
 <section class="container py-4">
   <div class="row align-items-center g-3">
     <div class="col-lg-6">
-      <h1 class="h3 mb-2">
-        <% if (category) { %>
-          <%= category.ten %>
-        <% } else if (q) { %>
-          Kết quả tìm kiếm
-        <% } else { %>
-          Tất cả sản phẩm
-        <% } %>
-      </h1>
-      <div class="text-muted mb-3">
-        <% if (category) { %>
-          Danh mục: <span class="fw-semibold"><%= category.ten %></span>
-        <% } else if (q) { %>
-          Tìm kiếm: <span class="fw-semibold"><%= q %></span>
-        <% } else { %>
-          Tất cả sản phẩm
-        <% } %>
-      </div>
-      <form class="d-flex gap-2" method="get" action="/san-pham">
+      <h1 class="h3 mb-2"><%= pageHeading %></h1>
+      <div class="text-muted mb-3"><%= pageLead %></div>
+      <form class="d-flex gap-2" method="get" action="<%= basePath || '/san-pham' %>">
         <% if (categoryId) { %><input type="hidden" name="the_loai_id" value="<%= categoryId %>" /><% } %>
-        <input class="form-control" type="text" name="q" value="<%= q || '' %>" placeholder="Tìm kiếm sản phẩm..." />
-        <button class="btn pm-btn-red" type="submit" aria-label="Tìm kiếm"><i class="bi bi-search"></i></button>
+        <input class="form-control" type="text" name="q" value="<%= q || '' %>" placeholder="T?m ki?m s?n ph?m..." />
+        <button class="btn pm-btn-red" type="submit" aria-label="T?m ki?m"><i class="bi bi-search"></i></button>
       </form>
     </div>
     <div class="col-lg-6 text-center">
-      <img class="img-fluid" style="max-height: 260px" src="/assets/img/hero.png" alt="Hero" />
+      <img class="img-fluid" style="max-height: 260px" src="/assets/img/hero.png" alt="PMFigure - Figure anime v? m? h?nh s?u t?m" />
     </div>
   </div>
 </section>
 
 <main class="container pb-5">
   <div class="section-header">
-    <h2 class="h5 mb-0"><%= category ? category.ten : 'Sản phẩm' %></h2>
+    <h2 class="h5 mb-0"><%= category ? category.ten : 'S?n ph?m' %></h2>
   </div>
 
   <% if (!products || products.length === 0) { %>
-    <div class="alert alert-secondary">Chưa có sản phẩm.</div>
+    <div class="alert alert-secondary">Ch?a c? s?n ph?m.</div>
   <% } else { %>
     <div class="row g-3">
       <% products.forEach((p) => { %>
@@ -48,21 +32,21 @@
           <div class="card product-card h-100">
             <a class="text-decoration-none" href="/san-pham/<%= p.id %>">
               <% if (p.hinh_anh) { %>
-                <img class="card-img-top" src="<%= p.hinh_anh.startsWith('/') ? p.hinh_anh : ('/uploads/' + p.hinh_anh) %>" alt="" />
+                <img class="card-img-top" src="<%= p.hinh_anh.startsWith('/') ? p.hinh_anh : ('/uploads/' + p.hinh_anh) %>" alt="<%= p.ten %>" />
               <% } else { %>
                 <div class="bg-light" style="height: 180px;"></div>
               <% } %>
               <div class="card-body text-body">
                 <div class="fw-semibold"><%= p.ten %></div>
                 <div class="text-muted small"><%= p.theLoai ? p.theLoai.ten : '' %></div>
-                <div class="mt-2 price"><%= Number(p.gia).toLocaleString('vi-VN') %> đ</div>
+                <div class="mt-2 price"><%= Number(p.gia).toLocaleString('vi-VN') %> ?</div>
               </div>
             </a>
             <div class="card-footer bg-white border-0 pt-0">
               <% if (user) { %>
-                <button class="btn btn-sm pm-btn-red w-100 js-quickadd" data-product-id="<%= p.id %>">Chọn mua</button>
+                <button class="btn btn-sm pm-btn-red w-100 js-quickadd" data-product-id="<%= p.id %>">Ch?n mua</button>
               <% } else { %>
-                <a class="btn btn-sm btn-outline-secondary w-100" href="/dang-nhap">Đăng nhập để mua</a>
+                <a class="btn btn-sm btn-outline-secondary w-100" href="/dang-nhap">??ng nh?p ?? mua</a>
               <% } %>
             </div>
           </div>
@@ -75,10 +59,10 @@
     <div class="text-muted small">Trang <%= page %></div>
     <div class="d-flex gap-2">
       <% if (page > 1) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/san-pham?<%= new URLSearchParams({ the_loai_id: categoryId || '', q: q || '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Trước</a>
+        <a class="btn btn-sm btn-outline-secondary" href="<%= basePath || '/san-pham' %>?<%= new URLSearchParams({ the_loai_id: categoryId || '', q: q || '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Tr??c</a>
       <% } %>
       <% if (hasNext) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/san-pham?<%= new URLSearchParams({ the_loai_id: categoryId || '', q: q || '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Sau</a>
+        <a class="btn btn-sm btn-outline-secondary" href="<%= basePath || '/san-pham' %>?<%= new URLSearchParams({ the_loai_id: categoryId || '', q: q || '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Sau</a>
       <% } %>
     </div>
   </div>
@@ -88,26 +72,26 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Chọn nhanh</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        <h5 class="modal-title">Ch?n nhanh</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="??ng"></button>
       </div>
       <div class="modal-body">
         <div id="qaError" class="alert alert-danger d-none"></div>
         <form id="qaForm" class="vstack gap-2">
           <input type="hidden" name="product_id" id="qaProductId" />
           <div>
-            <label class="form-label">Phiên bản</label>
+            <label class="form-label">Phi?n b?n</label>
             <select class="form-select" name="variant_id" id="qaVariant" required></select>
           </div>
           <div>
-            <label class="form-label">Số lượng</label>
+            <label class="form-label">S? l??ng</label>
             <input class="form-control" type="number" name="so_luong" id="qaQty" min="1" value="1" />
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary" id="qaSubmit">Thêm vào giỏ</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">??ng</button>
+        <button type="button" class="btn btn-primary" id="qaSubmit">Th?m v?o gi?</button>
       </div>
     </div>
   </div>
