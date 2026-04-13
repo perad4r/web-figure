@@ -129,6 +129,12 @@ async function productDetail(req, res) {
   return res.render('client/products/show', {
     title: product.ten,
     product,
+    seo: {
+      title: product.ten,
+      description: product.mo_ta || `Xem chi tiết ${product.ten} tại PMFigure.`,
+      ogType: 'product',
+      ogLocale: 'vi_VN',
+    },
   });
 }
 
