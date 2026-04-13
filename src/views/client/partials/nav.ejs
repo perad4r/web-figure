@@ -1,17 +1,27 @@
-<header class="pm-header">
-  <div class="container d-flex justify-content-between align-items-center gap-3">
-    <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none">
-      <img src="/assets/img/logo.png" alt="PMFigure" height="40" />
-      <div class="fw-bold mb-0">PMFigure</div>
-    </a>
+<header class="pm-header py-2 py-md-3">
+  <div class="container">
+    <div class="row align-items-center g-2 g-md-3">
+      <div class="col-6 col-md-3 col-lg-2 d-flex align-items-center">
+        <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none">
+          <img src="/assets/img/logo.png" alt="PMFigure" height="40" />
+          <div class="fw-bold mb-0">PMFigure</div>
+        </a>
+      </div>
 
-    <form class="input-group" method="get" action="/san-pham" style="max-width: 560px;">
-      <input type="text" class="form-control" name="q" placeholder="Tìm kiếm sản phẩm..." />
-      <button class="btn btn-light" type="submit">Tìm kiếm</button>
-    </form>
+      <div class="col-6 d-md-none text-end">
+        <a class="text-white text-decoration-none" href="/giohangs">
+          Giỏ hàng <span class="badge bg-white text-danger"><%= cartCount || 0 %></span>
+        </a>
+      </div>
 
-    <div class="d-flex align-items-center gap-3">
-      <div>
+      <div class="col-12 col-md-6 col-lg-8 order-3 order-md-2 d-flex justify-content-center">
+        <form class="input-group w-100" method="get" action="/san-pham" style="max-width: 560px;">
+          <input type="text" class="form-control" name="q" placeholder="Tìm kiếm sản phẩm..." />
+          <button class="btn btn-light" type="submit">Tìm kiếm</button>
+        </form>
+      </div>
+
+      <div class="col-md-3 col-lg-2 d-none d-md-flex justify-content-end order-2 order-md-3">
         <a class="text-white text-decoration-none" href="/giohangs">
           Giỏ hàng <span class="badge bg-white text-danger"><%= cartCount || 0 %></span>
         </a>
@@ -23,7 +33,7 @@
 <nav class="pm-nav py-2 mb-4">
   <div class="container d-flex align-items-center flex-wrap gap-2">
     <div class="position-relative">
-      <button id="categoryComp" class="btn btn-outline-secondary me-2">
+      <button id="categoryComp" class="btn btn-outline-secondary me-2 text-nowrap">
         <i class="bi bi-list"></i> Danh mục
       </button>
       <div id="category-menu" class="p-3 shadow">
@@ -36,19 +46,21 @@
       </div>
     </div>
 
-    <a href="/san-pham" class="nav-link px-3 fw-bold border-bottom border-danger">Trang chủ</a>
-    <a href="#" class="nav-link px-3">Facebook</a>
+    <div class="d-flex flex-nowrap overflow-auto gap-2">
+      <a href="/san-pham" class="nav-link px-2 px-md-3 fw-bold border-bottom border-danger text-nowrap">Trang chủ</a>
+      <a href="#" class="nav-link px-2 px-md-3 text-nowrap">Facebook</a>
+    </div>
 
-    <div class="ms-auto d-flex gap-2">
+    <div class="ms-md-auto mt-2 mt-md-0 d-flex flex-wrap gap-2 w-100 w-md-auto justify-content-start justify-content-md-end">
       <% if (user) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/lich-su-don-hang">Đơn hàng</a>
-        <a class="btn btn-sm btn-outline-secondary" href="/ho-so">Hồ sơ</a>
+        <a class="btn btn-sm btn-outline-secondary text-nowrap" href="/lich-su-don-hang">Đơn hàng</a>
+        <a class="btn btn-sm btn-outline-secondary text-nowrap" href="/ho-so">Hồ sơ</a>
         <form method="post" action="/dang-xuat" class="mb-0">
-          <button class="btn btn-sm btn-outline-secondary" type="submit">Đăng xuất</button>
+          <button class="btn btn-sm btn-outline-secondary text-nowrap" type="submit">Đăng xuất</button>
         </form>
       <% } else { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/dang-nhap">Đăng nhập</a>
-        <a class="btn btn-sm pm-btn-red" href="/dang-ky">Đăng ký</a>
+        <a class="btn btn-sm btn-outline-secondary text-nowrap" href="/dang-nhap">Đăng nhập</a>
+        <a class="btn btn-sm pm-btn-red text-nowrap" href="/dang-ky">Đăng ký</a>
       <% } %>
     </div>
   </div>
