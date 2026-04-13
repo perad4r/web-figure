@@ -110,6 +110,12 @@ docker compose up -d --build
 - App: `http://127.0.0.1:3000`
 - MySQL host port: `3406` (container port vẫn `3306`)
 
+Đổi port host (nếu máy bị trùng port):
+
+```bash
+APP_HOST_PORT=8089 DB_HOST_PORT=3406 docker compose up -d --build
+```
+
 ```bash
 docker compose down -v
 ```
