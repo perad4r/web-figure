@@ -2,27 +2,27 @@
 <%- include('../partials/nav') %>
 
 <main class="container pb-5" style="max-width: 720px;">
-  <h1 class="h4 mb-3">Edit Category</h1>
+  <h1 class="h4 mb-3">Sửa danh mục</h1>
 
   <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
 
   <form method="post" action="/admin/categories/<%= row.id %>" class="vstack gap-2">
     <input type="hidden" name="_method" value="PUT" />
     <div>
-      <label class="form-label">Name</label>
+      <label class="form-label">Tên</label>
       <input class="form-control" name="ten" value="<%= row.ten %>" required />
     </div>
     <div>
-      <label class="form-label">Description</label>
+      <label class="form-label">Mô tả</label>
       <textarea class="form-control" name="mo_ta"><%= row.mo_ta || '' %></textarea>
     </div>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" name="trang_thai" value="1" <%= row.trang_thai ? 'checked' : '' %> />
-      <label class="form-check-label">Active</label>
+      <label class="form-check-label">Đang dùng</label>
     </div>
     <div class="d-flex gap-2">
-      <button class="btn btn-primary" type="submit">Save</button>
-      <a class="btn btn-outline-secondary" href="/admin/categories">Cancel</a>
+      <button class="btn btn-primary" type="submit">Lưu</button>
+      <a class="btn btn-outline-secondary" href="/admin/categories">Hủy</a>
     </div>
   </form>
 </main>

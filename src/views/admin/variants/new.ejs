@@ -2,13 +2,13 @@
 <%- include('../partials/nav') %>
 
 <main class="container pb-5" style="max-width: 820px;">
-  <h1 class="h4 mb-3">New Variant</h1>
+  <h1 class="h4 mb-3">Thêm biến thể</h1>
   <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
 
   <form method="post" action="/admin/variants" class="vstack gap-2" enctype="multipart/form-data">
     <div class="row g-2">
       <div class="col-md-6">
-        <label class="form-label">Product</label>
+        <label class="form-label">Sản phẩm</label>
         <select class="form-select" name="hang_id" required>
           <option value="">--</option>
           <% products.forEach((p) => { %>
@@ -17,7 +17,7 @@
         </select>
       </div>
       <div class="col-md-3">
-        <label class="form-label">Color</label>
+        <label class="form-label">Màu</label>
         <select class="form-select" name="mau_id" required>
           <option value="">--</option>
           <% colors.forEach((c) => { %>
@@ -26,7 +26,7 @@
         </select>
       </div>
       <div class="col-md-3">
-        <label class="form-label">Size</label>
+        <label class="form-label">Kích cỡ</label>
         <select class="form-select" name="kich_co_id" required>
           <option value="">--</option>
           <% sizes.forEach((s) => { %>
@@ -37,24 +37,23 @@
     </div>
     <div class="row g-2">
       <div class="col-md-6">
-        <label class="form-label">Image</label>
+        <label class="form-label">Ảnh</label>
         <input class="form-control" type="file" name="image" />
       </div>
       <div class="col-md-3">
-        <label class="form-label">Price</label>
+        <label class="form-label">Giá</label>
         <input class="form-control" type="number" name="gia" value="0" />
       </div>
       <div class="col-md-3">
-        <label class="form-label">Stock</label>
+        <label class="form-label">Tồn kho</label>
         <input class="form-control" type="number" name="ton_kho" value="0" />
       </div>
     </div>
     <div class="d-flex gap-2">
-      <button class="btn btn-primary" type="submit">Create</button>
-      <a class="btn btn-outline-secondary" href="/admin/variants">Cancel</a>
+      <button class="btn btn-primary" type="submit">Tạo</button>
+      <a class="btn btn-outline-secondary" href="/admin/variants">Hủy</a>
     </div>
   </form>
 </main>
 
 <%- include('../partials/foot') %>
-

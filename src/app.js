@@ -19,22 +19,57 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      useDefaults: true,
-      directives: {
-        'default-src': ["'self'"],
-        'base-uri': ["'self'"],
-        'object-src': ["'none'"],
-        'frame-ancestors': ["'self'"],
-        'script-src': ["'self'", 'https://cdn.jsdelivr.net', 'https://code.jquery.com'],
-        'style-src': ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com'],
-        'font-src': ["'self'", 'https://fonts.gstatic.com', 'https://cdn.jsdelivr.net', 'data:'],
-        'img-src': ["'self'", 'data:'],
-        'connect-src': ["'self'", 'https://cdn.jsdelivr.net'],
-      },
-    },
+    // We apply CSP separately (strict vs Cloudflare) to avoid breaking
+    // Cloudflare-injected scripts when serving via a tunnel/proxy.
+    contentSecurityPolicy: false,
   }),
 );
+
+const baseCspDirectives = {
+  'default-src': ["'self'"],
+  'base-uri': ["'self'"],
+  'object-src': ["'none'"],
+  'frame-ancestors': ["'self'"],
+  'script-src': [
+    "'self'",
+    'https://cdn.jsdelivr.net',
+    'https://code.jquery.com',
+    'https://static.cloudflareinsights.com',
+  ],
+  'script-src-elem': [
+    "'self'",
+    'https://cdn.jsdelivr.net',
+    'https://code.jquery.com',
+    'https://static.cloudflareinsights.com',
+  ],
+  'style-src': ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com'],
+  'font-src': ["'self'", 'https://fonts.gstatic.com', 'https://cdn.jsdelivr.net', 'data:'],
+  'img-src': ["'self'", 'data:'],
+  'connect-src': ["'self'", 'https://cdn.jsdelivr.net', 'https://cloudflareinsights.com'],
+  'worker-src': ["'self'", 'blob:'],
+  // Some older browsers treat workers as child-src.
+  'child-src': ["'self'", 'blob:'],
+};
+
+const strictCsp = helmet.contentSecurityPolicy({
+  useDefaults: true,
+  directives: baseCspDirectives,
+});
+
+const cloudflareCsp = helmet.contentSecurityPolicy({
+  useDefaults: true,
+  directives: {
+    ...baseCspDirectives,
+    // Cloudflare (Insights/Zaraz/etc.) may inject inline scripts; allow them only when behind CF.
+    'script-src': [...baseCspDirectives['script-src'], "'unsafe-inline'"],
+    'script-src-elem': [...baseCspDirectives['script-src-elem'], "'unsafe-inline'"],
+  },
+});
+
+app.use((req, res, next) => {
+  const isCloudflare = Boolean(req.headers['cf-ray'] || req.headers['cf-connecting-ip']);
+  return (isCloudflare ? cloudflareCsp : strictCsp)(req, res, next);
+});
 app.use(cors());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 

@@ -2,21 +2,20 @@
 <%- include('../partials/nav') %>
 
 <main class="container pb-5" style="max-width: 720px;">
-  <h1 class="h4 mb-3">Edit Size</h1>
+  <h1 class="h4 mb-3">Sửa kích cỡ</h1>
   <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
 
   <form method="post" action="/admin/sizes/<%= row.id %>" class="vstack gap-2">
     <input type="hidden" name="_method" value="PUT" />
     <div>
-      <label class="form-label">Name</label>
+      <label class="form-label">Tên</label>
       <input class="form-control" name="ten" value="<%= row.ten %>" required />
     </div>
     <div class="d-flex gap-2">
-      <button class="btn btn-primary" type="submit">Save</button>
-      <a class="btn btn-outline-secondary" href="/admin/sizes">Cancel</a>
+      <button class="btn btn-primary" type="submit">Lưu</button>
+      <a class="btn btn-outline-secondary" href="/admin/sizes">Hủy</a>
     </div>
   </form>
 </main>
 
 <%- include('../partials/foot') %>
-

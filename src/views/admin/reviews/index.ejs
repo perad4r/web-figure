@@ -3,25 +3,25 @@
 
 <main class="container pb-5">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h4 mb-0">Reviews</h1>
+    <h1 class="h4 mb-0">Đánh giá</h1>
     <div class="d-flex gap-2">
-      <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews">Active</a>
-      <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews?deleted=1">Deleted</a>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews">Đang dùng</a>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews?deleted=1">Đã xóa</a>
     </div>
   </div>
 
   <% if (!rows || rows.length === 0) { %>
-    <div class="alert alert-secondary">Empty.</div>
+    <div class="alert alert-secondary">Trống.</div>
   <% } else { %>
     <div class="table-responsive">
       <table class="table align-middle">
         <thead>
           <tr>
             <th>#</th>
-            <th>Product</th>
-            <th>User</th>
-            <th>Rating</th>
-            <th>Content</th>
+            <th>Sản phẩm</th>
+            <th>Người dùng</th>
+            <th>Điểm</th>
+            <th>Nội dung</th>
             <th></th>
           </tr>
         </thead>
@@ -35,15 +35,15 @@
               <td style="max-width: 420px;"><%= r.danh_gia %></td>
               <td class="text-end">
                 <% if (!showDeleted) { %>
-                  <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews/<%= r.id %>/edit">Edit</a>
+                  <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews/<%= r.id %>/edit">Sửa</a>
                   <form method="post" action="/admin/reviews/<%= r.id %>" class="d-inline">
                     <input type="hidden" name="_method" value="DELETE" />
-                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Xóa</button>
                   </form>
                 <% } else { %>
                   <form method="post" action="/admin/reviews/<%= r.id %>/restore" class="d-inline">
                     <input type="hidden" name="_method" value="PATCH" />
-                    <button class="btn btn-sm btn-outline-success" type="submit">Restore</button>
+                    <button class="btn btn-sm btn-outline-success" type="submit">Khôi phục</button>
                   </form>
                 <% } %>
               </td>
@@ -55,13 +55,13 @@
   <% } %>
 
   <div class="d-flex justify-content-between align-items-center mt-3">
-    <div class="text-muted small">Page <%= page %></div>
+    <div class="text-muted small">Trang <%= page %></div>
     <div class="d-flex gap-2">
       <% if (page > 1) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Prev</a>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Trước</a>
       <% } %>
       <% if (hasNext) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Next</a>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Sau</a>
       <% } %>
     </div>
   </div>

@@ -3,32 +3,32 @@
 
 <main class="container pb-5">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h4 mb-0">Sizes</h1>
+    <h1 class="h4 mb-0">Kích cỡ</h1>
     <div class="d-flex gap-2">
       <form method="get" action="/admin/sizes" class="d-flex gap-2">
         <input type="hidden" name="deleted" value="<%= showDeleted ? '1' : '' %>" />
         <input class="form-control form-control-sm" name="q" value="<%= q || '' %>" placeholder="search..." />
-        <button class="btn btn-sm btn-outline-secondary" type="submit">Search</button>
+        <button class="btn btn-sm btn-outline-secondary" type="submit">Tìm</button>
       </form>
       <% if (showDeleted) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes">Active</a>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes">Đang dùng</a>
       <% } else { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes?deleted=1">Deleted</a>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes?deleted=1">Đã xóa</a>
       <% } %>
-      <a class="btn btn-primary btn-sm" href="/admin/sizes/new">New</a>
+      <a class="btn btn-primary btn-sm" href="/admin/sizes/new">Thêm mới</a>
     </div>
   </div>
 
   <% if (!rows || rows.length === 0) { %>
-    <div class="alert alert-secondary">Empty.</div>
+    <div class="alert alert-secondary">Trống.</div>
   <% } else { %>
     <div class="table-responsive">
       <table class="table align-middle">
         <thead>
           <tr>
             <th>#</th>
-            <th>Name</th>
-            <th>Deleted</th>
+            <th>Tên</th>
+            <th>Đã xóa</th>
             <th></th>
           </tr>
         </thead>
@@ -37,18 +37,18 @@
             <tr>
               <td><%= r.id %></td>
               <td><%= r.ten %></td>
-              <td><%= r.deleted_at ? 'yes' : 'no' %></td>
+              <td><%= r.deleted_at ? 'có' : 'không' %></td>
               <td class="text-end">
                 <% if (!r.deleted_at) { %>
-                  <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes/<%= r.id %>/edit">Edit</a>
+                  <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes/<%= r.id %>/edit">Sửa</a>
                   <form method="post" action="/admin/sizes/<%= r.id %>" class="d-inline">
                     <input type="hidden" name="_method" value="DELETE" />
-                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Xóa</button>
                   </form>
                 <% } else { %>
                   <form method="post" action="/admin/sizes/<%= r.id %>/restore" class="d-inline">
                     <input type="hidden" name="_method" value="PATCH" />
-                    <button class="btn btn-sm btn-outline-success" type="submit">Restore</button>
+                    <button class="btn btn-sm btn-outline-success" type="submit">Khôi phục</button>
                   </form>
                 <% } %>
               </td>
@@ -60,13 +60,13 @@
   <% } %>
 
   <div class="d-flex justify-content-between align-items-center mt-3">
-    <div class="text-muted small">Page <%= page %></div>
+    <div class="text-muted small">Trang <%= page %></div>
     <div class="d-flex gap-2">
       <% if (page > 1) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', q: q || '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Prev</a>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', q: q || '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Trước</a>
       <% } %>
       <% if (hasNext) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', q: q || '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Next</a>
+        <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', q: q || '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Sau</a>
       <% } %>
     </div>
   </div>

@@ -2,35 +2,34 @@
 <%- include('../partials/nav') %>
 
 <main class="container pb-5" style="max-width: 720px;">
-  <h1 class="h4 mb-3">Edit Review #<%= row.id %></h1>
+  <h1 class="h4 mb-3">Sửa đánh giá #<%= row.id %></h1>
 
   <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
 
   <div class="mb-3">
-    <div class="small text-muted">Product</div>
+    <div class="small text-muted">Sản phẩm</div>
     <div><%= row.product?.ten || '' %></div>
   </div>
   <div class="mb-3">
-    <div class="small text-muted">User</div>
+    <div class="small text-muted">Người dùng</div>
     <div><%= row.user?.email || '' %></div>
   </div>
 
   <form method="post" action="/admin/reviews/<%= row.id %>" class="vstack gap-2">
     <input type="hidden" name="_method" value="PUT" />
     <div>
-      <label class="form-label">Rating</label>
+      <label class="form-label">Điểm</label>
       <input class="form-control" name="rating" type="number" min="1" max="5" value="<%= row.rating || '' %>" />
     </div>
     <div>
-      <label class="form-label">Content</label>
+      <label class="form-label">Nội dung</label>
       <textarea class="form-control" name="danh_gia" required><%= row.danh_gia || '' %></textarea>
     </div>
     <div class="d-flex gap-2">
-      <button class="btn btn-primary" type="submit">Save</button>
-      <a class="btn btn-outline-secondary" href="/admin/reviews">Cancel</a>
+      <button class="btn btn-primary" type="submit">Lưu</button>
+      <a class="btn btn-outline-secondary" href="/admin/reviews">Hủy</a>
     </div>
   </form>
 </main>
 
 <%- include('../partials/foot') %>
-

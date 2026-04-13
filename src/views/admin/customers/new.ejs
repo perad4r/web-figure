@@ -2,17 +2,17 @@
 <%- include('../partials/nav') %>
 
 <main class="container pb-5" style="max-width: 720px;">
-  <h1 class="h4 mb-3">New Customer</h1>
+  <h1 class="h4 mb-3">Thêm khách hàng</h1>
 
   <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
 
   <form method="post" action="/admin/customers" class="vstack gap-2">
     <div>
-      <label class="form-label">Name</label>
+      <label class="form-label">Tên</label>
       <input class="form-control" name="ten" value="<%= values.ten || '' %>" required />
     </div>
     <div>
-      <label class="form-label">Phone</label>
+      <label class="form-label">SĐT</label>
       <input class="form-control" name="sdt" value="<%= values.sdt || '' %>" required />
     </div>
     <div>
@@ -20,11 +20,11 @@
       <input class="form-control" name="email" type="email" value="<%= values.email || '' %>" />
     </div>
     <div>
-      <label class="form-label">Address</label>
+      <label class="form-label">Địa chỉ</label>
       <textarea class="form-control" name="dia_chi" required><%= values.dia_chi || '' %></textarea>
     </div>
     <div>
-      <label class="form-label">Linked User (optional)</label>
+      <label class="form-label">Tài khoản liên kết (không bắt buộc)</label>
       <select class="form-select" name="ma_user">
         <option value="">—</option>
         <% users.forEach((u) => { %>
@@ -33,11 +33,10 @@
       </select>
     </div>
     <div class="d-flex gap-2">
-      <button class="btn btn-primary" type="submit">Create</button>
-      <a class="btn btn-outline-secondary" href="/admin/customers">Cancel</a>
+      <button class="btn btn-primary" type="submit">Tạo</button>
+      <a class="btn btn-outline-secondary" href="/admin/customers">Hủy</a>
     </div>
   </form>
 </main>
 
 <%- include('../partials/foot') %>
-

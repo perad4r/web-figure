@@ -2,13 +2,13 @@
 <%- include('../partials/nav') %>
 
 <main class="container pb-5" style="max-width: 720px;">
-  <h1 class="h4 mb-3">New User</h1>
+  <h1 class="h4 mb-3">Thêm người dùng</h1>
 
   <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
 
   <form method="post" action="/admin/users" class="vstack gap-2">
     <div>
-      <label class="form-label">Name</label>
+      <label class="form-label">Tên</label>
       <input class="form-control" name="ten" value="<%= values.ten || '' %>" required />
     </div>
     <div>
@@ -16,35 +16,34 @@
       <input class="form-control" name="email" type="email" value="<%= values.email || '' %>" required />
     </div>
     <div>
-      <label class="form-label">Password</label>
+      <label class="form-label">Mật khẩu</label>
       <input class="form-control" name="password" type="password" required />
     </div>
     <div>
-      <label class="form-label">Phone</label>
+      <label class="form-label">Số điện thoại</label>
       <input class="form-control" name="phone" value="<%= values.phone || '' %>" />
     </div>
     <div>
-      <label class="form-label">Address</label>
+      <label class="form-label">Địa chỉ</label>
       <textarea class="form-control" name="address"><%= values.address || '' %></textarea>
     </div>
     <div>
-      <label class="form-label">Role</label>
+      <label class="form-label">Vai trò</label>
       <select class="form-select" name="role" required>
         <option value="0" <%= Number(values.role) === 0 ? 'selected' : '' %>>Admin</option>
-        <option value="1" <%= Number(values.role) === 1 ? 'selected' : '' %>>Customer</option>
-        <option value="2" <%= Number(values.role) === 2 ? 'selected' : '' %>>Staff</option>
+        <option value="1" <%= Number(values.role) === 1 ? 'selected' : '' %>>Khách</option>
+        <option value="2" <%= Number(values.role) === 2 ? 'selected' : '' %>>Nhân viên</option>
       </select>
     </div>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" name="status" value="1" <%= values.status === false ? '' : 'checked' %> />
-      <label class="form-check-label">Active</label>
+      <label class="form-check-label">Đang dùng</label>
     </div>
     <div class="d-flex gap-2">
-      <button class="btn btn-primary" type="submit">Create</button>
-      <a class="btn btn-outline-secondary" href="/admin/users">Cancel</a>
+      <button class="btn btn-primary" type="submit">Tạo</button>
+      <a class="btn btn-outline-secondary" href="/admin/users">Hủy</a>
     </div>
   </form>
 </main>
 
 <%- include('../partials/foot') %>
-
