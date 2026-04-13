@@ -8,6 +8,7 @@
     "dev": "nodemon src/server.js",
     "db": "node scripts/db.js",
     "api-smoke": "node scripts/api-smoke.js",
+    "favicons": "node scripts/generate-favicons.js",
     "knex": "knex --knexfile ./knexfile.js",
     "migrate": "npm run knex -- migrate:latest",
     "migrate:make": "npm run knex -- migrate:make",
@@ -38,6 +39,7 @@
     "objection": "^3.1.5"
   },
   "devDependencies": {
+    "favicons": "^7.2.0",
     "nodemon": "^3.1.14"
   }
 }

@@ -5,9 +5,9 @@ const TheLoai = require('../models/TheLoai');
 async function home(req, res) {
   return renderProductListing(req, res, {
     canonicalPath: '/',
-    heading: 'Figure anime chính hãng',
-    lead: 'Khám phá figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật với nhiều mẫu mới cập nhật.',
-    defaultTitle: 'Figure anime chính hãng, mô hình sưu tầm đẹp tại Việt Nam',
+    heading: 'PMFigure',
+    lead: 'Cửa hàng figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật.',
+    defaultTitle: 'PMFigure - Figure anime chính hãng',
     defaultDescription:
       'PMFigure cung cấp figure anime, mô hình nhân vật và đồ sưu tầm chính hãng với giá rõ ràng, mẫu mã đa dạng và hỗ trợ giao hàng toàn quốc.',
     keywords:
@@ -74,15 +74,15 @@ async function renderProductListing(req, res, options) {
   }
 
   const title = category
-    ? `Figure ${category.ten} ch?nh h?ng`
+    ? `Figure ${category.ten} chính hãng`
     : q
-      ? `K?t qu? t?m ki?m cho "${q}"`
+      ? `Kết quả tìm kiếm cho "${q}"`
       : options.defaultTitle;
 
   const description = category
-    ? `Kh?m ph? c?c m?u figure v? m? h?nh thu?c danh m?c ${category.ten}, c?p nh?t gi? b?n v? t?nh tr?ng c?n h?ng t?i PMFigure.`
+    ? `Khám phá các mẫu figure và mô hình thuộc danh mục ${category.ten}, cập nhật giá bán và tình trạng còn hàng tại PMFigure.`
     : q
-      ? `K?t qu? t?m ki?m s?n ph?m cho t? kh?a ${q} t?i PMFigure.`
+      ? `Kết quả tìm kiếm sản phẩm cho từ khóa ${q} tại PMFigure.`
       : options.defaultDescription;
 
   return res.render('client/products/index', {
@@ -101,9 +101,9 @@ async function renderProductListing(req, res, options) {
         ? 'Kết quả tìm kiếm'
         : options.heading,
     pageLead: category
-      ? `Danh m?c: ${category.ten}`
+      ? `Danh mục: ${category.ten}`
       : q
-        ? `T? kh?a: ${q}`
+        ? `Từ khóa: ${q}`
         : options.lead,
     seo: {
       title,
