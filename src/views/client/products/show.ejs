@@ -3,7 +3,7 @@
 
 <main class="container py-4">
   <div class="mb-3">
-    <a href="/san-pham" class="text-decoration-none">&larr; Back</a>
+    <a href="/san-pham" class="text-decoration-none">&larr; Quay lại</a>
   </div>
 
   <div class="row g-4">
@@ -27,7 +27,7 @@
             <% product.variants.forEach((v) => { %>
               <option value="<%= v.id %>">
                 <%= v.color ? v.color.ten : '?' %> / <%= v.size ? v.size.ten : '?' %>
-                — <%= Number(v.gia).toLocaleString('vi-VN') %> đ (stock <%= v.ton_kho %>)
+                — <%= Number(v.gia).toLocaleString('vi-VN') %> đ (tồn kho <%= v.ton_kho %>)
               </option>
             <% }) %>
           </select>
@@ -37,7 +37,7 @@
           <input class="form-control" type="number" name="so_luong" min="1" value="1" />
         </div>
         <div class="col-md-2 d-grid">
-          <button class="btn pm-btn-red" type="submit">Add</button>
+          <button class="btn pm-btn-red" type="submit">Thêm vào giỏ</button>
         </div>
       </form>
     <% } %>

@@ -1,6 +1,8 @@
 const DonHang = require('../models/DonHang');
 const PaymentStatusHistory = require('../models/PaymentStatusHistory');
 const { createPayOS, createPaymentLink } = require('../services/payosService');
+const { deductStock } = require('../services/inventoryService');
+const { getKnex } = require('../config/database');
 
 function handlePayosError(res, error) {
   const status = error.statusCode || 500;
@@ -54,13 +56,18 @@ async function handleReturn(req, res) {
 
     await order.$query().patch({ payos_status: link.status });
 
-    if (link.status === 'PAID' && order.status !== DonHang.STATUS.PAID) {
-      await order.$query().patch({ status: DonHang.STATUS.PAID });
-      await PaymentStatusHistory.query().insert({
-        don_hang_id: order.id,
-        payment_status: 'PAID',
-        note: 'PayOS return',
-        changed_by: null,
+    // Option B (per plan): PAID -> SHIPPING (trừ kho), idempotent if already processed.
+    if (link.status === 'PAID' && order.status === DonHang.STATUS.UNPAID) {
+      const knex = getKnex();
+      await knex.transaction(async (trx) => {
+        await order.$query(trx).patch({ status: DonHang.STATUS.SHIPPING });
+        await deductStock(order.id, trx);
+        await PaymentStatusHistory.query(trx).insert({
+          don_hang_id: order.id,
+          payment_status: 'PAID',
+          note: 'PayOS thanh toán thành công - tự động chuyển giao hàng',
+          changed_by: null,
+        });
       });
     }
 
@@ -76,7 +83,7 @@ async function handleCancel(req, res) {
     if (!orderId) return res.json({ ok: true });
 
     const order = await DonHang.query().findById(orderId);
-    if (order) {
+    if (order && order.status === DonHang.STATUS.UNPAID) {
       await order.$query().patch({ status: DonHang.STATUS.CANCELLED, payos_status: 'CANCELLED' });
       await PaymentStatusHistory.query().insert({
         don_hang_id: order.id,
@@ -105,13 +112,18 @@ async function webhook(req, res) {
     if (order) {
       await order.$query().patch({ payos_status: data.code === '00' ? 'PAID' : data.desc });
 
-      if (data.code === '00' && order.status !== DonHang.STATUS.PAID) {
-        await order.$query().patch({ status: DonHang.STATUS.PAID });
-        await PaymentStatusHistory.query().insert({
-          don_hang_id: order.id,
-          payment_status: 'PAID',
-          note: 'PayOS webhook',
-          changed_by: null,
+      // Option B (per plan): PAID -> SHIPPING (trừ kho), idempotent if already processed.
+      if (data.code === '00' && order.status === DonHang.STATUS.UNPAID) {
+        const knex = getKnex();
+        await knex.transaction(async (trx) => {
+          await order.$query(trx).patch({ status: DonHang.STATUS.SHIPPING });
+          await deductStock(order.id, trx);
+          await PaymentStatusHistory.query(trx).insert({
+            don_hang_id: order.id,
+            payment_status: 'PAID',
+            note: 'PayOS thanh toán thành công - tự động chuyển giao hàng (webhook)',
+            changed_by: null,
+          });
         });
       }
     }

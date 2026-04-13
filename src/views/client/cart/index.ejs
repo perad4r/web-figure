@@ -39,14 +39,14 @@
                 <form method="post" action="/giohangs/<%= it.id %>" class="d-flex justify-content-end gap-2">
                   <input type="hidden" name="_method" value="PUT" />
                   <input class="form-control form-control-sm" style="width: 84px" type="number" name="so_luong" min="1" value="<%= it.so_luong %>" />
-                  <button class="btn btn-sm btn-outline-primary" type="submit">Update</button>
+                  <button class="btn btn-sm btn-outline-primary" type="submit">Cập nhật</button>
                 </form>
               </td>
               <td class="text-end"><%= (Number(it.variant?.gia || 0) * Number(it.so_luong || 0)).toLocaleString('vi-VN') %> đ</td>
               <td class="text-end">
                 <form method="post" action="/giohangs/<%= it.id %>" class="d-inline">
                   <input type="hidden" name="_method" value="DELETE" />
-                  <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Xoá</button>
                 </form>
               </td>
             </tr>
@@ -61,7 +61,7 @@
 
     <hr />
 
-    <h2 class="h6">Checkout</h2>
+    <h2 class="h6">Đặt hàng</h2>
     <form method="post" action="/giohangs/checkout" class="row g-2">
       <div class="col-md-6">
         <label class="form-label">Tên</label>
@@ -69,7 +69,14 @@
       </div>
       <div class="col-md-6">
         <label class="form-label">SĐT</label>
-        <input class="form-control" name="phone" required />
+        <input
+          class="form-control"
+          name="phone"
+          type="tel"
+          pattern="[0-9]{9,11}"
+          title="Nhập 9-11 chữ số"
+          required
+        />
       </div>
       <div class="col-12">
         <label class="form-label">Địa chỉ</label>

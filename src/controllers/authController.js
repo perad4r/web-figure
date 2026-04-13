@@ -9,17 +9,17 @@ async function login(req, res) {
   const { email, password } = req.body || {};
 
   if (!email || !password) {
-    return res.status(400).render('auth/login', { error: 'Missing email/password' });
+    return res.status(400).render('auth/login', { error: 'Thiếu email/mật khẩu' });
   }
 
   const user = await User.query().where({ email }).first();
   if (!user || !user.status) {
-    return res.status(401).render('auth/login', { error: 'Invalid credentials' });
+    return res.status(401).render('auth/login', { error: 'Sai thông tin đăng nhập' });
   }
 
   const ok = await bcrypt.compare(password, user.password);
   if (!ok) {
-    return res.status(401).render('auth/login', { error: 'Invalid credentials' });
+    return res.status(401).render('auth/login', { error: 'Sai thông tin đăng nhập' });
   }
 
   req.session.userId = user.id;
@@ -34,16 +34,23 @@ async function register(req, res) {
   const { ten, email, password, password_confirmation, phone, address } = req.body || {};
 
   if (!ten || !email || !password) {
-    return res.status(400).render('auth/register', { error: 'Missing fields' });
+    return res.status(400).render('auth/register', { error: 'Thiếu thông tin bắt buộc' });
+  }
+
+  if (phone && !/^[0-9]{9,11}$/.test(phone)) {
+    return res.status(400).render('auth/register', {
+      title: 'Đăng ký',
+      error: 'Số điện thoại không hợp lệ.',
+    });
   }
 
   if (password !== password_confirmation) {
-    return res.status(400).render('auth/register', { error: 'Password confirmation mismatch' });
+    return res.status(400).render('auth/register', { error: 'Mật khẩu nhập lại không khớp' });
   }
 
   const exists = await User.query().where({ email }).first();
   if (exists) {
-    return res.status(409).render('auth/register', { error: 'Email already used' });
+    return res.status(409).render('auth/register', { error: 'Email đã được sử dụng' });
   }
 
   const hashed = await bcrypt.hash(password, 10);
@@ -68,4 +75,3 @@ async function logout(req, res) {
 }
 
 module.exports = { showLogin, login, showRegister, register, logout };
-

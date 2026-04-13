@@ -18,6 +18,14 @@ async function updateProfile(req, res) {
     });
   }
 
+  if (phone && !/^[0-9]{9,11}$/.test(phone)) {
+    return res.status(400).render('client/profile/edit', {
+      title: 'Hồ sơ',
+      user: req.user,
+      error: 'Số điện thoại không hợp lệ.',
+    });
+  }
+
   const updated = await User.query().patchAndFetchById(req.user.id, {
     ten,
     phone: phone || null,
@@ -31,4 +39,3 @@ async function updateProfile(req, res) {
 }
 
 module.exports = { editProfile, updateProfile };
-

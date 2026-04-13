@@ -5,10 +5,18 @@
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h4 mb-0">Đơn hàng</h1>
     <form method="get" action="/admin/orders" class="d-flex gap-2">
-      <input class="form-control form-control-sm" style="width: 120px" name="q" value="<%= q || '' %>" placeholder="mã đơn" />
-      <input class="form-control form-control-sm" style="width: 120px" name="status" value="<%= status === null ? '' : status %>" placeholder="trạng thái" />
-      <button class="btn btn-sm btn-outline-secondary" type="submit">Lọc</button>
+      <input class="form-control form-control-sm" style="width: 140px" name="q" value="<%= q || '' %>" placeholder="mã đơn" />
+      <button class="btn btn-sm btn-outline-secondary" type="submit">Tìm</button>
     </form>
+  </div>
+
+  <div class="d-flex gap-1 flex-wrap mb-3">
+    <a class="btn btn-sm <%= status === null ? 'btn-dark' : 'btn-outline-secondary' %>" href="/admin/orders">Tất cả</a>
+    <a class="btn btn-sm <%= status === 0 ? 'btn-warning' : 'btn-outline-warning' %>" href="/admin/orders?status=0">Chưa thanh toán</a>
+    <a class="btn btn-sm <%= status === 1 ? 'btn-info' : 'btn-outline-info' %>" href="/admin/orders?status=1">Đã thanh toán</a>
+    <a class="btn btn-sm <%= status === 3 ? 'btn-primary' : 'btn-outline-primary' %>" href="/admin/orders?status=3">Đang giao</a>
+    <a class="btn btn-sm <%= status === 4 ? 'btn-success' : 'btn-outline-success' %>" href="/admin/orders?status=4">Đã nhận</a>
+    <a class="btn btn-sm <%= status === 2 ? 'btn-secondary' : 'btn-outline-secondary' %>" href="/admin/orders?status=2">Đã huỷ</a>
   </div>
 
   <% if (!rows || rows.length === 0) { %>
@@ -32,9 +40,19 @@
               <td><%= o.id %></td>
               <td><%= o.user ? o.user.email : '' %></td>
               <td class="text-end"><%= Number(o.gia || 0).toLocaleString('vi-VN') %></td>
-              <td><%= o.status %></td>
+              <td><span class="badge <%= statusBadge(o.status) %>"><%= statusLabel(o.status) %></span></td>
               <td><%= o.payos_status || '' %></td>
-              <td class="text-end">
+              <td class="text-end text-nowrap">
+                <% if (o.status === 0) { %>
+                  <button class="btn btn-sm btn-outline-danger js-cancel-order" data-id="<%= o.id %>">Huỷ</button>
+                <% } %>
+                <% if (o.status === 1 && user && user.role === 0) { %>
+                  <button class="btn btn-sm btn-outline-success js-ship-order" data-id="<%= o.id %>">Giao hàng</button>
+                <% } %>
+                <% if (o.status === 3) { %>
+                  <button class="btn btn-sm btn-outline-success js-complete-order" data-id="<%= o.id %>">Đã giao</button>
+                <% } %>
+                <button class="btn btn-sm btn-outline-secondary js-order-detail" data-id="<%= o.id %>">Chi tiết</button>
                 <a class="btn btn-sm btn-outline-secondary" href="/admin/orders/<%= o.id %>">Xem</a>
               </td>
             </tr>
@@ -56,5 +74,19 @@
     </div>
   </div>
 </main>
+
+<div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Chi tiết đơn hàng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body" id="orderDetailBody">
+        <div class="text-center py-4">Đang tải...</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <%- include('../partials/foot') %>

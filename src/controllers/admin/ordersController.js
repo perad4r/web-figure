@@ -1,5 +1,8 @@
 const DonHang = require('../../models/DonHang');
 const { createPayOS, createPaymentLink } = require('../../services/payosService');
+const { statusLabel, statusBadge } = require('../../helpers/statusHelper');
+const { deductStock, restoreStock } = require('../../services/inventoryService');
+const { getKnex } = require('../../config/database');
 
 async function index(req, res) {
   const status = req.query.status !== undefined && req.query.status !== '' ? Number(req.query.status) : null;
@@ -17,13 +20,15 @@ async function index(req, res) {
   const rows = hasNext ? rowsPlus.slice(0, pageSize) : rowsPlus;
 
   return res.render('admin/orders/index', {
-    title: 'Orders',
+    title: 'Đơn hàng',
     rows,
     status,
     q,
     page,
     pageSize,
     hasNext,
+    statusLabel,
+    statusBadge,
   });
 }
 
@@ -36,21 +41,50 @@ async function show(req, res) {
   if (!row) return res.status(404).render('client/errors/404', { title: 'Not Found' });
 
   return res.render('admin/orders/show', {
-    title: `Order #${row.id}`,
+    title: `Đơn hàng #${row.id}`,
     row,
     statusOptions: DonHang.STATUS,
     payosEnabled: String(process.env.PAYOS_ENABLED || '').toLowerCase() === 'true',
+    statusLabel,
+    statusBadge,
   });
 }
 
 async function updateStatus(req, res) {
   const id = Number(req.params.id);
   const row = await DonHang.query().findById(id);
-  if (!row) return res.status(404).render('client/errors/404', { title: 'Not Found' });
+  if (!row) return res.status(404).render('client/errors/404', { title: 'Không tìm thấy' });
 
-  const status = Number(req.body.status);
-  await row.$query().patch({ status });
-  req.flash('success', 'Order status updated');
+  const newStatus = Number(req.body.status);
+  const oldStatus = row.status;
+  const isStaffRole = req.user?.role === 2;
+
+  if (isStaffRole) {
+    const allowed = (oldStatus === DonHang.STATUS.SHIPPING && newStatus === DonHang.STATUS.RECEIVED);
+    const allowCancel = (oldStatus === DonHang.STATUS.UNPAID && newStatus === DonHang.STATUS.CANCELLED);
+    if (!allowed && !allowCancel) {
+      req.flash('danger', 'Nhân viên không có quyền thực hiện thao tác này');
+      return res.redirect(`/admin/orders/${row.id}`);
+    }
+  }
+
+  const knex = getKnex();
+  await knex.transaction(async (trx) => {
+    if (
+      newStatus === DonHang.STATUS.SHIPPING
+      && (oldStatus === DonHang.STATUS.UNPAID || oldStatus === DonHang.STATUS.PAID)
+    ) {
+      await deductStock(id, trx);
+    }
+
+    if (newStatus === DonHang.STATUS.CANCELLED && oldStatus === DonHang.STATUS.SHIPPING) {
+      await restoreStock(id, trx);
+    }
+
+    await row.$query(trx).patch({ status: newStatus });
+  });
+
+  req.flash('success', 'Đã cập nhật trạng thái đơn hàng');
   return res.redirect(`/admin/orders/${row.id}`);
 }
 
@@ -77,4 +111,27 @@ async function payosCheckout(req, res) {
   return res.redirect(link.checkoutUrl);
 }
 
-module.exports = { index, show, updateStatus, payosCheckout };
+async function detailPartial(req, res) {
+  const id = Number(req.params.id);
+  const row = await DonHang.query()
+    .findById(id)
+    .withGraphFetched('[user, details.[product, color, size]]');
+
+  if (!row) return res.status(404).json({ error: 'Không tìm thấy' });
+
+  return res.render('admin/orders/_detail_partial', {
+    row,
+    statusLabel,
+    statusBadge,
+    statusOptions: DonHang.STATUS,
+    isAdminRole: req.user?.role === 0,
+  });
+}
+
+module.exports = {
+  index,
+  show,
+  updateStatus,
+  payosCheckout,
+  detailPartial,
+};

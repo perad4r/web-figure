@@ -1,0 +1,53 @@
+<div>
+  <div class="mb-3">
+    <div><strong>Đơn hàng #<%= row.id %></strong></div>
+    <div>Khách: <%= row.ten_khach_hang %> — <%= row.phone %></div>
+    <div>Địa chỉ: <%= row.dia_chi %></div>
+    <div>Email: <%= row.email || '—' %></div>
+    <div>
+      Trạng thái:
+      <span class="badge <%= statusBadge(row.status) %>"><%= statusLabel(row.status) %></span>
+    </div>
+    <div>Tổng: <%= Number(row.gia || 0).toLocaleString('vi-VN') %> đ</div>
+    <% if (row.ghi_chu) { %>
+      <div>Ghi chú: <%= row.ghi_chu %></div>
+    <% } %>
+  </div>
+
+  <table class="table table-sm align-middle">
+    <thead>
+      <tr>
+        <th>Sản phẩm</th>
+        <th>Biến thể</th>
+        <th class="text-end">Giá</th>
+        <th class="text-end">SL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% (row.details || []).forEach((d) => { %>
+        <tr>
+          <td><%= d.product?.ten || '' %></td>
+          <td class="text-muted"><%= d.color?.ten || '?' %> / <%= d.size?.ten || '?' %></td>
+          <td class="text-end"><%= Number(d.gia || 0).toLocaleString('vi-VN') %></td>
+          <td class="text-end"><%= d.so_luong %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <% if (isAdminRole) { %>
+    <hr />
+    <form method="post" action="/admin/orders/<%= row.id %>/status" class="d-flex gap-2 align-items-center" id="modalStatusForm">
+      <input type="hidden" name="_method" value="PATCH" />
+      <select class="form-select form-select-sm" name="status" style="width: 200px" id="modalStatusSelect">
+        <% Object.entries(statusOptions).forEach(([k, v]) => { %>
+          <option value="<%= v %>" <%= v === row.status ? 'selected' : '' %>><%= statusLabel(v) %></option>
+        <% }) %>
+      </select>
+      <button class="btn btn-sm btn-outline-primary" type="submit" id="modalStatusBtn">Cập nhật</button>
+    </form>
+    <div class="text-muted small mt-1">
+      Lưu ý: Chuyển thẳng từ "Chưa thanh toán" sang "Đang giao hàng" sẽ trừ tồn kho mà không cần thanh toán (chỉ admin).
+    </div>
+  <% } %>
+</div>

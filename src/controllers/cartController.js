@@ -110,6 +110,28 @@ async function checkout(req, res) {
     });
   }
 
+  // Validate phone: chỉ cho phép số, 9-11 ký tự
+  const phoneRegex = /^[0-9]{9,11}$/;
+  if (phone && !phoneRegex.test(phone)) {
+    const items = await GioHang.query()
+      .where('gio_hangs.user_id', req.user.id)
+      .withGraphFetched('variant.[product, color, size]')
+      .orderBy('gio_hangs.id', 'desc');
+
+    const total = items.reduce((sum, item) => {
+      const price = Number(item.variant?.gia || 0);
+      const qty = Number(item.so_luong || 0);
+      return sum + price * qty;
+    }, 0);
+
+    return res.status(400).render('client/cart/index', {
+      title: 'Giỏ hàng',
+      items,
+      total,
+      error: 'Số điện thoại không hợp lệ (chỉ nhập số, 9-11 chữ số).',
+    });
+  }
+
   const cartItems = await GioHang.query()
     .where('gio_hangs.user_id', req.user.id)
     .withGraphFetched('variant.[product, color, size]');

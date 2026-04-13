@@ -13,13 +13,17 @@
 <div class="container py-3">
   <div class="d-flex gap-2 flex-wrap">
     <a class="btn btn-sm btn-outline-secondary" href="/admin/dashboard">Bảng điều khiển</a>
-    <a class="btn btn-sm btn-outline-secondary" href="/admin/categories">Danh mục</a>
-    <a class="btn btn-sm btn-outline-secondary" href="/admin/products">Sản phẩm</a>
-    <a class="btn btn-sm btn-outline-secondary" href="/admin/variants">Biến thể</a>
-    <a class="btn btn-sm btn-outline-secondary" href="/admin/colors">Màu sắc</a>
-    <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes">Kích cỡ</a>
+    <% if (user && user.role === 0) { %>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/categories">Danh mục</a>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/products">Sản phẩm</a>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/variants">Biến thể</a>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/colors">Màu sắc</a>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/sizes">Kích cỡ</a>
+    <% } %>
     <a class="btn btn-sm btn-outline-secondary" href="/admin/orders">Đơn hàng</a>
-    <a class="btn btn-sm btn-outline-secondary" href="/admin/users">Người dùng</a>
+    <% if (user && user.role === 0) { %>
+      <a class="btn btn-sm btn-outline-secondary" href="/admin/users">Người dùng</a>
+    <% } %>
     <a class="btn btn-sm btn-outline-secondary" href="/admin/customers">Khách hàng</a>
     <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews">Đánh giá</a>
   </div>

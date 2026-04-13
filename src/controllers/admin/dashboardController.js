@@ -28,8 +28,17 @@ async function dashboard(req, res) {
     reviews: Number(reviews?.c || 0),
   };
 
-  return res.render('admin/dashboard', { title: 'Dashboard', stats });
+  let revenue = null;
+  if (req.user && req.user.role === 0) {
+    const rev = await knex('don_hangs')
+      .where('status', '>=', 1)
+      .whereNot('status', 2)
+      .sum({ total: 'gia' })
+      .first();
+    revenue = Number(rev?.total || 0);
+  }
+
+  return res.render('admin/dashboard', { title: 'Bảng điều khiển', stats, revenue });
 }
 
 module.exports = { dashboard };
-

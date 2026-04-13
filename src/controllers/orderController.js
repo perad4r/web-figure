@@ -1,4 +1,7 @@
 const DonHang = require('../models/DonHang');
+const { statusLabel, statusBadge } = require('../helpers/statusHelper');
+const { restoreStock } = require('../services/inventoryService');
+const { getKnex } = require('../config/database');
 
 async function orderHistory(req, res) {
   const orders = await DonHang.query()
@@ -9,16 +12,8 @@ async function orderHistory(req, res) {
   return res.render('client/orders/index', {
     title: 'Lịch sử đơn hàng',
     orders,
-    statusLabel: (s) => {
-      const map = {
-        [DonHang.STATUS.UNPAID]: 'unpaid',
-        [DonHang.STATUS.PAID]: 'paid',
-        [DonHang.STATUS.CANCELLED]: 'cancelled',
-        [DonHang.STATUS.SHIPPING]: 'shipping',
-        [DonHang.STATUS.RECEIVED]: 'received',
-      };
-      return map[s] || String(s);
-    },
+    statusLabel,
+    statusBadge,
   });
 }
 
@@ -32,19 +27,14 @@ async function orderDetail(req, res) {
     return res.status(404).render('client/errors/404', { title: 'Not Found' });
   }
 
+  const payosEnabled = String(process.env.PAYOS_ENABLED || '').toLowerCase() === 'true';
+
   return res.render('client/orders/show', {
     title: `Đơn hàng #${order.id}`,
     order,
-    statusLabel: (s) => {
-      const map = {
-        [DonHang.STATUS.UNPAID]: 'unpaid',
-        [DonHang.STATUS.PAID]: 'paid',
-        [DonHang.STATUS.CANCELLED]: 'cancelled',
-        [DonHang.STATUS.SHIPPING]: 'shipping',
-        [DonHang.STATUS.RECEIVED]: 'received',
-      };
-      return map[s] || String(s);
-    },
+    statusLabel,
+    statusBadge,
+    payosEnabled,
   });
 }
 
@@ -59,7 +49,14 @@ async function cancelOrder(req, res) {
     return res.status(400).json({ error: 'Cannot cancel' });
   }
 
-  await order.$query().patch({ status: DonHang.STATUS.CANCELLED });
+  const knex = getKnex();
+  await knex.transaction(async (trx) => {
+    if (order.status === DonHang.STATUS.SHIPPING) {
+      await restoreStock(order.id, trx);
+    }
+    await order.$query(trx).patch({ status: DonHang.STATUS.CANCELLED });
+  });
+
   return res.json({ ok: true });
 }
 

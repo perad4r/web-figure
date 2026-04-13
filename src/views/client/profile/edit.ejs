@@ -15,15 +15,22 @@
       <input class="form-control" name="ten" value="<%= user.ten %>" required />
     </div>
     <div class="col-md-6">
-      <label class="form-label">Phone</label>
-      <input class="form-control" name="phone" value="<%= user.phone || '' %>" />
+      <label class="form-label">Số điện thoại</label>
+      <input
+        class="form-control"
+        type="tel"
+        name="phone"
+        pattern="[0-9]{9,11}"
+        title="Nhập 9-11 chữ số"
+        value="<%= user.phone || '' %>"
+      />
     </div>
     <div class="col-12">
-      <label class="form-label">Address</label>
+      <label class="form-label">Địa chỉ</label>
       <textarea class="form-control" name="address"><%= user.address || '' %></textarea>
     </div>
     <div class="col-12">
-      <button class="btn btn-primary" type="submit">Save</button>
+      <button class="btn btn-primary" type="submit">Lưu</button>
     </div>
   </form>
 </main>

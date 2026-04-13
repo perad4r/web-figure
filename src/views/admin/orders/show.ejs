@@ -7,6 +7,10 @@
   <div class="mb-3">
     <div><span class="text-muted">Người dùng:</span> <%= row.user ? row.user.email : '' %></div>
     <div><span class="text-muted">Tổng:</span> <%= Number(row.gia || 0).toLocaleString('vi-VN') %> đ</div>
+    <div>
+      <span class="text-muted">Trạng thái:</span>
+      <span class="badge <%= statusBadge(row.status) %>"><%= statusLabel(row.status) %></span>
+    </div>
     <div><span class="text-muted">PayOS:</span> <%= row.payos_status || '' %></div>
   </div>
 
@@ -15,7 +19,7 @@
       <input type="hidden" name="_method" value="PATCH" />
       <select class="form-select form-select-sm" name="status" style="width: 200px">
         <% Object.entries(statusOptions).forEach(([k, v]) => { %>
-          <option value="<%= v %>" <%= v === row.status ? 'selected' : '' %>><%= k %> (<%= v %>)</option>
+          <option value="<%= v %>" <%= v === row.status ? 'selected' : '' %>><%= statusLabel(v) %></option>
         <% }) %>
       </select>
       <button class="btn btn-sm btn-outline-primary" type="submit">Cập nhật trạng thái</button>

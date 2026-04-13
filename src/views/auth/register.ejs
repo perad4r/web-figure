@@ -26,16 +26,16 @@
       <input class="form-control" type="password" name="password_confirmation" required />
     </div>
     <div class="col-md-6">
-      <label class="form-label">Phone</label>
-      <input class="form-control" type="text" name="phone" />
+      <label class="form-label">Số điện thoại</label>
+      <input class="form-control" type="tel" name="phone" pattern="[0-9]{9,11}" title="Nhập 9-11 chữ số" />
     </div>
     <div class="col-12">
-      <label class="form-label">Address</label>
+      <label class="form-label">Địa chỉ</label>
       <textarea class="form-control" name="address"></textarea>
     </div>
     <div class="col-12 d-flex gap-2">
-      <button class="btn pm-btn-red" type="submit">Register</button>
-      <a class="btn btn-outline-secondary" href="/dang-nhap">Login</a>
+      <button class="btn pm-btn-red" type="submit">Đăng ký</button>
+      <a class="btn btn-outline-secondary" href="/dang-nhap">Đăng nhập</a>
     </div>
   </form>
 </main>

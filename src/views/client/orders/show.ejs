@@ -5,7 +5,10 @@
   <h1 class="h4 mb-3">Đơn hàng #<%= order.id %></h1>
 
   <div class="mb-3">
-    <div><span class="text-muted">Trạng thái:</span> <%= statusLabel(order.status) %></div>
+    <div>
+      <span class="text-muted">Trạng thái:</span>
+      <span class="badge <%= statusBadge(order.status) %>"><%= statusLabel(order.status) %></span>
+    </div>
     <div><span class="text-muted">Tổng:</span> <%= Number(order.gia || 0).toLocaleString('vi-VN') %> đ</div>
   </div>
 
@@ -13,14 +16,17 @@
     <% if (![2,4].includes(order.status)) { %>
       <form method="post" action="/lich-su-don-hang/<%= order.id %>/huy">
         <input type="hidden" name="_method" value="PATCH" />
-        <button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
+        <button class="btn btn-sm btn-outline-danger" type="submit">Huỷ đơn</button>
       </form>
     <% } %>
     <% if (order.status === 3) { %>
       <form method="post" action="/lich-su-don-hang/<%= order.id %>/da-nhan">
         <input type="hidden" name="_method" value="PATCH" />
-        <button class="btn btn-sm btn-outline-success" type="submit">Mark received</button>
+        <button class="btn btn-sm btn-outline-success" type="submit">Đã nhận hàng</button>
       </form>
+    <% } %>
+    <% if (order.status === 0 && payosEnabled) { %>
+      <a class="btn btn-sm btn-success" href="/thanh-toan/payos/<%= order.id %>">Thanh toán ngay</a>
     <% } %>
   </div>
 
