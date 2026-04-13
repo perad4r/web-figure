@@ -1,3 +1,5 @@
+# Warning: Hiện không dùng để kinh doanh
+
 # web-figure (PMFigure Node.js)
 
 Web bán figure. SSR Express + EJS. MySQL + Knex + Objection.
