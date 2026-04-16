@@ -36,12 +36,12 @@
               <td class="text-end">
                 <% if (!showDeleted) { %>
                   <a class="btn btn-sm btn-outline-secondary" href="/admin/reviews/<%= r.id %>/edit">Sửa</a>
-                  <form method="post" action="/admin/reviews/<%= r.id %>" class="d-inline">
+                  <form method="post" action="/admin/reviews/<%= r.id %>?_method=DELETE" class="d-inline">
                     <input type="hidden" name="_method" value="DELETE" />
                     <button class="btn btn-sm btn-outline-danger" type="submit">Xóa</button>
                   </form>
                 <% } else { %>
-                  <form method="post" action="/admin/reviews/<%= r.id %>/restore" class="d-inline">
+                  <form method="post" action="/admin/reviews/<%= r.id %>/restore?_method=PATCH" class="d-inline">
                     <input type="hidden" name="_method" value="PATCH" />
                     <button class="btn btn-sm btn-outline-success" type="submit">Khôi phục</button>
                   </form>

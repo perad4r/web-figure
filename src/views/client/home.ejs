@@ -1,0 +1,82 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container py-4">
+  <section class="mb-5">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-6">
+        <div class="badge text-bg-danger mb-3">PMFigure</div>
+        <h1 class="display-6 fw-semibold mb-3">Figure anime, mô hình sưu tầm và quà tặng</h1>
+        <p class="text-muted mb-4">Khám phá sản phẩm theo danh mục, xem hàng nổi bật và đi thẳng vào những bộ sưu tập mới nhất.</p>
+        <a class="btn btn-danger" href="/san-pham">Xem tất cả sản phẩm</a>
+      </div>
+      <div class="col-lg-6">
+        <img class="img-fluid rounded-4 border" src="/assets/img/hero.png" alt="PMFigure" />
+      </div>
+    </div>
+  </section>
+
+  <% if (categoriesWithProducts && categoriesWithProducts.length) { %>
+    <% categoriesWithProducts.forEach((category) => { %>
+      <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-end mb-3">
+          <div>
+            <h2 class="h4 mb-1"><%= category.ten %></h2>
+            <div class="text-muted small">Các sản phẩm nổi bật trong danh mục này</div>
+          </div>
+          <a class="btn btn-sm btn-outline-secondary" href="/san-pham?the_loai_id=<%= category.id %>">Xem tất cả</a>
+        </div>
+        <div class="row g-3">
+          <% (category.products || []).forEach((p) => { %>
+            <div class="col-6 col-md-3">
+              <div class="card product-card h-100">
+                <a class="text-decoration-none" href="/san-pham/<%= p.id %>">
+                  <% if (p.hinh_anh) { %>
+                    <img class="card-img-top" src="<%= p.hinh_anh.startsWith('/') ? p.hinh_anh : ('/uploads/' + p.hinh_anh) %>" alt="<%= p.ten %>" />
+                  <% } else { %>
+                    <div class="bg-light" style="height: 180px;"></div>
+                  <% } %>
+                  <div class="card-body text-body">
+                    <div class="fw-semibold"><%= p.ten %></div>
+                    <div class="text-muted small">Tồn kho: <%= Number(p.ton_kho || 0) %></div>
+                    <div class="mt-2 price"><%= Number(p.gia || 0).toLocaleString('vi-VN') %> đ</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </section>
+    <% }) %>
+  <% } %>
+
+  <% if (featuredProducts && featuredProducts.length) { %>
+    <section class="mb-4">
+      <h2 class="h4 mb-3">Sản phẩm mới</h2>
+      <div class="row g-3">
+        <% featuredProducts.forEach((p) => { %>
+          <div class="col-6 col-md-3">
+            <div class="card product-card h-100">
+              <a class="text-decoration-none" href="/san-pham/<%= p.id %>">
+                <% if (p.hinh_anh) { %>
+                  <img class="card-img-top" src="<%= p.hinh_anh.startsWith('/') ? p.hinh_anh : ('/uploads/' + p.hinh_anh) %>" alt="<%= p.ten %>" />
+                <% } else { %>
+                  <div class="bg-light" style="height: 180px;"></div>
+                <% } %>
+                <div class="card-body text-body">
+                  <div class="fw-semibold"><%= p.ten %></div>
+                  <div class="text-muted small"><%= p.theLoai ? p.theLoai.ten : '' %></div>
+                  <div class="text-muted small">Tồn kho: <%= Number(p.ton_kho || 0) %></div>
+                  <div class="mt-2 price"><%= Number(p.gia || 0).toLocaleString('vi-VN') %> đ</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </section>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/foot') %>

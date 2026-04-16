@@ -1,6 +1,5 @@
 const DonHang = require('../models/DonHang');
 const { statusLabel, statusBadge } = require('../helpers/statusHelper');
-const { restoreStock } = require('../services/inventoryService');
 const { getKnex } = require('../config/database');
 
 async function orderHistory(req, res) {
@@ -42,37 +41,40 @@ async function cancelOrder(req, res) {
   const id = Number(req.params.id);
   const order = await DonHang.query().findById(id);
   if (!order || order.user_id !== req.user.id) {
-    return res.status(404).json({ error: 'Order not found' });
+    req.flash('danger', 'Không tìm thấy đơn hàng.');
+    return res.redirect('/lich-su-don-hang');
   }
 
-  if ([DonHang.STATUS.CANCELLED, DonHang.STATUS.RECEIVED].includes(order.status)) {
-    return res.status(400).json({ error: 'Cannot cancel' });
+  if ([DonHang.STATUS.CANCELLED, DonHang.STATUS.RECEIVED, DonHang.STATUS.SHIPPING].includes(order.status)) {
+    req.flash('danger', 'Không thể huỷ đơn hàng này vì đơn đã được xử lý hoặc đang giao.');
+    return res.redirect(`/lich-su-don-hang/${id}`);
   }
 
   const knex = getKnex();
   await knex.transaction(async (trx) => {
-    if (order.status === DonHang.STATUS.SHIPPING) {
-      await restoreStock(order.id, trx);
-    }
     await order.$query(trx).patch({ status: DonHang.STATUS.CANCELLED });
   });
 
-  return res.json({ ok: true });
+  req.flash('success', 'Đã huỷ đơn hàng thành công.');
+  return res.redirect(`/lich-su-don-hang/${id}`);
 }
 
 async function markReceived(req, res) {
   const id = Number(req.params.id);
   const order = await DonHang.query().findById(id);
   if (!order || order.user_id !== req.user.id) {
-    return res.status(404).json({ error: 'Order not found' });
+    req.flash('danger', 'Không tìm thấy đơn hàng.');
+    return res.redirect('/lich-su-don-hang');
   }
 
   if (order.status !== DonHang.STATUS.SHIPPING) {
-    return res.status(400).json({ error: 'Not in shipping status' });
+    req.flash('danger', 'Chỉ có thể xác nhận đã nhận cho đơn đang giao.');
+    return res.redirect(`/lich-su-don-hang/${id}`);
   }
 
   await order.$query().patch({ status: DonHang.STATUS.RECEIVED });
-  return res.json({ ok: true });
+  req.flash('success', 'Đã xác nhận nhận hàng.');
+  return res.redirect(`/lich-su-don-hang/${id}`);
 }
 
 module.exports = {

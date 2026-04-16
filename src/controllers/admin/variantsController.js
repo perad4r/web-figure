@@ -13,6 +13,14 @@ async function withSelectedOption(options, id, loader, labelKey = 'ten') {
   return [{ ...row, _softDeleted: true, [labelKey]: `[DELETED] ${row[labelKey]}` }, ...options];
 }
 
+async function syncParentStock(hangId) {
+  if (!hangId) return;
+  const parent = await Hang.queryWithDeleted().findById(hangId);
+  if (parent) {
+    await parent.syncStockFromVariants();
+  }
+}
+
 async function index(req, res) {
   const showDeleted = String(req.query.deleted || '') === '1';
   const hangId = req.query.hang_id ? Number(req.query.hang_id) : null;
@@ -98,6 +106,8 @@ async function create(req, res) {
     ton_kho,
   });
 
+  await syncParentStock(hang_id);
+
   req.flash('success', 'Variant created');
   return res.redirect(`/admin/variants?hang_id=${hang_id}`);
 }
@@ -159,6 +169,10 @@ async function update(req, res) {
   if (req.file) patch.hinh_anh = `variants/${req.file.filename}`;
 
   await row.$query().patch(patch);
+  if (row.hang_id !== hang_id) {
+    await syncParentStock(row.hang_id);
+  }
+  await syncParentStock(hang_id);
   req.flash('success', 'Variant updated');
   return res.redirect(`/admin/variants?hang_id=${hang_id}`);
 }
@@ -170,6 +184,7 @@ async function destroy(req, res) {
 
   const knex = getKnex();
   await knex('bien_the_hangs').where({ id }).update({ deleted_at: knex.fn.now(), updated_at: knex.fn.now() });
+  await syncParentStock(row.hang_id);
   req.flash('success', 'Variant deleted');
   return res.redirect(`/admin/variants?hang_id=${row.hang_id}`);
 }
@@ -181,6 +196,7 @@ async function restore(req, res) {
 
   const knex = getKnex();
   await knex('bien_the_hangs').where({ id }).update({ deleted_at: null, updated_at: knex.fn.now() });
+  await syncParentStock(row.hang_id);
   req.flash('success', 'Variant restored');
   return res.redirect('/admin/variants?deleted=1');
 }

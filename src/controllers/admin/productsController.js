@@ -33,7 +33,6 @@ async function newForm(req, res) {
 async function create(req, res) {
   const ten = String(req.body.ten || '').trim();
   const gia = Number(req.body.gia || 0);
-  const ton_kho = Number(req.body.ton_kho || 0);
   const mo_ta = req.body.mo_ta ? String(req.body.mo_ta).trim() : null;
   const the_loai_id = Number(req.body.the_loai_id || 0);
 
@@ -52,7 +51,7 @@ async function create(req, res) {
   await Hang.queryWithDeleted().insert({
     ten,
     gia,
-    ton_kho,
+    ton_kho: 0,
     hinh_anh: imagePath,
     mo_ta,
     the_loai_id,
@@ -79,7 +78,6 @@ async function update(req, res) {
 
   const ten = String(req.body.ten || '').trim();
   const gia = Number(req.body.gia || 0);
-  const ton_kho = Number(req.body.ton_kho || 0);
   const mo_ta = req.body.mo_ta ? String(req.body.mo_ta).trim() : null;
   const the_loai_id = Number(req.body.the_loai_id || 0);
 
@@ -93,7 +91,7 @@ async function update(req, res) {
     });
   }
 
-  const patch = { ten, gia, ton_kho, mo_ta, the_loai_id };
+  const patch = { ten, gia, mo_ta, the_loai_id };
   if (req.file) patch.hinh_anh = `products/${req.file.filename}`;
   if (req.body.hinh_anh !== undefined && req.body.hinh_anh !== '') patch.hinh_anh = req.body.hinh_anh;
 

@@ -15,7 +15,7 @@
     <div><%= row.user?.email || '' %></div>
   </div>
 
-  <form method="post" action="/admin/reviews/<%= row.id %>" class="vstack gap-2">
+  <form method="post" action="/admin/reviews/<%= row.id %>?_method=PUT" class="vstack gap-2">
     <input type="hidden" name="_method" value="PUT" />
     <div>
       <label class="form-label">Điểm</label>

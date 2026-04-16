@@ -17,34 +17,58 @@
     <div class="col-md-7">
       <h1 class="h4"><%= product.ten %></h1>
       <div class="text-muted mb-2"><%= product.theLoai ? product.theLoai.ten : '' %></div>
-    <div class="h5 mb-3 price"><%= Number(product.gia).toLocaleString('vi-VN') %> đ</div>
+      <div class="h5 mb-3 price"><%= Number(product.gia).toLocaleString('vi-VN') %> đ</div>
+      <div class="text-muted mb-3">Tổng tồn kho: <%= Number(product.ton_kho || 0) %></div>
 
-    <% if (user && product.variants && product.variants.length > 0) { %>
-      <form method="post" action="/giohangs" class="row g-2 align-items-end mb-3">
-        <div class="col-md-7">
-          <label class="form-label">Chọn biến thể</label>
-          <select class="form-select" name="variant_id" required>
-            <% product.variants.forEach((v) => { %>
-              <option value="<%= v.id %>">
-                <%= v.color ? v.color.ten : '?' %> / <%= v.size ? v.size.ten : '?' %>
-                — <%= Number(v.gia).toLocaleString('vi-VN') %> đ (tồn kho <%= v.ton_kho %>)
-              </option>
-            <% }) %>
-          </select>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Số lượng</label>
-          <input class="form-control" type="number" name="so_luong" min="1" value="1" />
-        </div>
-        <div class="col-md-2 d-grid">
-          <button class="btn pm-btn-red" type="submit">Thêm vào giỏ</button>
-        </div>
-      </form>
-    <% } %>
+      <% if (user && product.variants && product.variants.length > 0) { %>
+        <form method="post" action="/giohangs" class="row g-2 align-items-end mb-3">
+          <div class="col-md-7">
+            <label class="form-label">Chọn biến thể</label>
+            <select class="form-select" name="variant_id" required>
+              <% product.variants.forEach((v) => { %>
+                <option value="<%= v.id %>">
+                  <%= v.color ? v.color.ten : '?' %> / <%= v.size ? v.size.ten : '?' %>
+                  - <%= Number(v.gia).toLocaleString('vi-VN') %> đ (tồn kho <%= v.ton_kho %>)
+                </option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Số lượng</label>
+            <input class="form-control" type="number" name="so_luong" min="1" value="1" />
+          </div>
+          <div class="col-md-2 d-grid">
+            <button class="btn pm-btn-red" type="submit">Thêm vào giỏ</button>
+          </div>
+        </form>
+      <% } %>
 
-    <% if (product.mo_ta) { %>
-      <div class="mb-3"><%= product.mo_ta %></div>
-    <% } %>
+      <% if (product.mo_ta) { %>
+        <div class="mb-3"><%= product.mo_ta %></div>
+      <% } %>
+
+      <% if (canReview) { %>
+        <section class="mt-4 mb-4">
+          <h2 class="h6">Viết đánh giá</h2>
+          <form method="post" action="/danhgia/client" class="vstack gap-2">
+            <input type="hidden" name="hang_id" value="<%= product.id %>" />
+            <input type="hidden" name="return_url" value="/san-pham/<%= product.id %>" />
+            <div class="row g-2">
+              <div class="col-md-3">
+                <label class="form-label">Điểm</label>
+                <input class="form-control" type="number" min="1" max="5" name="rating" value="5" />
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Nội dung</label>
+              <textarea class="form-control" name="danh_gia" rows="4" required></textarea>
+            </div>
+            <div>
+              <button class="btn btn-danger" type="submit">Gửi đánh giá</button>
+            </div>
+          </form>
+        </section>
+      <% } %>
 
       <h2 class="h6 mt-4">Biến thể</h2>
       <% if (!product.variants || product.variants.length === 0) { %>
@@ -67,6 +91,25 @@
           <% }) %>
         </div>
       <% } %>
+
+      <section class="mt-5">
+        <h2 class="h6 mb-3">Đánh giá từ khách hàng</h2>
+        <% if (!reviews || reviews.length === 0) { %>
+          <div class="alert alert-secondary">Chưa có đánh giá.</div>
+        <% } else { %>
+          <div class="vstack gap-3">
+            <% reviews.forEach((review) => { %>
+              <div class="border rounded p-3">
+                <div class="d-flex justify-content-between gap-2">
+                  <div class="fw-semibold">Khách hàng #<%= review.user_id || review.id %></div>
+                  <div class="text-muted small"><%= review.rating || '' %>/5</div>
+                </div>
+                <div class="mt-2"><%= review.danh_gia %></div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </section>
     </div>
   </div>
 </main>

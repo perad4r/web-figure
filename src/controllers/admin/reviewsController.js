@@ -24,6 +24,8 @@ async function index(req, res) {
 
 async function destroy(req, res) {
   const id = Number(req.params.id);
+  const row = await DanhGia.queryWithDeleted().findById(id);
+  if (!row) return res.redirect('/admin/reviews');
   const knex = getKnex();
   await knex('danh_gias').where({ id }).update({ deleted_at: knex.fn.now(), updated_at: knex.fn.now() });
   req.flash('success', 'Review deleted');
@@ -32,6 +34,8 @@ async function destroy(req, res) {
 
 async function restore(req, res) {
   const id = Number(req.params.id);
+  const row = await DanhGia.queryWithDeleted().findById(id);
+  if (!row) return res.redirect('/admin/reviews?deleted=1');
   const knex = getKnex();
   await knex('danh_gias').where({ id }).update({ deleted_at: null, updated_at: knex.fn.now() });
   req.flash('success', 'Review restored');
