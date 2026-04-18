@@ -16,7 +16,7 @@ async function home(req, res) {
         .where('the_loai_id', category.id)
         .withGraphFetched('variants.[color, size]')
         .orderBy('id', 'desc')
-        .limit(4);
+        .limit(5);
 
       return { ...category, products };
     })

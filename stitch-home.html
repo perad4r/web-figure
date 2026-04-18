@@ -1,26 +1,6 @@
-<% const pageSeo = typeof seo !== 'undefined' && seo ? seo : {}; %>
 <!DOCTYPE html>
-<html class="light" lang="vi">
-<head>
-    
-    
-    
-    <meta name="description" content="<%= pageSeo.description || 'PMFigure - cửa hàng figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật.' %>" />
-    <% if (pageSeo.keywords) { %><meta name="keywords" content="<%= pageSeo.keywords %>" /><% } %>
-    <meta property="og:locale" content="<%= pageSeo.ogLocale || 'vi_VN' %>" />
-    <meta property="og:type" content="<%= pageSeo.ogType || 'website' %>" />
-    <meta property="og:title" content="<%= pageSeo.title || title || 'PMFigure' %>" />
-    <meta property="og:description" content="<%= pageSeo.description || 'PMFigure - cửa hàng figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật.' %>" />
-    <meta property="og:site_name" content="PMFigure" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="<%= pageSeo.title || title || 'PMFigure' %>" />
-    <meta name="twitter:description" content="<%= pageSeo.description || 'PMFigure - cửa hàng figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật.' %>" />
-    <% if (pageSeo.canonicalUrl) { %><link rel="canonical" href="<%= pageSeo.canonicalUrl %>" /><meta property="og:url" content="<%= pageSeo.canonicalUrl %>" /><% } %>
-    <link rel="icon" href="/favicons/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
-    <link rel="manifest" href="/favicons/manifest.webmanifest" />
+
+<html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Pick Miu Store - The Digital Curator</title>
@@ -104,7 +84,7 @@
           },
         }
     </script>
-<style>a { text-decoration: none !important; } 
+<style>
         /* Soft Minimalism & Editorial Spacing Overrides */
         body {
             background-color: theme('colors.surface');
@@ -130,24 +110,22 @@
 <!-- 1. TopNavBar -->
 <nav class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl font-['Plus_Jakarta_Sans'] tracking-tight fixed top-0 w-full z-50 tonal shift via surface-container-low shadow-sm shadow-pink-100/20 dark:shadow-none">
 <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
-<div class="text-2xl font-bold italic text-pink-600 dark:text-pink-400"><a href="/" style="text-decoration:none;color:inherit;">PMFigure</a></div>
-<form class="hidden md:flex flex-1 max-w-xl mx-8 relative" method="get" action="/san-pham">
-<input name="q" class="w-full bg-surface-container-high rounded-full py-2.5 pl-12 pr-4 text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container border-none shadow-inner placeholder-on-surface-variant/50" placeholder="Search figures..." type="text"/>
+<div class="text-2xl font-bold italic text-pink-600 dark:text-pink-400">Pick Miu</div>
+<div class="hidden md:flex flex-1 max-w-xl mx-8 relative">
+<input class="w-full bg-surface-container-high rounded-full py-2.5 pl-12 pr-4 text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container border-none shadow-inner placeholder-on-surface-variant/50" placeholder="Search figures..." type="text"/>
 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
-</form>
+</div>
 <div class="flex items-center gap-6">
-<a href="/san-pham" class="text-zinc-500 dark:text-zinc-400 hover:text-pink-400 hover:opacity-80 transition-opacity active:scale-95 duration-200 ease-in-out md:hidden flex">
+<button class="text-zinc-500 dark:text-zinc-400 hover:text-pink-400 hover:opacity-80 transition-opacity Active: scale-95 duration-200 ease-in-out md:hidden">
 <span class="material-symbols-outlined" data-icon="search">search</span>
-</a>
-<a href="/giohangs" class="text-zinc-500 dark:text-zinc-400 hover:text-pink-400 hover:opacity-80 transition-opacity active:scale-95 duration-200 ease-in-out relative block">
+</button>
+<button class="text-zinc-500 dark:text-zinc-400 hover:text-pink-400 hover:opacity-80 transition-opacity Active: scale-95 duration-200 ease-in-out relative">
 <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-<% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
-<span class="absolute -top-1 -right-1 bg-primary text-on-primary text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center"><%= cartCount %></span>
-<% } %>
-</a>
-<a href="<%= (typeof user !== 'undefined' && user) ? '/ho-so' : '/dang-nhap' %>" class="text-zinc-500 dark:text-zinc-400 hover:text-pink-400 hover:opacity-80 transition-opacity active:scale-95 duration-200 ease-in-out hidden md:block">
+<span class="absolute -top-1 -right-1 bg-primary text-on-primary text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">3</span>
+</button>
+<button class="text-zinc-500 dark:text-zinc-400 hover:text-pink-400 hover:opacity-80 transition-opacity Active: scale-95 duration-200 ease-in-out hidden md:block">
 <span class="material-symbols-outlined" data-icon="person">person</span>
-</a>
+</button>
 </div>
 </div>
 </nav>
@@ -177,47 +155,64 @@
 </section>
 <!-- 3. Dual Static Banners -->
 <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<a href="/san-pham" class="block rounded-xl overflow-hidden h-[250px] relative group cursor-pointer">
+<div class="rounded-xl overflow-hidden h-[250px] relative group cursor-pointer">
 <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="close up macro shot of a detailed fantasy miniature figure against a pure white background with soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGqbMrzDp-R0e7m8mj8ZCf0_CvxSTppEgWHAvUU5nD9SKm6EpekL2R4K99yC9CGk5e1dxYGv7vXNu3dG7B4xaHnaJLEwj6LRRGvkMujBgOaHk4qet6cQzgnfHIgarB-kuJm_4QxjcUW2QXqYglpL2SWFYfpF4fezDgDDU4lHKOZBUN4RBdCQMh1bLby4JI5eSQGPur33rFbfzCA1dLxhitNqfdD1cr8YJcBw1LbIdDIpozKlJOQ5kP_IaL8I2vMMS5LNX3GBjn7pN-"/>
 <div class="absolute inset-0 bg-gradient-to-t from-surface/90 via-surface/20 to-transparent p-6 flex flex-col justify-end">
 <h3 class="font-headline text-2xl font-bold text-on-surface">Pre-Orders Open</h3>
 <p class="font-body text-sm text-primary mt-1 font-medium">Secure yours now →</p>
 </div>
-</a>
-<a href="/san-pham" class="block rounded-xl overflow-hidden h-[250px] relative group cursor-pointer">
+</div>
+<div class="rounded-xl overflow-hidden h-[250px] relative group cursor-pointer">
 <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="aesthetic minimalist setup featuring a small cute styled vinyl figure sitting on a light oak desk with soft morning sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGUxEd3e3KGGq2OiDfTl-Yag6slW891ds0ms_xmqy35wRndZ47YSFFgM_B33xtSRs0O1rcdtasLD04qphxlbl0kQ0Mq8RWFZEtAigIplPx0Hk9vJA9oauLc1q0AliTpO-9rA2dDPpH_MywZV4z3XN3RskauPp4-idAyZDE1Ux1KJ9x_oXaA2f4p9ziP67uoOC9MZRW2jQPzF_yy6BPU5PveJ4PREFo2sKSxiZvEHw3kFdd8fX21f133realcZXcfvWs0ZgIG9bt_Qw"/>
 <div class="absolute inset-0 bg-gradient-to-t from-surface/90 via-surface/20 to-transparent p-6 flex flex-col justify-end">
 <h3 class="font-headline text-2xl font-bold text-on-surface">New Arrivals</h3>
 <p class="font-body text-sm text-primary mt-1 font-medium">Shop latest collections →</p>
 </div>
-</a>
+</div>
 </section>
 <!-- 4. Circular Categories -->
 <section>
 <div class="flex justify-between items-end mb-8">
-<h2 class="font-headline text-2xl font-bold text-on-surface">Danh Mục</h2>
-<a class="font-body text-sm text-primary hover:text-primary-container font-medium" href="/san-pham" style="text-decoration:none;">Xem tất cả</a>
+<h2 class="font-headline text-2xl font-bold text-on-surface">Curated Categories</h2>
+<a class="font-body text-sm text-primary hover:text-primary-container font-medium" href="#">Xem tất cả</a>
 </div>
 <div class="flex overflow-x-auto gap-8 pb-4 no-scrollbar">
-<% if (categoriesWithProducts && categoriesWithProducts.length) { %>
-  <% categoriesWithProducts.forEach((category) => { 
-      let catImg = '';
-      if (category.products && category.products.length > 0 && category.products[0].hinh_anh) {
-          catImg = category.products[0].hinh_anh.startsWith('/') ? category.products[0].hinh_anh : '/uploads/' + category.products[0].hinh_anh;
-      }
-  %>
-  <a href="/san-pham?the_loai_id=<%= category.id %>" class="flex flex-col items-center gap-3 min-w-[80px] group cursor-pointer" style="text-decoration:none;">
-    <div class="w-20 h-20 rounded-full bg-surface-container-lowest p-1 shadow-sm ring-2 ring-surface-variant group-hover:ring-primary-container transition-all">
-      <% if (catImg) { %>
-        <img class="w-full h-full object-cover rounded-full" src="<%= catImg %>" alt="<%= category.ten %>"/>
-      <% } else { %>
-        <div class="w-full h-full rounded-full bg-surface-dim"></div>
-      <% } %>
-    </div>
-    <span class="font-body text-sm font-medium text-on-surface-variant group-hover:text-primary transition-colors text-center line-clamp-1"><%= category.ten %></span>
-  </a>
-  <% }) %>
-<% } %>
+<div class="flex flex-col items-center gap-3 min-w-[80px] group cursor-pointer">
+<div class="w-20 h-20 rounded-full bg-surface-container-lowest p-1 shadow-sm ring-2 ring-surface-variant group-hover:ring-primary-container transition-all">
+<img class="w-full h-full object-cover rounded-full" data-alt="close up of a super deformed cute anime figure face isolated on white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgMiwu9iBLXplNRfY3Wr2AnMGy46on6ddxCXRXInYLVJkVp-W9hNSH78kzee0pZD7g5dqaxqL9Hz7mRC5jQnh0eOREkkeFf_FHs3jzXEUn8kKtAwFBynfiD8RT38nfLcMtp3YsbLfIMJh-zUyetM8GorCZVVhutZuMZrm_3X_zyhbNfv4JZhNeaHbK53kvon-JjIT5puK7KwOUTwMnP3kYZsat-u6BvHawIZgxYokYgaV0-XPsVUL30BlEi83Jsz2hH13zbnamseuV"/>
+</div>
+<span class="font-body text-sm font-medium text-on-surface-variant group-hover:text-primary transition-colors">Nendoroid</span>
+</div>
+<div class="flex flex-col items-center gap-3 min-w-[80px] group cursor-pointer">
+<div class="w-20 h-20 rounded-full bg-surface-container-lowest p-1 shadow-sm ring-2 ring-surface-variant group-hover:ring-primary-container transition-all">
+<img class="w-full h-full object-cover rounded-full" data-alt="elegant 1/7 scale anime figure in a flowing dress against a soft pastel background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlsOtPEMCbLxnN5gGSJu6LZjGlOHZjSHcHzSAPctSk28PfCb6ekUVPYlYXB2DlP06TVhzTKaKrHLLy9a3T1l6xcDU4_FDY2oZLm-bdKqKzcAsaFfccU4Z1JqyXZi0H9513E35NKiZbsihsc8jI5oUAhqLDUmYtB_-npEKBXYkf11JGxAQLcxPCcYmp7bu3_2hs1mSHRr5FXWfGQkEkYVf85HCL1w2tYCvRAkBv_llizY9huj0LPoEK-0NSC3QXcRSrKdD3k8vR14Rc"/>
+</div>
+<span class="font-body text-sm font-medium text-on-surface-variant group-hover:text-primary transition-colors">Scale Figure</span>
+</div>
+<div class="flex flex-col items-center gap-3 min-w-[80px] group cursor-pointer">
+<div class="w-20 h-20 rounded-full bg-surface-container-lowest p-1 shadow-sm ring-2 ring-surface-variant group-hover:ring-primary-container transition-all">
+<img class="w-full h-full object-cover rounded-full" data-alt="articulated action figure posed dynamically with accessories on a clean studio surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMjL9_BXODSGpfWjV4y5Zzu5TARe-_73igkHZy98UERMs75bysFaerjM94p-bRin75pZjcuHICB3LI82-uqKGa7gjAgRN8If_8YpQXXJiAtocxs3JJgyqeaUMXT8_77jtccCC1OTqYHfOUyEZxkmuzLask4WY_i9RLqGIiuksuNSvZFAhXgaLDVNcCCwlqaRND_Gs1ombkIkU_y6ELnPrp3j3B5rSpOQhdcZhHhnDI9k8rOCMgAh1LM5oXx7G6OqIpUHhW6ShRfeyG"/>
+</div>
+<span class="font-body text-sm font-medium text-on-surface-variant group-hover:text-primary transition-colors">Figma</span>
+</div>
+<div class="flex flex-col items-center gap-3 min-w-[80px] group cursor-pointer">
+<div class="w-20 h-20 rounded-full bg-surface-container-lowest p-1 shadow-sm ring-2 ring-surface-variant group-hover:ring-primary-container transition-all">
+<img class="w-full h-full object-cover rounded-full" data-alt="collection of small mystery box blind box vinyl toys arranged neatly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4kcn3wqbKk7Z_e1XfcbvKacWFNp9Hwc12D2ZS1q8Ggyf5-8Yk1yplj4DVpCsy24mCiPpS-928G_vq-ikVPgbEOWY8noFmylo9YCW0qSi_yALFVE0PW8SB-e6z0HAK0iWGugynskAIgV5M8j1s9BPdUcF7qsHWicn28FdnJElvhgd7zQeQ5st2PQaFjmV-VXbeIJK75ZRhW7KjLDmJ0CpBrIYypvUpMn0I8vVrfEYJVAQ5LMwWxGkfE7OGeKOFBgGXoDPt-7qxnGpn"/>
+</div>
+<span class="font-body text-sm font-medium text-on-surface-variant group-hover:text-primary transition-colors">Blind Box</span>
+</div>
+<div class="flex flex-col items-center gap-3 min-w-[80px] group cursor-pointer">
+<div class="w-20 h-20 rounded-full bg-surface-container-lowest p-1 shadow-sm ring-2 ring-surface-variant group-hover:ring-primary-container transition-all">
+<img class="w-full h-full object-cover rounded-full" data-alt="premium detailed mecha robot model kit fully assembled with panel lining" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0ltSuUe7eSl6xtG5zhkP2u_DBzHAr3BQD6DxFxV5-YvWvU2NV9EK749fhygUwjPKTbMVA6efI2VZ5ojs9FwqjPc5Ina8tlOz2e0RM1VrnzLBOm72AS_pFTeuks6CifTbK1lp7pZ6SkDmN7EfdZdlqGH4ZhpHBsWINRVIF1YMGczZ_70-NUSvRexQfJbsWRh19lDuuwjxg-OEtwsdZdORps3kUTX2zejkPM7a6mml_jSmoAgVkh-rjMuGcoPcT0JmRAk0IzBzFv7XX"/>
+</div>
+<span class="font-body text-sm font-medium text-on-surface-variant group-hover:text-primary transition-colors">Model Kits</span>
+</div>
+<div class="flex flex-col items-center gap-3 min-w-[80px] group cursor-pointer">
+<div class="w-20 h-20 rounded-full bg-surface-container-lowest p-1 shadow-sm ring-2 ring-surface-variant group-hover:ring-primary-container transition-all">
+<img class="w-full h-full object-cover rounded-full" data-alt="soft plush toy doll with cute features sitting on a light colored velvet cushion" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzEW67yzBp97SrbNyc-_xwWY6w773BCUtECH4TM11gGzW-wwk9eVBA3Dur1qdJZxo4wRt9Q3k1YKXZxeF4kRFtPgpf9Q3oTXDF7P83Q1rotBfthcXAshN-dMvZeJ1KjwflMX-YUXlucZvelyno85i7JgbxYifJrytQXA8zj7GHn0Z4owVdy85X2qhfF2KVhzQQmENBrwrmaXVCn9-Fkpiyhgeh6B1ma_u2Bp-0fRlAVZ_QYCarOocrhhRdHdLuv9Sfr-y7S5g-p_B1"/>
+</div>
+<span class="font-body text-sm font-medium text-on-surface-variant group-hover:text-primary transition-colors">Plushies</span>
+</div>
 </div>
 </section>
 <!-- 5. Partners Carousel -->
@@ -230,44 +225,96 @@
 </div>
 </section>
 <!-- 6. Product Section -->
-<% if (categoriesWithProducts && categoriesWithProducts.length) { %>
-<% categoriesWithProducts.forEach((category) => { %>
-<% if (category.products && category.products.length > 0) { %>
-<section class="mb-12">
-<div class="mb-6 flex justify-between items-center">
-<span class="bg-primary text-on-primary font-headline font-bold text-lg px-6 py-2 rounded-r-full inline-block shadow-md"><%= category.ten %></span>
-<a href="/san-pham?the_loai_id=<%= category.id %>" class="font-body text-sm text-primary hover:text-primary-container font-medium pr-4" style="text-decoration:none;">Xem thêm <%= category.ten %> &rarr;</a>
+<section>
+<div class="mb-6">
+<span class="bg-primary text-on-primary font-headline font-bold text-lg px-6 py-2 rounded-r-full inline-block shadow-md">Nendoroid</span>
 </div>
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
-<% category.products.forEach((p) => { %>
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group border border-surface-variant h-full">
-<a href="/san-pham/<%= p.id %>" class="flex flex-col h-full focus:outline-none" style="text-decoration:none;color:inherit;">
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+<!-- Product Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group border border-surface-variant">
 <div class="relative pt-[100%] overflow-hidden bg-surface-container-low">
-<% if (p.hinh_anh) { %>
-<img alt="<%= p.ten %>" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="<%= p.hinh_anh.startsWith('/') ? p.hinh_anh : ('/uploads/' + p.hinh_anh) %>"/>
-<% } else { %>
-<div class="absolute inset-0 w-full h-full bg-surface-dim group-hover:scale-105 transition-transform duration-500"></div>
-<% } %>
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgMiwu9iBLXplNRfY3Wr2AnMGy46on6ddxCXRXInYLVJkVp-W9hNSH78kzee0pZD7g5dqaxqL9Hz7mRC5jQnh0eOREkkeFf_FHs3jzXEUn8kKtAwFBynfiD8RT38nfLcMtp3YsbLfIMJh-zUyetM8GorCZVVhutZuMZrm_3X_zyhbNfv4JZhNeaHbK53kvon-JjIT5puK7KwOUTwMnP3kYZsat-u6BvHawIZgxYokYgaV0-XPsVUL30BlEi83Jsz2hH13zbnamseuV"/>
 </div>
 <div class="p-4 flex flex-col flex-1">
-<h4 class="font-body text-sm text-on-surface-variant mb-2 line-clamp-2"><%= p.ten %></h4>
-<div class="mt-auto block w-full">
-<div class="text-xs text-on-surface-variant mb-1">Tồn kho: <%= Number(p.ton_kho || 0) %></div>
-<div class="font-headline font-bold text-primary text-lg mb-3"><%= Number(p.gia || 0).toLocaleString('vi-VN') %>đ</div>
-<button class="w-full bg-primary-container/20 text-primary hover:bg-primary hover:text-on-primary font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 pointer-events-none">
+<h4 class="font-body text-sm text-on-surface-variant mb-2 line-clamp-2">( Hàng Order chưa về ) Mô hình Anime - Umamusume: Pretty Derby - Kitasan...</h4>
+<div class="mt-auto">
+<div class="font-headline font-bold text-primary text-lg mb-3">1.800.000đ</div>
+<button class="w-full bg-primary-container/20 text-primary hover:bg-primary hover:text-on-primary font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
 <span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
-Chọn mua
-</button>
+                        Chọn mua
+                    </button>
 </div>
 </div>
-</a>
 </div>
-<% }) %>
+<!-- Product Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group border border-surface-variant">
+<div class="relative pt-[100%] overflow-hidden bg-surface-container-low">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlsOtPEMCbLxnN5gGSJu6LZjGlOHZjSHcHzSAPctSk28PfCb6ekUVPYlYXB2DlP06TVhzTKaKrHLLy9a3T1l6xcDU4_FDY2oZLm-bdKqKzcAsaFfccU4Z1JqyXZi0H9513E35NKiZbsihsc8jI5oUAhqLDUmYtB_-npEKBXYkf11JGxAQLcxPCcYmp7bu3_2hs1mSHRr5FXWfGQkEkYVf85HCL1w2tYCvRAkBv_llizY9huj0LPoEK-0NSC3QXcRSrKdD3k8vR14Rc"/>
 </div>
+<div class="p-4 flex flex-col flex-1">
+<h4 class="font-body text-sm text-on-surface-variant mb-2 line-clamp-2">( Hàng Order chưa về ) Nendoroid Hatsune Miku Glasses x Cafe Ver -...</h4>
+<div class="mt-auto">
+<div class="font-headline font-bold text-primary text-lg mb-3">1.200.000đ</div>
+<button class="w-full bg-primary-container/20 text-primary hover:bg-primary hover:text-on-primary font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+                        Chọn mua
+                    </button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group border border-surface-variant">
+<div class="relative pt-[100%] overflow-hidden bg-surface-container-low">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMjL9_BXODSGpfWjV4y5Zzu5TARe-_73igkHZy98UERMs75bysFaerjM94p-bRin75pZjcuHICB3LI82-uqKGa7gjAgRN8If_8YpQXXJiAtocxs3JJgyqeaUMXT8_77jtccCC1OTqYHfOUyEZxkmuzLask4WY_i9RLqGIiuksuNSvZFAhXgaLDVNcCCwlqaRND_Gs1ombkIkU_y6ELnPrp3j3B5rSpOQhdcZhHhnDI9k8rOCMgAh1LM5oXx7G6OqIpUHhW6ShRfeyG"/>
+</div>
+<div class="p-4 flex flex-col flex-1">
+<h4 class="font-body text-sm text-on-surface-variant mb-2 line-clamp-2">( Hàng Order chưa về ) Mô hình Anime - Vocaloid - Hatsune Miku -...</h4>
+<div class="mt-auto">
+<div class="font-headline font-bold text-primary text-lg mb-3">1.300.000đ</div>
+<button class="w-full bg-primary-container/20 text-primary hover:bg-primary hover:text-on-primary font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+                        Chọn mua
+                    </button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group border border-surface-variant">
+<div class="relative pt-[100%] overflow-hidden bg-surface-container-low">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4kcn3wqbKk7Z_e1XfcbvKacWFNp9Hwc12D2ZS1q8Ggyf5-8Yk1yplj4DVpCsy24mCiPpS-928G_vq-ikVPgbEOWY8noFmylo9YCW0qSi_yALFVE0PW8SB-e6z0HAK0iWGugynskAIgV5M8j1s9BPdUcF7qsHWicn28FdnJElvhgd7zQeQ5st2PQaFjmV-VXbeIJK75ZRhW7KjLDmJ0CpBrIYypvUpMn0I8vVrfEYJVAQ5LMwWxGkfE7OGeKOFBgGXoDPt-7qxnGpn"/>
+</div>
+<div class="p-4 flex flex-col flex-1">
+<h4 class="font-body text-sm text-on-surface-variant mb-2 line-clamp-2">( Hàng Order chưa về ) Nendoroid - Hatsune Miku Vocaloid from MGP...</h4>
+<div class="mt-auto">
+<div class="font-headline font-bold text-primary text-lg mb-3">1.300.000đ</div>
+<button class="w-full bg-primary-container/20 text-primary hover:bg-primary hover:text-on-primary font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+                        Chọn mua
+                    </button>
+</div>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group border border-surface-variant hidden md:flex">
+<div class="relative pt-[100%] overflow-hidden bg-surface-container-low">
+<img alt="Product Image" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0ltSuUe7eSl6xtG5zhkP2u_DBzHAr3BQD6DxFxV5-YvWvU2NV9EK749fhygUwjPKTbMVA6efI2VZ5ojs9FwqjPc5Ina8tlOz2e0RM1VrnzLBOm72AS_pFTeuks6CifTbK1lp7pZ6SkDmN7EfdZdlqGH4ZhpHBsWINRVIF1YMGczZ_70-NUSvRexQfJbsWRh19lDuuwjxg-OEtwsdZdORps3kUTX2zejkPM7a6mml_jSmoAgVkh-rjMuGcoPcT0JmRAk0IzBzFv7XX"/>
+</div>
+<div class="p-4 flex flex-col flex-1">
+<h4 class="font-body text-sm text-on-surface-variant mb-2 line-clamp-2">( Hàng Order chưa về ) Mô hình Anime - Vocaloid - Hatsune Miku -...</h4>
+<div class="mt-auto">
+<div class="font-headline font-bold text-primary text-lg mb-3">1.300.000đ</div>
+<button class="w-full bg-primary-container/20 text-primary hover:bg-primary hover:text-on-primary font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+                        Chọn mua
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full border-2 border-outline-variant text-primary hover:bg-primary hover:text-on-primary hover:border-primary font-medium py-3 rounded-xl transition-all">
+        Xem thêm 37 sản phẩm
+    </button>
 </section>
-<% } %>
-<% }) %>
-<% } %>
 <!-- 7. Service Promises Grid -->
 <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-12 border-t border-surface-variant">
 <div class="flex flex-col items-center text-center p-4">
@@ -392,23 +439,22 @@ Chọn mua
 </section>
 </main>
 <!-- 2. BottomNavBar (Mobile Only) -->
-<nav class="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-lg font-['Manrope'] text-[10px] font-medium fixed bottom-0 w-full z-50 rounded-t-2xl no-border tonal layering shadow-[0_-4px_20px_rgba(240,98,146,0.08)] fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 md:hidden"><a href="/" class="flex flex-col items-center justify-center text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/20 rounded-xl px-4 py-1 hover:text-pink-300 active:scale-90 duration-150" style="text-decoration:none;">
+<nav class="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-lg font-['Manrope'] text-[10px] font-medium fixed bottom-0 w-full z-50 rounded-t-2xl no-border tonal layering shadow-[0_-4px_20px_rgba(240,98,146,0.08)] fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 md:hidden">
+<button class="flex flex-col items-center justify-center text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/20 rounded-xl px-4 py-1 hover:text-pink-300 Active: scale-90 duration-150">
 <span class="material-symbols-outlined mb-1" data-icon="home" data-weight="fill">home</span>
 <span>Home</span>
-</a>
-<a href="/san-pham" class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-pink-300" style="text-decoration:none;">
+</button>
+<button class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-pink-300">
 <span class="material-symbols-outlined mb-1" data-icon="grid_view">grid_view</span>
 <span>Category</span>
-</a>
-<a href="/giohangs" class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-pink-300 relative" style="text-decoration:none;">
+</button>
+<button class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-pink-300">
 <span class="material-symbols-outlined mb-1" data-icon="shopping_bag">shopping_bag</span>
 <span>Cart</span>
-<% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
-<span class="absolute top-0 right-2 bg-primary text-on-primary text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center"><%= cartCount %></span>
-<% } %>
-</a>
-<a href="<%= (typeof user !== 'undefined' && user) ? '/ho-so' : '/dang-nhap' %>" class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-pink-300" style="text-decoration:none;">
+</button>
+<button class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-pink-300">
 <span class="material-symbols-outlined mb-1" data-icon="person">person</span>
 <span>Profile</span>
-</a></nav>
+</button>
+</nav>
 </body></html>
