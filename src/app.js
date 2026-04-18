@@ -44,7 +44,7 @@ const baseCspDirectives = {
   ],
   'style-src': ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com'],
   'font-src': ["'self'", 'https://fonts.gstatic.com', 'https://cdn.jsdelivr.net', 'data:'],
-  'img-src': ["'self'", 'data:'],
+  'img-src': ["'self'", 'data:', 'https:', 'http:'],
   'connect-src': ["'self'", 'https://cdn.jsdelivr.net', 'https://cloudflareinsights.com'],
   'worker-src': ["'self'", 'blob:'],
   // Some older browsers treat workers as child-src.

@@ -13,7 +13,9 @@
     "migrate": "npm run knex -- migrate:latest",
     "migrate:make": "npm run knex -- migrate:make",
     "seed": "npm run knex -- seed:run",
-    "seed:make": "npm run knex -- seed:make"
+    "seed:make": "npm run knex -- seed:make",
+    "build:css": "tailwindcss -i ./public/assets/css/input.css -o ./public/assets/css/tailwind.css",
+    "dev:css": "tailwindcss -i ./public/assets/css/input.css -o ./public/assets/css/tailwind.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -39,7 +41,10 @@
     "objection": "^3.1.5"
   },
   "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.11",
     "favicons": "^7.2.0",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "tailwindcss": "^3.4.19"
   }
 }

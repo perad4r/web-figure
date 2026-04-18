@@ -8,6 +8,7 @@ RUN npm ci
 COPY . ./
 
 RUN npm run favicons
+RUN npm run build:css
 
 FROM node:20-alpine
 
@@ -20,6 +21,7 @@ RUN npm ci --omit=dev
 
 COPY . ./
 COPY --from=build /app/public/favicons /app/public/favicons
+COPY --from=build /app/public/assets/css/tailwind.css /app/public/assets/css/tailwind.css
 
 EXPOSE 3000
 
