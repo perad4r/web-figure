@@ -18,6 +18,7 @@ const adminUserRoutes = require('./admin/users');
 const adminOrderRoutes = require('./admin/orders');
 const adminCustomerRoutes = require('./admin/customers');
 const adminReviewRoutes = require('./admin/reviews');
+const adminHomeContentRoutes = require('./admin/homeContent');
 const paymentRoutes = require('./payment');
 
 const router = express.Router();
@@ -40,6 +41,7 @@ router.use('/admin', adminUserRoutes);
 router.use('/admin', adminOrderRoutes);
 router.use('/admin', adminCustomerRoutes);
 router.use('/admin', adminReviewRoutes);
+router.use('/admin', adminHomeContentRoutes);
 router.use(paymentRoutes);
 
 module.exports = router;

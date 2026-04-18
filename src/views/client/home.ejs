@@ -1,344 +1,487 @@
 <% const pageSeo = typeof seo !== 'undefined' && seo ? seo : {}; %>
-<!DOCTYPE html>
-<html class="light" lang="vi">
-<head>
-    
-    
-    
-    <meta name="description" content="<%= pageSeo.description || 'PMFigure - cửa hàng figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật.' %>" />
-    <% if (pageSeo.keywords) { %><meta name="keywords" content="<%= pageSeo.keywords %>" /><% } %>
+<%
+  const safeArray = (value) => (Array.isArray(value) ? value : []);
+  const toImageSrc = (image) => {
+    if (!image) return '';
+    if (/^https?:\/\//i.test(image)) return image;
+    if (String(image).startsWith('/')) return image;
+    return `/uploads/${image}`;
+  };
+
+  const sections = safeArray(categoriesWithProducts).filter(
+    (category) => Array.isArray(category.products) && category.products.length
+  );
+  const heroCategory = sections[0] || null;
+  const heroProducts = heroCategory ? heroCategory.products.slice(0, 5) : safeArray(featuredProducts).slice(0, 5);
+  const heroSectionTitle = heroCategory?.ten || 'Sản phẩm nổi bật';
+  const heroSectionLink = heroCategory ? `/san-pham?the_loai_id=${heroCategory.id}` : '/san-pham';
+  const categoryCards = safeArray(categoriesWithProducts).slice(0, 6);
+  const heroBannerItems = safeArray(heroBanners);
+  const promoCardItems = safeArray(promoCards);
+  const brandLogoItems = safeArray(brandLogos);
+  const testimonialItems = safeArray(testimonials);
+  const galleryImageItems = safeArray(galleryImages);
+%>
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%= pageSeo.title || title || 'PMFigure' %></title>
+    <meta
+      name="description"
+      content="<%= pageSeo.description || 'PMFigure - cửa hàng figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật.' %>"
+    />
+    <% if (pageSeo.keywords) { %>
+      <meta name="keywords" content="<%= pageSeo.keywords %>" />
+    <% } %>
     <meta property="og:locale" content="<%= pageSeo.ogLocale || 'vi_VN' %>" />
     <meta property="og:type" content="<%= pageSeo.ogType || 'website' %>" />
     <meta property="og:title" content="<%= pageSeo.title || title || 'PMFigure' %>" />
-    <meta property="og:description" content="<%= pageSeo.description || 'PMFigure - cửa hàng figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật.' %>" />
+    <meta
+      property="og:description"
+      content="<%= pageSeo.description || 'PMFigure - cửa hàng figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật.' %>"
+    />
     <meta property="og:site_name" content="PMFigure" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="<%= pageSeo.title || title || 'PMFigure' %>" />
-    <meta name="twitter:description" content="<%= pageSeo.description || 'PMFigure - cửa hàng figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật.' %>" />
-    <% if (pageSeo.canonicalUrl) { %><link rel="canonical" href="<%= pageSeo.canonicalUrl %>" /><meta property="og:url" content="<%= pageSeo.canonicalUrl %>" /><% } %>
+    <meta
+      name="twitter:description"
+      content="<%= pageSeo.description || 'PMFigure - cửa hàng figure anime, mô hình sưu tầm và quà tặng dành cho người yêu thích nhân vật.' %>"
+    />
+    <% if (pageSeo.canonicalUrl) { %>
+      <link rel="canonical" href="<%= pageSeo.canonicalUrl %>" />
+      <meta property="og:url" content="<%= pageSeo.canonicalUrl %>" />
+    <% } %>
     <link rel="icon" href="/favicons/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
     <link rel="manifest" href="/favicons/manifest.webmanifest" />
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Pick Miu Store - The Digital Curator</title>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Compiled Tailwind CSS -->
-    <link rel="stylesheet" href="/assets/css/tailwind.css">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<style>a { text-decoration: none !important; } 
-        /* Soft Minimalism & Editorial Spacing Overrides */
-        body {
-            background-color: theme('colors.surface');
-            color: theme('colors.on-surface');
-            font-family: theme('fontFamily.body');
-            -webkit-font-smoothing: antialiased;
-        }
-        h1, h2, h3, h4, h5, h6, .font-headline {
-            font-family: theme('fontFamily.headline');
-        }
-        
-        /* Hide scrollbars for horizontal carousels but allow scrolling */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
-    </style>
-</head>
-<body class="pt-24 pb-20 md:pb-0">
-<!-- 1. TopNavBar -->
-<nav class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl font-['Plus_Jakarta_Sans'] tracking-tight fixed top-0 w-full z-50 tonal shift via surface-container-low shadow-sm shadow-pink-100/20 dark:shadow-none">
-<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
-<div class="text-2xl font-bold italic text-pink-600 dark:text-pink-400"><a href="/" style="text-decoration:none;color:inherit;">PMFigure</a></div>
-<form class="hidden md:flex flex-1 max-w-xl mx-8 relative" method="get" action="/san-pham">
-<input name="q" class="w-full bg-surface-container-high rounded-full py-2.5 pl-12 pr-4 text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container border-none shadow-inner placeholder-on-surface-variant/50" placeholder="Search figures..." type="text"/>
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
-</form>
-<div class="flex items-center gap-6">
-<a href="/san-pham" class="text-zinc-500 dark:text-zinc-400 hover:text-pink-400 hover:opacity-80 transition-opacity active:scale-95 duration-200 ease-in-out md:hidden flex">
-<span class="material-symbols-outlined" data-icon="search">search</span>
-</a>
-<a href="/giohangs" class="text-zinc-500 dark:text-zinc-400 hover:text-pink-400 hover:opacity-80 transition-opacity active:scale-95 duration-200 ease-in-out relative block">
-<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-<% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
-<span class="absolute -top-1 -right-1 bg-primary text-on-primary text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center"><%= cartCount %></span>
-<% } %>
-</a>
-<a href="<%= (typeof user !== 'undefined' && user) ? '/ho-so' : '/dang-nhap' %>" class="text-zinc-500 dark:text-zinc-400 hover:text-pink-400 hover:opacity-80 transition-opacity active:scale-95 duration-200 ease-in-out hidden md:block">
-<span class="material-symbols-outlined" data-icon="person">person</span>
-</a>
-</div>
-</div>
-</nav>
-<!-- Main Content Canvas -->
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
-<!-- 2. Main Carousel Banner -->
-<section class="mt-8 rounded-xl overflow-hidden bg-surface-container-low shadow-sm relative group">
-<div class="w-full h-[300px] md:h-[500px] flex overflow-x-auto snap-x snap-mandatory no-scrollbar">
-<div class="flex-none w-full h-full snap-center relative">
-<img class="w-full h-full object-cover" data-alt="high quality soft lighting photography of an anime figure collection displayed elegantly on clean white shelves with soft pink ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5Y0xqxTyYNTMJl_7Lv21kN1TCdrxwISRMGAb2CSLPU22g22976QOSh4sTnF85M8Xf6zV3MNIIVZuRAfGLSf8blZjlUFgQogfffoFIE8aSyYRUH-5B0Nu9BLJQd-4SRbgenqGrpidinNjbbOMcOVeu9bjpW4-Zj8e6PCASVyTJeYbjDrQtPCOHofINpaKACI0vrDEk6Q_shh-kE7qrwwiGG4gdVmIAYbKmL8XC1mvj3I1hI3_bAhb7T4aavLaVJKZ9k8J5JSNki4WT"/>
-<div class="absolute inset-0 bg-gradient-to-r from-surface/80 to-transparent flex items-center">
-<div class="p-8 md:p-16 max-w-lg">
-<h2 class="font-headline text-4xl md:text-5xl font-bold text-on-surface mb-4 leading-tight">The Art of<br/><span class="text-primary">Collecting</span></h2>
-<p class="font-body text-lg text-on-surface-variant mb-8">Curated figures for the discerning collector.</p>
-<button class="bg-primary text-on-primary rounded-full px-8 py-3 font-semibold hover:bg-primary-container transition-colors shadow-lg shadow-primary/20">Explore Gallery</button>
-</div>
-</div>
-</div>
-<!-- Additional slides would go here -->
-</div>
-<!-- Indicators -->
-<div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
-<div class="w-2 h-2 rounded-full bg-primary"></div>
-<div class="w-2 h-2 rounded-full bg-outline-variant/50"></div>
-<div class="w-2 h-2 rounded-full bg-outline-variant/50"></div>
-</div>
-</section>
-<!-- 3. Dual Static Banners -->
-<section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<a href="/san-pham" class="block rounded-xl overflow-hidden h-[250px] relative group cursor-pointer">
-<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="close up macro shot of a detailed fantasy miniature figure against a pure white background with soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGqbMrzDp-R0e7m8mj8ZCf0_CvxSTppEgWHAvUU5nD9SKm6EpekL2R4K99yC9CGk5e1dxYGv7vXNu3dG7B4xaHnaJLEwj6LRRGvkMujBgOaHk4qet6cQzgnfHIgarB-kuJm_4QxjcUW2QXqYglpL2SWFYfpF4fezDgDDU4lHKOZBUN4RBdCQMh1bLby4JI5eSQGPur33rFbfzCA1dLxhitNqfdD1cr8YJcBw1LbIdDIpozKlJOQ5kP_IaL8I2vMMS5LNX3GBjn7pN-"/>
-<div class="absolute inset-0 bg-gradient-to-t from-surface/90 via-surface/20 to-transparent p-6 flex flex-col justify-end">
-<h3 class="font-headline text-2xl font-bold text-on-surface">Pre-Orders Open</h3>
-<p class="font-body text-sm text-primary mt-1 font-medium">Secure yours now →</p>
-</div>
-</a>
-<a href="/san-pham" class="block rounded-xl overflow-hidden h-[250px] relative group cursor-pointer">
-<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="aesthetic minimalist setup featuring a small cute styled vinyl figure sitting on a light oak desk with soft morning sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGUxEd3e3KGGq2OiDfTl-Yag6slW891ds0ms_xmqy35wRndZ47YSFFgM_B33xtSRs0O1rcdtasLD04qphxlbl0kQ0Mq8RWFZEtAigIplPx0Hk9vJA9oauLc1q0AliTpO-9rA2dDPpH_MywZV4z3XN3RskauPp4-idAyZDE1Ux1KJ9x_oXaA2f4p9ziP67uoOC9MZRW2jQPzF_yy6BPU5PveJ4PREFo2sKSxiZvEHw3kFdd8fX21f133realcZXcfvWs0ZgIG9bt_Qw"/>
-<div class="absolute inset-0 bg-gradient-to-t from-surface/90 via-surface/20 to-transparent p-6 flex flex-col justify-end">
-<h3 class="font-headline text-2xl font-bold text-on-surface">New Arrivals</h3>
-<p class="font-body text-sm text-primary mt-1 font-medium">Shop latest collections →</p>
-</div>
-</a>
-</section>
-<!-- 4. Circular Categories -->
-<section>
-<div class="flex justify-between items-end mb-8">
-<h2 class="font-headline text-2xl font-bold text-on-surface">Danh Mục</h2>
-<a class="font-body text-sm text-primary hover:text-primary-container font-medium" href="/san-pham" style="text-decoration:none;">Xem tất cả</a>
-</div>
-<div class="flex overflow-x-auto gap-8 pb-4 no-scrollbar">
-<% if (categoriesWithProducts && categoriesWithProducts.length) { %>
-  <% categoriesWithProducts.forEach((category) => { 
-      let catImg = '';
-      if (category.products && category.products.length > 0 && category.products[0].hinh_anh) {
-          catImg = category.products[0].hinh_anh.startsWith('/') ? category.products[0].hinh_anh : '/uploads/' + category.products[0].hinh_anh;
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/assets/css/tailwind.css" />
+    <link rel="stylesheet" href="/vendor/swiper/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script defer src="/assets/js/app.js"></script>
+    <style>
+      :root {
+        --pm-bg: #f8f5f0;
+        --pm-surface: #ffffff;
+        --pm-surface-soft: #faf7f2;
+        --pm-primary: #f06292;
+        --pm-primary-strong: #db2777;
+        --pm-text: #1f1f1f;
+        --pm-muted: #6f665f;
+        --pm-border: rgba(31, 31, 31, 0.08);
       }
-  %>
-  <a href="/san-pham?the_loai_id=<%= category.id %>" class="flex flex-col items-center gap-3 min-w-[80px] group cursor-pointer" style="text-decoration:none;">
-    <div class="w-20 h-20 rounded-full bg-surface-container-lowest p-1 shadow-sm ring-2 ring-surface-variant group-hover:ring-primary-container transition-all">
-      <% if (catImg) { %>
-        <img class="w-full h-full object-cover rounded-full" src="<%= catImg %>" alt="<%= category.ten %>"/>
-      <% } else { %>
-        <div class="w-full h-full rounded-full bg-surface-dim"></div>
-      <% } %>
-    </div>
-    <span class="font-body text-sm font-medium text-on-surface-variant group-hover:text-primary transition-colors text-center line-clamp-1"><%= category.ten %></span>
-  </a>
-  <% }) %>
-<% } %>
-</div>
-</section>
-<!-- 5. Partners Carousel -->
-<section class="border-y border-surface-variant py-8">
-<div class="flex justify-between items-center gap-8 overflow-x-auto no-scrollbar max-w-5xl mx-auto px-4">
-<img alt="Good Smile Company" class="h-12 object-contain grayscale hover:grayscale-0 transition-all opacity-70 hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_cYjcHrlNXX13vJX-dQBOkGAx6PAxVq95I55i5aTW_2MycUnTFoLz2x2LFIYXrmDMMFbi-NB7R1BFjGDVqrl5RB1AE3LkPnTNXb4p7vC9SUrGUTJJ7QJxZnE_c-k82ydQ0NOqmEc0_vlHhxWF8ZjcJ8-QkOCngFBZtAbqNI3y3h5AHjilKfiWqJB0inJwK4yflZRtb6w7Vmcp8r4cwIqSzgo5wGercdmIfI4prW2zzUzdSdhz8-6-jPgOwhK4LPxJl9_qbIgbpI"/>
-<img alt="Max Factory" class="h-12 object-contain grayscale hover:grayscale-0 transition-all opacity-70 hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl7RwEzyljI_1ZQfIyYYOs_2dGfzgtw4giomUr0SSRhWACroKLgQejAW7tTCJEhaEtaozmRujmd1URpSnwnfhvtInig8y87A5NuXGNWapt5VFQq64pygC3pPwCsmVIZXC_stCR38-QQvvWY8c3otXO79lZY-4rO24KC3e6J0XkScDXkpDUBNbeNNSZFkNoeLDG6FUdZroZhJy0_l3Yg7jUPRZtvREesErJsXJBiuB0veSA23PUxckskXuTDEuUwotBl9tvwH4T7nK0"/>
-<img alt="Kotobukiya" class="h-12 object-contain grayscale hover:grayscale-0 transition-all opacity-70 hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBmnHfaimWe_AsW3ESdStWk7qzeemkF0Eji197pU7PUlFGDkVm71RjtwI2URvU8fOM1srPxLlGlDxlqywzBQq65voRN2arsqAhKCKC82kFUjMf-nj1o0fMcqT56SW2M69x0O0MBoqYyviS1dFNC-_i8XXdYZaDbaokgMdXOeBVnL8JkGPvvQVn8WFzibFm7lvUXK6ixZDkNe6tS2JvE0HQEnlZu8HD_CJ37JaKf2vj3zBiMII2DlHYS5QNErB5HF_ew4LoRQIFuCpj"/>
-<img alt="FuRyu" class="h-12 object-contain grayscale hover:grayscale-0 transition-all opacity-70 hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBo0hxKZJZqGNAYHoE24lSSMNFPQq_0t13Il67-h5BQK9PmjwvBHj6MTyvhKejHcQoVXuHlNOnHBfoORgkCt-0lzHYhTImJE2zubAby16tEU_5g74uUJ84A9wYns2DhOOYz_ojbg9FBuqbKq8v5cUsUd1YWsVECD24Z9iRSaw1eToNplp9EthgvD0nELj_Y0Phlcw1Ov3QTibaGBOGvuzq9eQPG7zWGH40i63ap_6FIuOJ-xdf4YrDegU-RV_aQ8ps1_5or0omghGq"/>
-</div>
-</section>
-<!-- 6. Product Section -->
-<% if (categoriesWithProducts && categoriesWithProducts.length) { %>
-<% categoriesWithProducts.forEach((category) => { %>
-<% if (category.products && category.products.length > 0) { %>
-<section class="mb-12">
-<div class="mb-6 flex justify-between items-center">
-<span class="bg-primary text-on-primary font-headline font-bold text-lg px-6 py-2 rounded-r-full inline-block shadow-md"><%= category.ten %></span>
-<a href="/san-pham?the_loai_id=<%= category.id %>" class="font-body text-sm text-primary hover:text-primary-container font-medium pr-4" style="text-decoration:none;">Xem thêm <%= category.ten %> &rarr;</a>
-</div>
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
-<% category.products.forEach((p) => { %>
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group border border-surface-variant h-full">
-<a href="/san-pham/<%= p.id %>" class="flex flex-col h-full focus:outline-none" style="text-decoration:none;color:inherit;">
-<div class="relative pt-[100%] overflow-hidden bg-surface-container-low">
-<% if (p.hinh_anh) { %>
-<img alt="<%= p.ten %>" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="<%= p.hinh_anh.startsWith('/') ? p.hinh_anh : ('/uploads/' + p.hinh_anh) %>"/>
-<% } else { %>
-<div class="absolute inset-0 w-full h-full bg-surface-dim group-hover:scale-105 transition-transform duration-500"></div>
-<% } %>
-</div>
-<div class="p-4 flex flex-col flex-1">
-<h4 class="font-body text-sm text-on-surface-variant mb-2 line-clamp-2"><%= p.ten %></h4>
-<div class="mt-auto block w-full">
-<div class="text-xs text-on-surface-variant mb-1">Tồn kho: <%= Number(p.ton_kho || 0) %></div>
-<div class="font-headline font-bold text-primary text-lg mb-3"><%= Number(p.gia || 0).toLocaleString('vi-VN') %>đ</div>
-<button class="w-full bg-primary-container/20 text-primary hover:bg-primary hover:text-on-primary font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 pointer-events-none">
-<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
-Chọn mua
-</button>
-</div>
-</div>
-</a>
-</div>
-<% }) %>
-</div>
-</section>
-<% } %>
-<% }) %>
-<% } %>
-<!-- 7. Service Promises Grid -->
-<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-12 border-t border-surface-variant">
-<div class="flex flex-col items-center text-center p-4">
-<span class="material-symbols-outlined text-4xl text-primary mb-3" data-icon="inventory_2">inventory_2</span>
-<h4 class="font-headline font-bold text-on-surface mb-2">ĐẶT HÀNG / ĐẶT HÀNG TRƯỚC</h4>
-<p class="font-body text-sm text-on-surface-variant">Nhận tìm kiếm và đặt hàng các loại sản phẩm theo yêu cầu</p>
-</div>
-<div class="flex flex-col items-center text-center p-4">
-<span class="material-symbols-outlined text-4xl text-primary mb-3" data-icon="verified">verified</span>
-<h4 class="font-headline font-bold text-on-surface mb-2">HÀNG CHÍNH HÃNG</h4>
-<p class="font-body text-sm text-on-surface-variant">Cam kết hàng chính hãng 100% được đặt trực tiếp từ nhà phân phối</p>
-</div>
-<div class="flex flex-col items-center text-center p-4">
-<span class="material-symbols-outlined text-4xl text-primary mb-3" data-icon="local_shipping">local_shipping</span>
-<h4 class="font-headline font-bold text-on-surface mb-2">SHIP TOÀN QUỐC</h4>
-<p class="font-body text-sm text-on-surface-variant">Nhận ship hàng các đơn vị vận chuyển như Viettelpost, SPX</p>
-</div>
-<div class="flex flex-col items-center text-center p-4">
-<span class="material-symbols-outlined text-4xl text-primary mb-3" data-icon="handshake">handshake</span>
-<h4 class="font-headline font-bold text-on-surface mb-2">BẢO HÀNH 1 ĐỔI 1</h4>
-<p class="font-body text-sm text-on-surface-variant">Nhận đổi hàng mới trong trường hợp lỗi từ nhà sản xuất</p>
-</div>
-</section>
-<!-- 8. Customer Reviews -->
-<section class="bg-surface-container-low rounded-2xl py-12 px-6 relative overflow-hidden">
-<div class="text-center mb-10 relative z-10">
-<h2 class="font-headline text-3xl font-bold text-on-surface">Cảm Nhận Khách Hàng</h2>
-</div>
-<div class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 no-scrollbar relative z-10">
-<!-- Review 1 -->
-<div class="snap-center shrink-0 w-full md:w-[400px] flex flex-col items-center text-center">
-<div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-surface">
-<img alt="Akashi Chowie" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgMiwu9iBLXplNRfY3Wr2AnMGy46on6ddxCXRXInYLVJkVp-W9hNSH78kzee0pZD7g5dqaxqL9Hz7mRC5jQnh0eOREkkeFf_FHs3jzXEUn8kKtAwFBynfiD8RT38nfLcMtp3YsbLfIMJh-zUyetM8GorCZVVhutZuMZrm_3X_zyhbNfv4JZhNeaHbK53kvon-JjIT5puK7KwOUTwMnP3kYZsat-u6BvHawIZgxYokYgaV0-XPsVUL30BlEi83Jsz2hH13zbnamseuV"/>
-</div>
-<h4 class="font-headline font-bold text-lg text-on-surface mb-2">Akashi Chowie</h4>
-<p class="font-body text-on-surface-variant mb-4 italic">" Quán cuti zì, á, tỉ lệ 100% có gấu nha 😍 hjhj "</p>
-<div class="flex text-amber-500 gap-1">
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-</div>
-</div>
-<!-- Review 2 -->
-<div class="snap-center shrink-0 w-full md:w-[400px] flex flex-col items-center text-center">
-<div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-surface">
-<img alt="Hoaii Anh" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlsOtPEMCbLxnN5gGSJu6LZjGlOHZjSHcHzSAPctSk28PfCb6ekUVPYlYXB2DlP06TVhzTKaKrHLLy9a3T1l6xcDU4_FDY2oZLm-bdKqKzcAsaFfccU4Z1JqyXZi0H9513E35NKiZbsihsc8jI5oUAhqLDUmYtB_-npEKBXYkf11JGxAQLcxPCcYmp7bu3_2hs1mSHRr5FXWfGQkEkYVf85HCL1w2tYCvRAkBv_llizY9huj0LPoEK-0NSC3QXcRSrKdD3k8vR14Rc"/>
-</div>
-<h4 class="font-headline font-bold text-lg text-on-surface mb-2">Hoaii Anh</h4>
-<p class="font-body text-on-surface-variant mb-4 italic">" anh chủ nhiệt tình vch đến là có gấu nựng đến ủng hộ đi "</p>
-<div class="flex text-amber-500 gap-1">
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-</div>
-</div>
-<!-- Review 3 -->
-<div class="snap-center shrink-0 w-full md:w-[400px] flex flex-col items-center text-center">
-<div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-surface">
-<img alt="Kim Juure" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMjL9_BXODSGpfWjV4y5Zzu5TARe-_73igkHZy98UERMs75bysFaerjM94p-bRin75pZjcuHICB3LI82-uqKGa7gjAgRN8If_8YpQXXJiAtocxs3JJgyqeaUMXT8_77jtccCC1OTqYHfOUyEZxkmuzLask4WY_i9RLqGIiuksuNSvZFAhXgaLDVNcCCwlqaRND_Gs1ombkIkU_y6ELnPrp3j3B5rSpOQhdcZhHhnDI9k8rOCMgAh1LM5oXx7G6OqIpUHhW6ShRfeyG"/>
-</div>
-<h4 class="font-headline font-bold text-lg text-on-surface mb-2">Kim Juure</h4>
-<p class="font-body text-on-surface-variant mb-4 italic">" Gấu bông bên này siêu dễ thương=), recommend mọi người qua mua nha "</p>
-<div class="flex text-amber-500 gap-1">
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-<span class="material-symbols-outlined fill-current" data-icon="star">star</span>
-</div>
-</div>
-</div>
-<!-- Controls -->
-<button class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-surface rounded-full shadow-md flex items-center justify-center text-on-surface hover:text-primary z-20 transition-colors">
-<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
-</button>
-<button class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-surface rounded-full shadow-md flex items-center justify-center text-on-surface hover:text-primary z-20 transition-colors">
-<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
-</button>
-</section>
-<!-- 9. Footer Image Carousel -->
-<section class="overflow-hidden w-full relative">
-<div class="flex w-full overflow-hidden" style="animation: scroll 15s linear infinite;">
-<div class="flex w-[350%] md:w-[250%] lg:w-[150%] shrink-0">
-<div class="w-1/4 p-1">
-<img alt="Gallery 1" class="w-full h-64 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgMiwu9iBLXplNRfY3Wr2AnMGy46on6ddxCXRXInYLVJkVp-W9hNSH78kzee0pZD7g5dqaxqL9Hz7mRC5jQnh0eOREkkeFf_FHs3jzXEUn8kKtAwFBynfiD8RT38nfLcMtp3YsbLfIMJh-zUyetM8GorCZVVhutZuMZrm_3X_zyhbNfv4JZhNeaHbK53kvon-JjIT5puK7KwOUTwMnP3kYZsat-u6BvHawIZgxYokYgaV0-XPsVUL30BlEi83Jsz2hH13zbnamseuV"/>
-</div>
-<div class="w-1/4 p-1">
-<img alt="Gallery 2" class="w-full h-64 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlsOtPEMCbLxnN5gGSJu6LZjGlOHZjSHcHzSAPctSk28PfCb6ekUVPYlYXB2DlP06TVhzTKaKrHLLy9a3T1l6xcDU4_FDY2oZLm-bdKqKzcAsaFfccU4Z1JqyXZi0H9513E35NKiZbsihsc8jI5oUAhqLDUmYtB_-npEKBXYkf11JGxAQLcxPCcYmp7bu3_2hs1mSHRr5FXWfGQkEkYVf85HCL1w2tYCvRAkBv_llizY9huj0LPoEK-0NSC3QXcRSrKdD3k8vR14Rc"/>
-</div>
-<div class="w-1/4 p-1">
-<img alt="Gallery 3" class="w-full h-64 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMjL9_BXODSGpfWjV4y5Zzu5TARe-_73igkHZy98UERMs75bysFaerjM94p-bRin75pZjcuHICB3LI82-uqKGa7gjAgRN8If_8YpQXXJiAtocxs3JJgyqeaUMXT8_77jtccCC1OTqYHfOUyEZxkmuzLask4WY_i9RLqGIiuksuNSvZFAhXgaLDVNcCCwlqaRND_Gs1ombkIkU_y6ELnPrp3j3B5rSpOQhdcZhHhnDI9k8rOCMgAh1LM5oXx7G6OqIpUHhW6ShRfeyG"/>
-</div>
-<div class="w-1/4 p-1">
-<img alt="Gallery 4" class="w-full h-64 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4kcn3wqbKk7Z_e1XfcbvKacWFNp9Hwc12D2ZS1q8Ggyf5-8Yk1yplj4DVpCsy24mCiPpS-928G_vq-ikVPgbEOWY8noFmylo9YCW0qSi_yALFVE0PW8SB-e6z0HAK0iWGugynskAIgV5M8j1s9BPdUcF7qsHWicn28FdnJElvhgd7zQeQ5st2PQaFjmV-VXbeIJK75ZRhW7KjLDmJ0CpBrIYypvUpMn0I8vVrfEYJVAQ5LMwWxGkfE7OGeKOFBgGXoDPt-7qxnGpn"/>
-</div>
-</div>
-<div class="flex w-[350%] md:w-[250%] lg:w-[150%] shrink-0">
-<div class="w-1/4 p-1">
-<img alt="Gallery 1" class="w-full h-64 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgMiwu9iBLXplNRfY3Wr2AnMGy46on6ddxCXRXInYLVJkVp-W9hNSH78kzee0pZD7g5dqaxqL9Hz7mRC5jQnh0eOREkkeFf_FHs3jzXEUn8kKtAwFBynfiD8RT38nfLcMtp3YsbLfIMJh-zUyetM8GorCZVVhutZuMZrm_3X_zyhbNfv4JZhNeaHbK53kvon-JjIT5puK7KwOUTwMnP3kYZsat-u6BvHawIZgxYokYgaV0-XPsVUL30BlEi83Jsz2hH13zbnamseuV"/>
-</div>
-<div class="w-1/4 p-1">
-<img alt="Gallery 2" class="w-full h-64 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlsOtPEMCbLxnN5gGSJu6LZjGlOHZjSHcHzSAPctSk28PfCb6ekUVPYlYXB2DlP06TVhzTKaKrHLLy9a3T1l6xcDU4_FDY2oZLm-bdKqKzcAsaFfccU4Z1JqyXZi0H9513E35NKiZbsihsc8jI5oUAhqLDUmYtB_-npEKBXYkf11JGxAQLcxPCcYmp7bu3_2hs1mSHRr5FXWfGQkEkYVf85HCL1w2tYCvRAkBv_llizY9huj0LPoEK-0NSC3QXcRSrKdD3k8vR14Rc"/>
-</div>
-<div class="w-1/4 p-1">
-<img alt="Gallery 3" class="w-full h-64 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMjL9_BXODSGpfWjV4y5Zzu5TARe-_73igkHZy98UERMs75bysFaerjM94p-bRin75pZjcuHICB3LI82-uqKGa7gjAgRN8If_8YpQXXJiAtocxs3JJgyqeaUMXT8_77jtccCC1OTqYHfOUyEZxkmuzLask4WY_i9RLqGIiuksuNSvZFAhXgaLDVNcCCwlqaRND_Gs1ombkIkU_y6ELnPrp3j3B5rSpOQhdcZhHhnDI9k8rOCMgAh1LM5oXx7G6OqIpUHhW6ShRfeyG"/>
-</div>
-<div class="w-1/4 p-1">
-<img alt="Gallery 4" class="w-full h-64 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4kcn3wqbKk7Z_e1XfcbvKacWFNp9Hwc12D2ZS1q8Ggyf5-8Yk1yplj4DVpCsy24mCiPpS-928G_vq-ikVPgbEOWY8noFmylo9YCW0qSi_yALFVE0PW8SB-e6z0HAK0iWGugynskAIgV5M8j1s9BPdUcF7qsHWicn28FdnJElvhgd7zQeQ5st2PQaFjmV-VXbeIJK75ZRhW7KjLDmJ0CpBrIYypvUpMn0I8vVrfEYJVAQ5LMwWxGkfE7OGeKOFBgGXoDPt-7qxnGpn"/>
-</div>
-</div>
-</div>
-<style>
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body.pm-home {
+        background: var(--pm-bg);
+        color: var(--pm-text);
+        font-family: 'Roboto', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .pm-home .pm-header .col-6.col-md-3.col-lg-2 > a {
+        gap: 0.5rem !important;
+      }
+
+      .pm-home .pm-header .col-6.col-md-3.col-lg-2 > a img {
+        height: 28px !important;
+        width: auto;
+      }
+
+      .pm-home .pm-header .col-6.col-md-3.col-lg-2 > a .fw-bold {
+        font-size: 1rem;
+        line-height: 1.1;
+      }
+
+      .pm-home h1,
+      .pm-home h2,
+      .pm-home h3,
+      .pm-home h4,
+      .pm-home h5,
+      .pm-home h6,
+      .font-headline {
+        font-family: 'Playfair Display', serif;
+      }
+
+      .pm-no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .pm-no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .pm-line-clamp-2 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+      }
+
+      .pm-hero-swiper {
+        overflow: hidden;
+      }
+
+      .pm-hero-swiper .swiper-slide {
+        position: relative;
+      }
+
+      .pm-hero-pagination {
+        bottom: 1.5rem !important;
+      }
+
+      .pm-hero-pagination .swiper-pagination-bullet {
+        width: 0.5rem;
+        height: 0.5rem;
+        margin: 0 0.25rem !important;
+        background: rgba(212, 212, 216, 0.8);
+        opacity: 1;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+      }
+
+      .pm-hero-pagination .swiper-pagination-bullet-active {
+        background: #db2777;
+        transform: scale(1.1);
+      }
+
+      .pm-testimonial-swiper {
+        overflow: hidden;
+      }
+
+      .pm-testimonial-swiper .swiper-slide {
+        height: auto;
+      }
+
+      .pm-testimonial-swiper .swiper-button-prev,
+      .pm-testimonial-swiper .swiper-button-next {
+        color: #db2777;
+      }
+
+      .pm-testimonial-swiper .swiper-button-prev::after,
+      .pm-testimonial-swiper .swiper-button-next::after {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+
+      .pm-testimonial-pagination {
+        position: static;
+        margin-top: 1rem;
+      }
+
+      .pm-testimonial-pagination .swiper-pagination-bullet {
+        background: rgba(212, 212, 216, 0.9);
+        opacity: 1;
+      }
+
+      .pm-testimonial-pagination .swiper-pagination-bullet-active {
+        background: #db2777;
+      }
+
+      .pm-marquee {
+        animation: pm-scroll 15s linear infinite;
+      }
+
+      @keyframes pm-scroll {
+        0% {
+          transform: translateX(0);
         }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
     </style>
-</section>
-</main>
-<!-- 2. BottomNavBar (Mobile Only) -->
-<nav class="bg-white/90 dark:bg-zinc-950/90 backdrop-blur-lg font-['Manrope'] text-[10px] font-medium fixed bottom-0 w-full z-50 rounded-t-2xl no-border tonal layering shadow-[0_-4px_20px_rgba(240,98,146,0.08)] fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 md:hidden"><a href="/" class="flex flex-col items-center justify-center text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/20 rounded-xl px-4 py-1 hover:text-pink-300 active:scale-90 duration-150" style="text-decoration:none;">
-<span class="material-symbols-outlined mb-1" data-icon="home" data-weight="fill">home</span>
-<span>Home</span>
-</a>
-<a href="/san-pham" class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-pink-300" style="text-decoration:none;">
-<span class="material-symbols-outlined mb-1" data-icon="grid_view">grid_view</span>
-<span>Category</span>
-</a>
-<a href="/giohangs" class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-pink-300 relative" style="text-decoration:none;">
-<span class="material-symbols-outlined mb-1" data-icon="shopping_bag">shopping_bag</span>
-<span>Cart</span>
-<% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
-<span class="absolute top-0 right-2 bg-primary text-on-primary text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center"><%= cartCount %></span>
-<% } %>
-</a>
-<a href="<%= (typeof user !== 'undefined' && user) ? '/ho-so' : '/dang-nhap' %>" class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-pink-300" style="text-decoration:none;">
-<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
-<span>Profile</span>
-</a></nav>
-</body></html>
+  </head>
+  <body class="pm-home pb-20 md:pb-0">
+    <%- include('./partials/nav') %>
+
+    <main class="mx-auto max-w-7xl space-y-24 px-4 sm:px-6 lg:px-8">
+      <section class="relative overflow-hidden rounded-[28px] bg-white shadow-sm ring-1 ring-black/5">
+        <div id="heroBannerTrack" class="swiper pm-hero-swiper">
+          <div class="swiper-wrapper">
+            <% (heroBannerItems.length ? heroBannerItems : ['']).forEach((banner) => { %>
+            <div class="swiper-slide">
+              <img
+                class="h-[300px] w-full object-cover md:h-[500px]"
+                alt="high quality soft lighting photography of an anime figure collection displayed elegantly on clean white shelves with soft pink ambient lighting"
+                src="<%= banner %>"
+              />
+              <div class="absolute inset-0 flex items-center bg-gradient-to-r from-black/65 via-black/20 to-transparent">
+                <div class="max-w-lg p-8 md:p-16">
+                  <h1 class="mb-4 text-4xl font-bold leading-tight text-white md:text-6xl">
+                    The Art of<br />
+                    <span class="text-pink-300">Collecting</span>
+                  </h1>
+                  <p class="mb-8 text-lg text-white/85">Curated figures for the discerning collector.</p>
+                  <a
+                    href="/san-pham"
+                    class="inline-flex items-center rounded-full bg-pink-600 px-8 py-3 font-semibold text-white shadow-lg shadow-pink-600/20 transition-colors hover:bg-pink-700"
+                  >
+                    Explore Gallery
+                  </a>
+                </div>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+          <div class="swiper-pagination pm-hero-pagination"></div>
+        </div>
+      </section>
+
+      <section class="mt-3 grid gap-6 md:grid-cols-2">
+        <% promoCardItems.forEach((card) => { %>
+          <a href="<%= card.href %>" class="group relative block h-[250px] overflow-hidden rounded-[24px] shadow-sm ring-1 ring-black/5">
+            <img
+              class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              alt="<%= card.title %>"
+              src="<%= card.image %>"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent p-6">
+              <div class="flex h-full flex-col justify-end">
+                <h2 class="text-2xl font-bold text-white"><%= card.title %></h2>
+                <p class="mt-1 text-sm font-medium text-pink-200"><%= card.subtitle %></p>
+              </div>
+            </div>
+          </a>
+        <% }) %>
+      </section>
+
+      <section class="mt-3">
+        <div class="mb-8 flex items-end justify-between gap-4">
+          <h2 class="text-2xl font-bold text-zinc-900">Danh Mục</h2>
+          <a class="text-sm font-medium text-pink-600 transition-colors hover:text-pink-700" href="/san-pham">
+            Xem tất cả
+          </a>
+        </div>
+
+        <div class="flex gap-8 overflow-x-auto pb-4 pm-no-scrollbar">
+          <% categoryCards.forEach((category) => {
+               const categoryImage =
+                 category.products && category.products.length > 0 && category.products[0].hinh_anh
+                   ? toImageSrc(category.products[0].hinh_anh)
+                   : '';
+          %>
+            <a
+              href="/san-pham?the_loai_id=<%= category.id %>"
+              class="group flex min-w-[80px] flex-col items-center gap-3 text-center"
+            >
+              <div class="h-20 w-20 rounded-full bg-zinc-50 p-1 shadow-sm ring-2 ring-zinc-200 transition-all group-hover:ring-pink-200">
+                <% if (categoryImage) { %>
+                  <img class="h-full w-full rounded-full object-cover" src="<%= categoryImage %>" alt="<%= category.ten %>" />
+                <% } else { %>
+                  <div class="h-full w-full rounded-full bg-zinc-200"></div>
+                <% } %>
+              </div>
+              <span class="line-clamp-1 text-center text-sm font-medium text-zinc-600 transition-colors group-hover:text-pink-600">
+                <%= category.ten %>
+              </span>
+            </a>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="mt-3 border-y border-black/10 py-8">
+        <div class="mx-auto flex max-w-5xl items-center gap-8 overflow-x-auto px-4 pm-no-scrollbar">
+          <% brandLogoItems.forEach((brand) => { %>
+            <img
+              alt="<%= brand.alt %>"
+              class="h-12 object-contain opacity-70 grayscale transition-all hover:opacity-100 hover:grayscale-0"
+              src="<%= brand.src %>"
+            />
+          <% }) %>
+        </div>
+      </section>
+
+      <% if (heroProducts.length) { %>
+        <section class="mt-3 space-y-6">
+          <div class="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <div class="inline-flex max-w-full rounded-r-full bg-pink-600 px-4 py-2 text-base font-bold text-white shadow-md sm:px-6 sm:text-lg">
+              <%= heroSectionTitle %>
+            </div>
+            <a
+              href="<%= heroSectionLink %>"
+              class="text-sm font-medium text-pink-600 transition-colors hover:text-pink-700 sm:pr-4"
+            >
+              Xem thêm <%= heroSectionTitle %> &rarr;
+            </a>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+            <% heroProducts.forEach((product) => { %>
+              <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                <a href="/san-pham/<%= product.id %>" class="flex h-full flex-col text-inherit">
+                  <div class="relative overflow-hidden bg-zinc-100 pt-[100%]">
+                    <% if (product.hinh_anh) { %>
+                      <img
+                        alt="<%= product.ten %>"
+                        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        src="<%= toImageSrc(product.hinh_anh) %>"
+                      />
+                    <% } else { %>
+                      <div class="absolute inset-0 h-full w-full bg-zinc-200"></div>
+                    <% } %>
+                  </div>
+
+                  <div class="flex flex-1 flex-col p-4">
+                    <h3 class="pm-line-clamp-2 mb-2 text-sm text-zinc-600">
+                      <%= product.ten %>
+                    </h3>
+                    <div class="mt-auto">
+                      <div class="mb-1 text-xs text-zinc-500">Tồn kho: <%= Number(product.ton_kho || 0) %></div>
+                      <div class="mb-3 text-lg font-bold text-pink-600">
+                        <%= Number(product.gia || 0).toLocaleString('vi-VN') %>đ
+                      </div>
+                      <button
+                        type="button"
+                        class="pointer-events-none flex w-full items-center justify-center gap-2 rounded-lg bg-pink-50 py-2 font-medium text-pink-600 transition-colors group-hover:bg-pink-600 group-hover:text-white"
+                      >
+                        <i class="bi bi-bag"></i>
+                        Chọn mua
+                      </button>
+                    </div>
+                  </div>
+                </a>
+              </article>
+            <% }) %>
+          </div>
+        </section>
+      <% } %>
+
+      <section class="mt-3 grid gap-6 border-t border-black/10 py-12 md:grid-cols-2 lg:grid-cols-4">
+        <div class="flex flex-col items-center px-4 text-center">
+          <i class="bi bi-box-seam mb-3 text-4xl text-pink-600"></i>
+          <h3 class="mb-2 font-bold text-zinc-900">ĐẶT HÀNG / ĐẶT HÀNG TRƯỚC</h3>
+          <p class="text-sm text-zinc-600">Nhận tìm kiếm và đặt hàng các loại sản phẩm theo yêu cầu</p>
+        </div>
+        <div class="flex flex-col items-center px-4 text-center">
+          <i class="bi bi-patch-check mb-3 text-4xl text-pink-600"></i>
+          <h3 class="mb-2 font-bold text-zinc-900">HÀNG CHÍNH HÃNG</h3>
+          <p class="text-sm text-zinc-600">Cam kết hàng chính hãng 100% được đặt trực tiếp từ nhà phân phối</p>
+        </div>
+        <div class="flex flex-col items-center px-4 text-center">
+          <i class="bi bi-truck mb-3 text-4xl text-pink-600"></i>
+          <h3 class="mb-2 font-bold text-zinc-900">SHIP TOÀN QUỐC</h3>
+          <p class="text-sm text-zinc-600">Nhận ship hàng các đơn vị vận chuyển như Viettelpost, SPX</p>
+        </div>
+        <div class="flex flex-col items-center px-4 text-center">
+          <i class="bi bi-arrow-repeat mb-3 text-4xl text-pink-600"></i>
+          <h3 class="mb-2 font-bold text-zinc-900">BẢO HÀNH 1 ĐỔI 1</h3>
+          <p class="text-sm text-zinc-600">Nhận đổi hàng mới trong trường hợp lỗi từ nhà sản xuất</p>
+        </div>
+      </section>
+
+      <% if (testimonialItems.length) { %>
+        <section class="relative mt-3 overflow-hidden rounded-[28px] bg-white px-6 py-12 shadow-sm ring-1 ring-black/5">
+          <div class="mb-10 text-center">
+            <h2 class="text-3xl font-bold text-zinc-900">Cảm Nhận Khách Hàng</h2>
+          </div>
+
+          <div id="testimonialTrack" class="swiper pm-testimonial-swiper relative z-10">
+            <div class="swiper-wrapper">
+            <% testimonialItems.forEach((review) => { %>
+              <div class="swiper-slide text-center">
+                <div class="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-full border-4 border-white shadow-sm">
+                  <img alt="<%= review.user %>" class="h-full w-full object-cover" src="<%= review.avatar %>" />
+                </div>
+                <h3 class="mb-2 text-lg font-bold text-zinc-900"><%= review.user %></h3>
+                <p class="mb-4 italic text-zinc-600">" <%= review.comment %> "</p>
+                <div class="flex justify-center gap-1 text-amber-500">
+                  <% for (let i = 0; i < 5; i += 1) { %>
+                    <i class="bi bi-star-fill"></i>
+                  <% } %>
+                </div>
+              </div>
+            <% }) %>
+            </div>
+            <div class="swiper-pagination pm-testimonial-pagination"></div>
+          </div>
+
+          <button
+            id="testimonialPrev"
+            type="button"
+            class="absolute left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-zinc-700 shadow-md transition-colors hover:text-pink-600"
+            aria-label="Previous review"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button
+            id="testimonialNext"
+            type="button"
+            class="absolute right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-zinc-700 shadow-md transition-colors hover:text-pink-600"
+            aria-label="Next review"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </section>
+      <% } %>
+
+      <section class="overflow-hidden">
+        <div class="flex w-max pm-marquee">
+          <% [0, 1].forEach(() => { %>
+            <div class="flex shrink-0">
+              <% galleryImageItems.forEach((image, index) => { %>
+                <div class="w-72 p-1 md:w-80 lg:w-96">
+                  <img
+                    alt="Gallery <%= index + 1 %>"
+                    class="h-64 w-full rounded-xl object-cover"
+                    src="<%= image %>"
+                  />
+                </div>
+              <% }) %>
+            </div>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+
+    <%- include('./partials/footer') %>
+
+    <nav class="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-black/5 bg-white/95 px-4 py-3 shadow-[0_-4px_20px_rgba(240,98,146,0.08)] backdrop-blur-lg md:hidden">
+      <a
+        href="/"
+        class="flex flex-col items-center justify-center rounded-xl bg-pink-50 px-4 py-1 text-pink-600 transition-transform active:scale-90"
+      >
+        <i class="bi bi-house-fill mb-1 text-xl"></i>
+        <span class="text-[10px] font-medium">Home</span>
+      </a>
+      <a href="/san-pham" class="flex flex-col items-center justify-center text-zinc-400 transition-colors hover:text-pink-400">
+        <i class="bi bi-grid mb-1 text-xl"></i>
+        <span class="text-[10px] font-medium">Category</span>
+      </a>
+      <a href="/giohangs" class="relative flex flex-col items-center justify-center text-zinc-400 transition-colors hover:text-pink-400">
+        <i class="bi bi-bag mb-1 text-xl"></i>
+        <span class="text-[10px] font-medium">Cart</span>
+        <% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
+          <span class="absolute right-2 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-pink-600 text-[10px] font-bold text-white">
+            <%= cartCount %>
+          </span>
+        <% } %>
+      </a>
+      <a
+        href="<%= (typeof user !== 'undefined' && user) ? '/ho-so' : '/dang-nhap' %>"
+        class="flex flex-col items-center justify-center text-zinc-400 transition-colors hover:text-pink-400"
+      >
+        <i class="bi bi-person mb-1 text-xl"></i>
+        <span class="text-[10px] font-medium">Profile</span>
+      </a>
+    </nav>
+
+    <script defer src="/vendor/swiper/swiper-bundle.min.js"></script>
+    <script defer src="/assets/js/home.js"></script>
+    <%- include('./partials/foot') %>
+  </body>
+</html>

@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
@@ -13,6 +14,10 @@ const loadCategories = require('./middleware/loadCategories');
 const routes = require('./routes');
 
 const app = express();
+
+['products', 'variants', 'home'].forEach((subdir) => {
+  fs.mkdirSync(path.join(__dirname, '..', 'public', 'uploads', subdir), { recursive: true });
+});
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -92,6 +97,7 @@ app.get('/favicon.ico', (req, res) => res.redirect(302, '/favicons/favicon.ico')
 
 const assetsDir = path.join(__dirname, '..', 'public', 'assets');
 app.use('/assets', express.static(assetsDir));
+app.use('/vendor/swiper', express.static(path.join(__dirname, '..', 'node_modules', 'swiper')));
 
 app.use(routes);
 

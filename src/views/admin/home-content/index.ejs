@@ -1,0 +1,119 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+
+<main class="container pb-5">
+  <style>
+    .pm-admin-switch {
+      position: relative;
+      display: inline-flex;
+      height: 1.5rem;
+      width: 2.75rem;
+      align-items: center;
+      border: 0;
+      border-radius: 999px;
+      background: #cbd5e1;
+      padding: 0;
+      transition: background-color 0.2s ease;
+    }
+
+    .pm-admin-switch::after {
+      content: '';
+      position: absolute;
+      left: 0.2rem;
+      height: 1.1rem;
+      width: 1.1rem;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18);
+      transition: transform 0.2s ease;
+    }
+
+    .pm-admin-switch.is-on {
+      background: #16a34a;
+    }
+
+    .pm-admin-switch.is-on::after {
+      transform: translateX(1.25rem);
+    }
+  </style>
+
+  <div class="d-flex justify-content-between align-items-center mb-3 gap-3 flex-wrap">
+    <h1 class="h4 mb-0">Quản lý trang chủ</h1>
+    <a class="btn btn-primary btn-sm" href="/admin/home-content/new">Thêm mới</a>
+  </div>
+
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <a class="nav-link <%= !activeSection ? 'active' : '' %>" href="/admin/home-content">Tất cả</a>
+    </li>
+    <% sections.forEach((section) => { %>
+      <li class="nav-item">
+        <a class="nav-link <%= activeSection === section ? 'active' : '' %>" href="/admin/home-content?section=<%= section %>">
+          <%= section %>
+        </a>
+      </li>
+    <% }) %>
+  </ul>
+
+  <% if (!rows.length) { %>
+    <div class="alert alert-secondary">Trống.</div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Section</th>
+            <th>Pos</th>
+            <th>Label</th>
+            <th>Image</th>
+            <th>Hiển thị</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% rows.forEach((row) => { %>
+            <tr>
+              <td><%= row.id %></td>
+              <td><code><%= row.section %></code></td>
+              <td><%= row.position %></td>
+              <td><%= row.label || '-' %></td>
+              <td>
+                <% if (row.image_url) { %>
+                  <img src="<%= row.image_url %>" alt="<%= row.label || row.section %>" style="height:48px; width:72px; object-fit:cover;" />
+                <% } else { %>
+                  <span class="text-muted">-</span>
+                <% } %>
+              </td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked="<%= row.is_active ? 'true' : 'false' %>"
+                    aria-label="<%= row.is_active ? 'Đang hiển thị trên trang chủ' : 'Đang ẩn khỏi trang chủ' %>"
+                    class="pm-admin-switch js-home-content-toggle <%= row.is_active ? 'is-on' : '' %>"
+                    data-id="<%= row.id %>"
+                  ></button>
+                  <span class="small fw-semibold <%= row.is_active ? 'text-success' : 'text-secondary' %>">
+                    <%= row.is_active ? 'Đang hiển thị' : 'Đang ẩn' %>
+                  </span>
+                </div>
+              </td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary" href="/admin/home-content/<%= row.id %>/edit">Sửa</a>
+                <form method="post" action="/admin/home-content/<%= row.id %>" class="d-inline">
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button class="btn btn-sm btn-outline-danger js-home-content-delete" type="submit">Xóa</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</main>
+
+<script defer src="/assets/js/admin-home-content.js"></script>
+<%- include('../partials/foot') %>

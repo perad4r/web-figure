@@ -3,11 +3,13 @@ const BienTheHang = require('../models/BienTheHang');
 const TheLoai = require('../models/TheLoai');
 const DonHang = require('../models/DonHang');
 const DanhGia = require('../models/DanhGia');
+const HomeSetting = require('../models/HomeSetting');
 
 async function home(req, res) {
-  const [categories, featuredProducts] = await Promise.all([
+  const [categories, featuredProducts, homeSettings] = await Promise.all([
     TheLoai.query().orderBy('id', 'desc').limit(5),
     Hang.query().withGraphFetched('theLoai').orderBy('id', 'desc').limit(8),
+    HomeSetting.query().where('is_active', 1).orderBy([{ column: 'section' }, { column: 'position' }]),
   ]);
 
   const categoriesWithProducts = await Promise.all(
@@ -22,10 +24,48 @@ async function home(req, res) {
     })
   );
 
+  const grouped = {};
+  for (const row of homeSettings) {
+    if (!grouped[row.section]) grouped[row.section] = [];
+    grouped[row.section].push(row);
+  }
+
+  const heroBanners = (grouped.hero_banner || []).map((row) => row.image_url).filter(Boolean);
+  const promoCards = (grouped.promo_card || []).map((row) => ({
+    href: row.link_url || '/san-pham',
+    title: row.label || '',
+    subtitle: row.subtitle || '',
+    image: row.image_url || '',
+  }));
+  const brandLogos = (grouped.brand_logo || []).map((row) => ({
+    alt: row.label || '',
+    src: row.image_url || '',
+  }));
+  const testimonials = (grouped.testimonial || []).map((row) => {
+    let extra = {};
+    try {
+      extra = JSON.parse(row.extra_json || '{}');
+    } catch (_error) {
+      extra = {};
+    }
+
+    return {
+      user: row.label || 'Khách hàng',
+      avatar: row.image_url || '',
+      comment: extra.comment || '',
+    };
+  });
+  const galleryImages = (grouped.gallery_image || []).map((row) => row.image_url).filter(Boolean);
+
   return res.render('client/home', {
     title: 'PMFigure - Figure anime chính hãng',
     categoriesWithProducts,
     featuredProducts,
+    heroBanners,
+    promoCards,
+    brandLogos,
+    testimonials,
+    galleryImages,
     seo: {
       title: 'PMFigure - Figure anime chính hãng',
       description:
