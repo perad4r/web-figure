@@ -8,12 +8,10 @@
 
   <form
     method="post"
-    action="<%= row ? `/admin/home-content/${row.id}` : '/admin/home-content' %>"
+    action="<%= row ? `/admin/home-content/${row.id}?_method=PUT` : '/admin/home-content' %>"
     enctype="multipart/form-data"
     class="vstack gap-3"
   >
-    <% if (row) { %><input type="hidden" name="_method" value="PUT" /><% } %>
-
     <div>
       <label class="form-label">Section</label>
       <select name="section" class="form-select" required>
