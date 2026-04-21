@@ -12,14 +12,22 @@
     enctype="multipart/form-data"
     class="vstack gap-3"
   >
-    <div>
-      <label class="form-label">Section</label>
-      <select name="section" class="form-select" required>
-        <% sections.forEach((section) => { %>
-          <option value="<%= section %>" <%= defaultSection === section ? 'selected' : '' %>><%= section %></option>
-        <% }) %>
-      </select>
-    </div>
+    <% if (lockedSection) { %>
+      <div>
+        <label class="form-label">Section</label>
+        <div class="form-control bg-light"><code><%= lockedSection %></code></div>
+        <input type="hidden" name="section" value="<%= lockedSection %>" />
+      </div>
+    <% } else { %>
+      <div>
+        <label class="form-label">Section</label>
+        <select name="section" class="form-select" required>
+          <% sections.forEach((section) => { %>
+            <option value="<%= section %>" <%= defaultSection === section ? 'selected' : '' %>><%= section %></option>
+          <% }) %>
+        </select>
+      </div>
+    <% } %>
 
     <div>
       <label class="form-label">Thứ tự</label>
@@ -73,7 +81,7 @@
 
     <div class="d-flex gap-2">
       <button class="btn btn-primary" type="submit">Lưu</button>
-      <a class="btn btn-outline-secondary" href="/admin/home-content">Hủy</a>
+      <a class="btn btn-outline-secondary" href="/admin/home-content<%= defaultSection ? `?section=${defaultSection}` : '' %>">Hủy</a>
     </div>
   </form>
 </main>

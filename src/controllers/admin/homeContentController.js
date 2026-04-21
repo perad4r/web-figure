@@ -45,11 +45,14 @@ async function index(req, res) {
 
 async function newForm(req, res) {
   const defaultSection = SECTIONS.includes(req.query.section) ? req.query.section : 'hero_banner';
+  const lockedSection = SECTIONS.includes(req.query.section) ? req.query.section : null;
+
   return res.render('admin/home-content/form', {
     title: 'Thêm nội dung trang chủ',
     row: null,
     sections: SECTIONS,
     defaultSection,
+    lockedSection,
     error: null,
   });
 }
@@ -58,7 +61,7 @@ async function create(req, res) {
   const payload = normalizeForm(req.body, req.file, null);
   await HomeSetting.query().insert(payload);
   req.flash('success', 'Đã thêm nội dung trang chủ');
-  return res.redirect('/admin/home-content');
+  return res.redirect(`/admin/home-content${payload.section ? `?section=${payload.section}` : ''}`);
 }
 
 async function editForm(req, res) {
@@ -71,6 +74,7 @@ async function editForm(req, res) {
     row,
     sections: SECTIONS,
     defaultSection: row.section,
+    lockedSection: null,
     error: null,
   });
 }
@@ -82,7 +86,7 @@ async function update(req, res) {
   const payload = normalizeForm(req.body, req.file, row);
   await row.$query().patch(payload);
   req.flash('success', 'Đã cập nhật');
-  return res.redirect('/admin/home-content');
+  return res.redirect(`/admin/home-content?section=${payload.section}`);
 }
 
 async function destroy(req, res) {

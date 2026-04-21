@@ -38,8 +38,15 @@
   </style>
 
   <div class="d-flex justify-content-between align-items-center mb-3 gap-3 flex-wrap">
-    <h1 class="h4 mb-0">Quản lý trang chủ</h1>
-    <a class="btn btn-primary btn-sm" href="/admin/home-content/new">Thêm mới</a>
+    <div>
+      <h1 class="h4 mb-1">Quản lý trang chủ</h1>
+      <% if (activeSection) { %>
+        <div class="text-muted small">Đang xem riêng: <code><%= activeSection %></code></div>
+      <% } %>
+    </div>
+    <a class="btn btn-primary btn-sm" href="/admin/home-content/new<%= activeSection ? `?section=${activeSection}` : '' %>">
+      Thêm mới<%= activeSection ? ` ${activeSection}` : '' %>
+    </a>
   </div>
 
   <ul class="nav nav-tabs mb-3">
