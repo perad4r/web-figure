@@ -42,7 +42,7 @@
                   <div class="row align-items-center gy-3 m-0 cart-item-row" data-price="<%= it.variant?.gia || 0 %>">
                     
                     <!-- Product Image and Context -->
-                    <div class="col-12 col-md-5 p-0 d-flex align-items-center">
+                    <div class="col-12 col-md-4 p-0 d-flex align-items-center">
                       <div class="bg-light rounded-4 p-2 me-3 text-muted d-flex align-items-center justify-content-center flex-shrink-0 border" style="width: 90px; height: 90px;">
                         <i class="bi bi-image fs-1 opacity-50"></i>
                       </div>
@@ -78,7 +78,7 @@
                     </div>
 
                     <!-- Actions and Subtotal -->
-                    <div class="col-5 col-md-2 p-0 d-flex justify-content-end align-items-center gap-2 gap-md-3">
+                    <div class="col-5 col-md-3 p-0 d-flex justify-content-end align-items-center gap-2 gap-md-3">
                       <!-- Desktop Subtotal -->
                       <div class="text-end fw-bold text-danger fs-5 d-none d-md-block flex-grow-1 item-subtotal">
                         <%= (Number(it.variant?.gia || 0) * Number(it.so_luong || 0)).toLocaleString('vi-VN') %> <small class="text-decoration-underline fs-6 mt-1">đ</small>
