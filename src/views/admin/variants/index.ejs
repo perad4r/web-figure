@@ -1,86 +1,114 @@
 <%- include('../partials/head') %>
 <%- include('../partials/nav') %>
 
-<main class="container pb-5">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h4 mb-0">Biến thể</h1>
-    <div class="d-flex gap-2">
-      <a class="btn btn-sm btn-outline-secondary" href="/admin/variants">Đang dùng</a>
-      <a class="btn btn-sm btn-outline-secondary" href="/admin/variants?deleted=1">Đã xóa</a>
-      <a class="btn btn-primary btn-sm" href="/admin/variants/new">Thêm mới</a>
-    </div>
+<main class="container-fluid pb-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 fw-bold mb-0 text-dark">Quản lý Biến thể Sản phẩm</h1>
+    <a class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm transition hover-lift" href="/admin/variants/new"><i class="bi bi-boxes me-2"></i>Thêm biến thể</a>
   </div>
 
-  <form method="get" action="/admin/variants" class="row g-2 mb-3">
-    <% if (showDeleted) { %><input type="hidden" name="deleted" value="1" /><% } %>
-    <div class="col-md-6">
-      <select class="form-select form-select-sm" name="hang_id">
-        <option value="">Tất cả sản phẩm</option>
-        <% products.forEach((p) => { %>
-          <option value="<%= p.id %>" <%= hangId === p.id ? 'selected' : '' %>><%= p.ten %></option>
-        <% }) %>
-      </select>
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="card-header bg-white border-bottom py-3 px-4">
+      <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+        <form method="get" action="/admin/variants" class="d-flex gap-2">
+          <% if (showDeleted) { %><input type="hidden" name="deleted" value="1" /><% } %>
+          <div class="input-group" style="min-width: 300px;">
+             <span class="input-group-text bg-light border-0"><i class="bi bi-filter text-muted"></i></span>
+             <select class="form-select bg-light border-0 shadow-none" name="hang_id">
+               <option value="">-- Lọc theo tất cả sản phẩm --</option>
+               <% products.forEach((p) => { %>
+                 <option value="<%= p.id %>" <%= hangId === p.id ? 'selected' : '' %>><%= p.ten %></option>
+               <% }) %>
+             </select>
+             <button class="btn btn-secondary border-0 fw-medium" type="submit">Lọc</button>
+          </div>
+        </form>
+        <div class="d-flex gap-2">
+            <a class="btn btn-sm <%= !showDeleted ? 'btn-dark' : 'btn-light border' %> rounded-pill px-3 fw-medium" href="/admin/variants">Đang dùng</a>
+            <a class="btn btn-sm <%= showDeleted ? 'btn-dark' : 'btn-light border' %> rounded-pill px-3 fw-medium" href="/admin/variants?deleted=1">Đã xóa</a>
+        </div>
+      </div>
     </div>
-    <div class="col-md-2">
-      <button class="btn btn-sm btn-outline-secondary" type="submit">Lọc</button>
-    </div>
-  </form>
 
-  <% if (!rows || rows.length === 0) { %>
-    <div class="alert alert-secondary">Trống.</div>
-  <% } else { %>
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Sản phẩm</th>
-            <th>Tên biến thể</th>
-            <th class="text-end">Giá</th>
-            <th class="text-end">Tồn kho</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% rows.forEach((r) => { %>
-            <tr>
-              <td><%= r.id %></td>
-              <td><%= r.product?.ten || '' %></td>
-              <td><%= r.ten || ('Tuy chon #' + r.id) %></td>
-              <td class="text-end"><%= Number(r.gia || 0).toLocaleString('vi-VN') %></td>
-              <td class="text-end"><%= r.ton_kho %></td>
-              <td class="text-end">
-                <% if (!showDeleted) { %>
-                  <a class="btn btn-sm btn-outline-secondary" href="/admin/variants/<%= r.id %>/edit">Sửa</a>
-                  <form method="post" action="/admin/variants/<%= r.id %>" class="d-inline">
-                    <input type="hidden" name="_method" value="DELETE" />
-                    <button class="btn btn-sm btn-outline-danger" type="submit">Xóa</button>
-                  </form>
-                <% } else { %>
-                  <form method="post" action="/admin/variants/<%= r.id %>/restore" class="d-inline">
-                    <input type="hidden" name="_method" value="PATCH" />
-                    <button class="btn btn-sm btn-outline-success" type="submit">Khôi phục</button>
-                  </form>
-                <% } %>
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
+    <div class="card-body p-0">
+      <% if (!rows || rows.length === 0) { %>
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>
+            Chưa có dữ liệu biến thể.
+        </div>
+      <% } else { %>
+        <div class="table-responsive">
+          <table class="table-modern">
+            <thead>
+              <tr>
+                <th width="80">#</th>
+                <th>Sản phẩm gốc</th>
+                <th>Tên biến thể</th>
+                <th class="text-end">Giá (VNĐ)</th>
+                <th class="text-end">Tồn kho</th>
+                <th class="text-end">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% rows.forEach((r) => { %>
+                <tr>
+                  <td class="fw-semibold text-muted">#<%= r.id %></td>
+                  <td><span class="badge bg-light text-secondary border"><%= r.product?.ten || 'Không rõ' %></span></td>
+                  <td class="fw-bold text-dark"><%= r.ten || ('Tuỳ chọn #' + r.id) %></td>
+                  <td class="text-end fw-bold text-primary"><%= Number(r.gia || 0).toLocaleString('vi-VN') %></td>
+                  <td class="text-end">
+                    <% if (r.ton_kho > 0) { %>
+                        <span class="fw-medium text-success"><%= r.ton_kho %></span>
+                    <% } else { %>
+                        <span class="text-danger fw-medium">Hết hàng</span>
+                    <% } %>
+                  </td>
+                  <td class="text-end">
+                    <div class="d-flex gap-2 justify-content-end">
+                      <% if (!showDeleted) { %>
+                        <a class="btn btn-sm btn-light border text-primary transition hover-lift" href="/admin/variants/<%= r.id %>/edit" title="Sửa">
+                          <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <form method="post" action="/admin/variants/<%= r.id %>" class="m-0">
+                          <input type="hidden" name="_method" value="DELETE" />
+                          <button class="btn btn-sm btn-light border text-danger transition hover-lift" type="submit" title="Xóa">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </form>
+                      <% } else { %>
+                        <form method="post" action="/admin/variants/<%= r.id %>/restore" class="m-0">
+                          <input type="hidden" name="_method" value="PATCH" />
+                          <button class="btn btn-sm btn-success rounded-pill px-3 fw-medium transition hover-lift text-white" type="submit">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Khôi phục
+                          </button>
+                        </form>
+                      <% } %>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
     </div>
-  <% } %>
-
-  <div class="d-flex justify-content-between align-items-center mt-3">
-    <div class="text-muted small">Trang <%= page %></div>
-    <div class="d-flex gap-2">
-      <% if (page > 1) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/admin/variants?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', hang_id: hangId ? String(hangId) : '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Trước</a>
-      <% } %>
-      <% if (hasNext) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/admin/variants?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', hang_id: hangId ? String(hangId) : '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Sau</a>
-      <% } %>
+    
+    <div class="card-footer bg-white border-top py-3 px-4 d-flex justify-content-between align-items-center">
+      <div class="text-muted small fw-medium">Trang <%= page %></div>
+      <div class="d-flex gap-2">
+        <% if (page > 1) { %>
+          <a class="btn btn-sm btn-light border rounded-pill px-3 fw-medium" href="/admin/variants?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', hang_id: hangId ? String(hangId) : '', page: String(page - 1), pageSize: String(pageSize) }).toString() %>"><i class="bi bi-chevron-left"></i> Trước</a>
+        <% } %>
+        <% if (hasNext) { %>
+          <a class="btn btn-sm btn-light border rounded-pill px-3 fw-medium" href="/admin/variants?<%= new URLSearchParams({ deleted: showDeleted ? '1' : '', hang_id: hangId ? String(hangId) : '', page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Sau <i class="bi bi-chevron-right"></i></a>
+        <% } %>
+      </div>
     </div>
   </div>
 </main>
+<style>
+  .hover-lift:hover { transform: translateY(-2px); }
+  .transition { transition: all 0.2s ease; }
+</style>
 
 <%- include('../partials/foot') %>

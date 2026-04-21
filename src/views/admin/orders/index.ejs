@@ -1,79 +1,112 @@
 <%- include('../partials/head') %>
 <%- include('../partials/nav') %>
 
-<main class="container pb-5">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h4 mb-0">Đơn hàng</h1>
-    <form method="get" action="/admin/orders" class="d-flex gap-2">
-      <input class="form-control form-control-sm" style="width: 140px" name="q" value="<%= q || '' %>" placeholder="mã đơn" />
-      <button class="btn btn-sm btn-outline-secondary" type="submit">Tìm</button>
-    </form>
+<main class="container-fluid pb-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 fw-bold mb-0 text-dark">Quản lý đơn hàng</h1>
+    <a class="btn btn-outline-secondary rounded-pill fw-medium btn-sm" href="/admin/dashboard"><i class="bi bi-arrow-left me-1"></i> Trở về Dashboard</a>
   </div>
 
-  <div class="d-flex gap-1 flex-wrap mb-3">
-    <a class="btn btn-sm <%= status === null ? 'btn-dark' : 'btn-outline-secondary' %>" href="/admin/orders">Tất cả</a>
-    <a class="btn btn-sm <%= status === 0 ? 'btn-warning' : 'btn-outline-warning' %>" href="/admin/orders?status=0">Chưa thanh toán</a>
-    <a class="btn btn-sm <%= status === 1 ? 'btn-info' : 'btn-outline-info' %>" href="/admin/orders?status=1">Đã thanh toán</a>
-    <a class="btn btn-sm <%= status === 3 ? 'btn-primary' : 'btn-outline-primary' %>" href="/admin/orders?status=3">Đang giao</a>
-    <a class="btn btn-sm <%= status === 4 ? 'btn-success' : 'btn-outline-success' %>" href="/admin/orders?status=4">Đã nhận</a>
-    <a class="btn btn-sm <%= status === 2 ? 'btn-secondary' : 'btn-outline-secondary' %>" href="/admin/orders?status=2">Đã huỷ</a>
-  </div>
-
-  <% if (!rows || rows.length === 0) { %>
-    <div class="alert alert-secondary">Trống.</div>
-  <% } else { %>
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Người dùng</th>
-            <th class="text-end">Tổng</th>
-            <th>Trạng thái</th>
-            <th>PayOS</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% rows.forEach((o) => { %>
-            <tr>
-              <td><%= o.id %></td>
-              <td><%= o.user ? o.user.email : '' %></td>
-              <td class="text-end"><%= Number(o.gia || 0).toLocaleString('vi-VN') %></td>
-              <td><span class="badge <%= statusBadge(o.status) %>"><%= statusLabel(o.status) %></span></td>
-              <td><%= o.payos_status || '' %></td>
-              <td class="text-end text-nowrap">
-                <% if (o.status === 0) { %>
-                  <button class="btn btn-sm btn-outline-danger js-cancel-order" data-id="<%= o.id %>">Huỷ</button>
-                <% } %>
-                <% if (o.status === 1 && user && user.role === 0) { %>
-                  <button class="btn btn-sm btn-outline-success js-ship-order" data-id="<%= o.id %>">Giao hàng</button>
-                <% } %>
-                <% if (o.status === 3) { %>
-                  <button class="btn btn-sm btn-outline-success js-complete-order" data-id="<%= o.id %>">Đã giao</button>
-                <% } %>
-                <button class="btn btn-sm btn-outline-secondary js-order-detail" data-id="<%= o.id %>">Chi tiết</button>
-                <a class="btn btn-sm btn-outline-secondary" href="/admin/orders/<%= o.id %>">Xem</a>
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="card-header bg-white border-bottom py-3 px-4">
+      <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+        <form method="get" action="/admin/orders" class="d-flex gap-2">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+            <input class="form-control bg-light border-0 shadow-none" style="width: 200px" name="q" value="<%= q || '' %>" placeholder="Tìm theo ID Đơn hoặc Trạng thái..." />
+            <button class="btn btn-secondary border-0 fw-medium" type="submit">Tìm</button>
+          </div>
+        </form>
+        
+        <div class="d-flex gap-1 flex-wrap align-items-center">
+            <a class="btn btn-sm <%= status === null ? 'btn-dark' : 'btn-light border' %> rounded-pill px-3" href="/admin/orders">Tất cả</a>
+            <a class="btn btn-sm <%= status === 0 ? 'bg-warning text-dark border-warning' : 'btn-light border' %> rounded-pill px-3" href="/admin/orders?status=0">Chờ thanh toán</a>
+            <a class="btn btn-sm <%= status === 1 ? 'bg-info text-dark border-info' : 'btn-light border' %> rounded-pill px-3" href="/admin/orders?status=1">Đã thanh toán</a>
+            <a class="btn btn-sm <%= status === 3 ? 'bg-primary text-white border-primary' : 'btn-light border' %> rounded-pill px-3" href="/admin/orders?status=3">Đang giao</a>
+            <a class="btn btn-sm <%= status === 4 ? 'bg-success text-white border-success' : 'btn-light border' %> rounded-pill px-3" href="/admin/orders?status=4">Hoàn thành</a>
+            <a class="btn btn-sm <%= status === 2 ? 'btn-secondary' : 'btn-light border' %> rounded-pill px-3" href="/admin/orders?status=2">Đã hủy</a>
+        </div>
+      </div>
     </div>
-  <% } %>
 
-  <div class="d-flex justify-content-between align-items-center mt-3">
-    <div class="text-muted small">Trang <%= page %></div>
-    <div class="d-flex gap-2">
-      <% if (page > 1) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/admin/orders?<%= new URLSearchParams({ q: q || '', status: status === null ? '' : String(status), page: String(page - 1), pageSize: String(pageSize) }).toString() %>">Trước</a>
+    <div class="card-body p-0">
+      <% if (!rows || rows.length === 0) { %>
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-bag-x fs-1 d-block mb-2 opacity-50"></i>
+            Chưa có đơn hàng nào khớp với tìm kiếm.
+        </div>
+      <% } else { %>
+        <div class="table-responsive">
+          <table class="table-modern">
+            <thead>
+              <tr>
+                <th width="100">Mã đơn</th>
+                <th>Khách hàng</th>
+                <th class="text-end">Tổng tiền (VNĐ)</th>
+                <th class="text-center">Trạng thái</th>
+                <th class="text-center">Payment API</th>
+                <th class="text-end">Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% rows.forEach((o) => { %>
+                <tr>
+                  <td class="fw-bold text-danger">#<%= o.id %></td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-secondary" style="width: 32px; height: 32px;"><i class="bi bi-person-fill"></i></div>
+                        <span class="fw-medium text-dark"><%= o.user ? o.user.email : 'Khách vãng lai' %></span>
+                    </div>
+                  </td>
+                  <td class="text-end fw-bold text-dark"><%= Number(o.gia || 0).toLocaleString('vi-VN') %></td>
+                  <td class="text-center"><span class="badge <%= statusBadge(o.status) %> px-3 py-2 rounded-pill"><%= statusLabel(o.status) %></span></td>
+                  <td class="text-center">
+                    <% if (o.payos_status) { %>
+                        <span class="badge bg-light text-dark border"><i class="bi bi-credit-card-fill text-primary me-1"></i> <%= o.payos_status %></span>
+                    <% } else { %>
+                        <span class="text-muted small">-</span>
+                    <% } %>
+                  </td>
+                  <td class="text-end text-nowrap">
+                    <div class="d-flex gap-2 justify-content-end">
+                        <% if (o.status === 0) { %>
+                          <button class="btn btn-sm btn-outline-danger fw-medium js-cancel-order rounded-pill px-3" data-id="<%= o.id %>">Huỷ Đơn</button>
+                        <% } %>
+                        <% if (o.status === 1 && user && user.role === 0) { %>
+                          <button class="btn btn-sm btn-primary text-white fw-medium js-ship-order rounded-pill px-3 hover-lift shadow-sm transition" data-id="<%= o.id %>"><i class="bi bi-truck me-1"></i> Bắt đầu Giao</button>
+                        <% } %>
+                        <% if (o.status === 3) { %>
+                          <button class="btn btn-sm btn-success text-white fw-medium js-complete-order rounded-pill px-3 hover-lift shadow-sm transition" data-id="<%= o.id %>"><i class="bi bi-check-circle me-1"></i> Hoàn thành</button>
+                        <% } %>
+                        <button class="btn btn-sm btn-light border text-secondary transition hover-lift js-order-detail" data-id="<%= o.id %>" title="Xem Nhanh"><i class="bi bi-eye"></i></button>
+                        <a class="btn btn-sm btn-light border text-primary transition hover-lift" href="/admin/orders/<%= o.id %>" title="Chi tiết Đầy đủ"><i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
       <% } %>
-      <% if (hasNext) { %>
-        <a class="btn btn-sm btn-outline-secondary" href="/admin/orders?<%= new URLSearchParams({ q: q || '', status: status === null ? '' : String(status), page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Sau</a>
-      <% } %>
+    </div>
+    
+    <div class="card-footer bg-white border-top py-3 px-4 d-flex justify-content-between align-items-center">
+      <div class="text-muted small fw-medium">Trang <%= page %></div>
+      <div class="d-flex gap-2">
+        <% if (page > 1) { %>
+          <a class="btn btn-sm btn-light border rounded-pill px-3 fw-medium" href="/admin/orders?<%= new URLSearchParams({ q: q || '', status: status === null ? '' : String(status), page: String(page - 1), pageSize: String(pageSize) }).toString() %>"><i class="bi bi-chevron-left"></i> Trước</a>
+        <% } %>
+        <% if (hasNext) { %>
+          <a class="btn btn-sm btn-light border rounded-pill px-3 fw-medium" href="/admin/orders?<%= new URLSearchParams({ q: q || '', status: status === null ? '' : String(status), page: String(page + 1), pageSize: String(pageSize) }).toString() %>">Sau <i class="bi bi-chevron-right"></i></a>
+        <% } %>
+      </div>
     </div>
   </div>
 </main>
+<style>
+  .hover-lift:hover { transform: translateY(-2px); }
+  .transition { transition: all 0.2s ease; }
+</style>
 
 <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">

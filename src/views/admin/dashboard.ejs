@@ -1,54 +1,93 @@
 <%- include('partials/head') %>
 <%- include('partials/nav') %>
 
-<main class="container pb-5">
-  <h1 class="h4 mb-3">Bảng điều khiển</h1>
-  <div class="row g-3">
-    <div class="col-6 col-md-4">
-      <div class="border rounded p-3">
-        <div class="text-muted">Người dùng</div>
-        <div class="h4 mb-0"><%= stats.users %></div>
+<main class="container-fluid pb-5">
+  <div class="d-flex align-items-center mb-4">
+    <h1 class="h3 fw-bold mb-0 text-dark">Bảng điều khiển</h1>
+  </div>
+  
+  <div class="row g-4">
+    <div class="col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+        <div class="card-body p-4 position-relative">
+          <div class="text-muted fw-semibold text-uppercase small mb-1 letter-spacing-1">Người dùng</div>
+          <div class="h2 fw-bold text-dark mb-0"><%= stats.users %></div>
+          <div class="position-absolute opacity-10 bg-primary" style="width: 80px; height: 80px; border-radius: 50%; right: -20px; top: -20px;"></div>
+          <i class="bi bi-people text-primary position-absolute" style="font-size: 2.5rem; right: 20px; bottom: 20px; opacity: 0.2;"></i>
+        </div>
       </div>
     </div>
-    <div class="col-6 col-md-4">
-      <div class="border rounded p-3">
-        <div class="text-muted">Danh mục</div>
-        <div class="h4 mb-0"><%= stats.categories %></div>
+    
+    <div class="col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+        <div class="card-body p-4 position-relative">
+          <div class="text-muted fw-semibold text-uppercase small mb-1 letter-spacing-1">Danh mục</div>
+          <div class="h2 fw-bold text-dark mb-0"><%= stats.categories %></div>
+          <div class="position-absolute opacity-10 bg-info" style="width: 80px; height: 80px; border-radius: 50%; right: -20px; top: -20px;"></div>
+          <i class="bi bi-tags text-info position-absolute" style="font-size: 2.5rem; right: 20px; bottom: 20px; opacity: 0.2;"></i>
+        </div>
       </div>
     </div>
-    <div class="col-6 col-md-4">
-      <div class="border rounded p-3">
-        <div class="text-muted">Sản phẩm</div>
-        <div class="h4 mb-0"><%= stats.products %></div>
+    
+    <div class="col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-primary bg-gradient text-white">
+        <div class="card-body p-4 position-relative z-1">
+          <div class="text-white-50 fw-semibold text-uppercase small mb-1 letter-spacing-1">Sản phẩm</div>
+          <div class="h2 fw-bold mb-0"><%= stats.products %></div>
+          <i class="bi bi-box-seam position-absolute" style="font-size: 2.5rem; right: 20px; bottom: 20px; opacity: 0.3;"></i>
+        </div>
       </div>
     </div>
-    <div class="col-6 col-md-4">
-      <div class="border rounded p-3">
-        <div class="text-muted">Biến thể</div>
-        <div class="h4 mb-0"><%= stats.variants %></div>
+    
+    <div class="col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+        <div class="card-body p-4 position-relative">
+          <div class="text-muted fw-semibold text-uppercase small mb-1 letter-spacing-1">Biến thể</div>
+          <div class="h2 fw-bold text-dark mb-0"><%= stats.variants %></div>
+          <i class="bi bi-boxes text-secondary position-absolute" style="font-size: 2.5rem; right: 20px; bottom: 20px; opacity: 0.15;"></i>
+        </div>
       </div>
     </div>
-    <div class="col-6 col-md-4">
-      <div class="border rounded p-3">
-        <div class="text-muted">Đơn hàng</div>
-        <div class="h4 mb-0"><%= stats.orders %></div>
+    
+    <div class="col-sm-6 col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+        <div class="card-body p-4 position-relative">
+          <div class="text-muted fw-semibold text-uppercase small mb-1 letter-spacing-1">Đơn hàng mới</div>
+          <div class="h2 fw-bold text-dark mb-0"><%= stats.orders %></div>
+          <div class="position-absolute opacity-10 bg-warning" style="width: 80px; height: 80px; border-radius: 50%; right: -20px; top: -20px;"></div>
+          <i class="bi bi-bag-check text-warning position-absolute" style="font-size: 2.5rem; right: 20px; bottom: 20px; opacity: 0.3;"></i>
+        </div>
       </div>
     </div>
-    <div class="col-6 col-md-4">
-      <div class="border rounded p-3">
-        <div class="text-muted">Đánh giá</div>
-        <div class="h4 mb-0"><%= stats.reviews %></div>
+    
+    <div class="col-sm-6 col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+        <div class="card-body p-4 position-relative">
+          <div class="text-muted fw-semibold text-uppercase small mb-1 letter-spacing-1">Đánh giá KH</div>
+          <div class="h2 fw-bold text-dark mb-0"><%= stats.reviews %></div>
+          <i class="bi bi-star-half text-success position-absolute" style="font-size: 2.5rem; right: 20px; bottom: 20px; opacity: 0.2;"></i>
+        </div>
       </div>
     </div>
+    
     <% if (revenue !== null && revenue !== undefined) { %>
-      <div class="col-6 col-md-4">
-        <div class="border rounded p-3">
-          <div class="text-muted">Doanh thu</div>
-          <div class="h4 mb-0"><%= Number(revenue).toLocaleString('vi-VN') %> đ</div>
+      <div class="col-sm-12 col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-danger bg-gradient text-white">
+          <div class="card-body p-4 position-relative z-1">
+            <div class="text-white-50 fw-semibold text-uppercase small mb-1 letter-spacing-1">Tổng Doanh Thu</div>
+            <div class="h3 fw-bold mb-0 mt-3"><%= Number(revenue).toLocaleString('vi-VN') %> đ</div>
+            <i class="bi bi-graph-up-arrow position-absolute" style="font-size: 3.5rem; right: 20px; bottom: 10px; opacity: 0.3;"></i>
+          </div>
         </div>
       </div>
     <% } %>
   </div>
 </main>
+
+<style>
+  .letter-spacing-1 { letter-spacing: 0.5px; }
+  .card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.08) !important; }
+</style>
 
 <%- include('partials/foot') %>

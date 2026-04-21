@@ -1,7 +1,7 @@
 <%- include('../partials/head') %>
 <%- include('../partials/nav') %>
 
-<main class="container pb-5">
+<main class="container-fluid pb-5">
   <style>
     .pm-admin-switch {
       position: relative;
@@ -15,7 +15,6 @@
       padding: 0;
       transition: background-color 0.2s ease;
     }
-
     .pm-admin-switch::after {
       content: '';
       position: absolute;
@@ -27,99 +26,133 @@
       box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18);
       transition: transform 0.2s ease;
     }
-
-    .pm-admin-switch.is-on {
-      background: #16a34a;
+    .pm-admin-switch.is-on { background: #16a34a; }
+    .pm-admin-switch.is-on::after { transform: translateX(1.25rem); }
+    .hover-lift:hover { transform: translateY(-2px); }
+    .transition { transition: all 0.2s ease; }
+    
+    .nav-tabs-modern {
+        border-bottom: 2px solid #e9ecef;
     }
-
-    .pm-admin-switch.is-on::after {
-      transform: translateX(1.25rem);
+    .nav-tabs-modern .nav-link {
+        color: #6c757d;
+        border: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        font-weight: 500;
+        padding: 0.75rem 1.25rem;
+    }
+    .nav-tabs-modern .nav-link:hover {
+        color: #495057;
+        border-bottom-color: #cbd5e1;
+    }
+    .nav-tabs-modern .nav-link.active {
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+        background: transparent;
     }
   </style>
 
-  <div class="d-flex justify-content-between align-items-center mb-3 gap-3 flex-wrap">
+  <div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap">
     <div>
-      <h1 class="h4 mb-1">Quản lý trang chủ</h1>
+      <h1 class="h3 fw-bold mb-1 text-dark">Quản lý giao diện trang chủ</h1>
       <% if (activeSection) { %>
-        <div class="text-muted small">Đang xem riêng: <code><%= activeSection %></code></div>
+        <div class="text-muted small">Đang lọc theo khu vực: <span class="badge bg-secondary ms-1"><%= activeSection %></span></div>
       <% } %>
     </div>
-    <a class="btn btn-primary btn-sm" href="/admin/home-content/new<%= activeSection ? `?section=${activeSection}` : '' %>">
-      Thêm mới<%= activeSection ? ` ${activeSection}` : '' %>
+    <a class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm transition hover-lift" href="/admin/home-content/new<%= activeSection ? `?section=${activeSection}` : '' %>">
+      <i class="bi bi-node-plus-fill me-2"></i>Thêm <%= activeSection ? `vào ${activeSection}` : 'Nội dung mới' %>
     </a>
   </div>
 
-  <ul class="nav nav-tabs mb-3">
-    <li class="nav-item">
-      <a class="nav-link <%= !activeSection ? 'active' : '' %>" href="/admin/home-content">Tất cả</a>
-    </li>
-    <% sections.forEach((section) => { %>
-      <li class="nav-item">
-        <a class="nav-link <%= activeSection === section ? 'active' : '' %>" href="/admin/home-content?section=<%= section %>">
-          <%= section %>
-        </a>
-      </li>
-    <% }) %>
-  </ul>
-
-  <% if (!rows.length) { %>
-    <div class="alert alert-secondary">Trống.</div>
-  <% } else { %>
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Section</th>
-            <th>Pos</th>
-            <th>Label</th>
-            <th>Image</th>
-            <th>Hiển thị</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% rows.forEach((row) => { %>
-            <tr>
-              <td><%= row.id %></td>
-              <td><code><%= row.section %></code></td>
-              <td><%= row.position %></td>
-              <td><%= row.label || '-' %></td>
-              <td>
-                <% if (row.image_url) { %>
-                  <img src="<%= row.image_url %>" alt="<%= row.label || row.section %>" style="height:48px; width:72px; object-fit:cover;" />
-                <% } else { %>
-                  <span class="text-muted">-</span>
-                <% } %>
-              </td>
-              <td>
-                <div class="d-flex align-items-center gap-2">
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked="<%= row.is_active ? 'true' : 'false' %>"
-                    aria-label="<%= row.is_active ? 'Đang hiển thị trên trang chủ' : 'Đang ẩn khỏi trang chủ' %>"
-                    class="pm-admin-switch js-home-content-toggle <%= row.is_active ? 'is-on' : '' %>"
-                    data-id="<%= row.id %>"
-                  ></button>
-                  <span class="small fw-semibold <%= row.is_active ? 'text-success' : 'text-secondary' %>">
-                    <%= row.is_active ? 'Đang hiển thị' : 'Đang ẩn' %>
-                  </span>
-                </div>
-              </td>
-              <td class="text-end">
-                <a class="btn btn-sm btn-outline-secondary" href="/admin/home-content/<%= row.id %>/edit">Sửa</a>
-                <form method="post" action="/admin/home-content/<%= row.id %>" class="d-inline">
-                  <input type="hidden" name="_method" value="DELETE" />
-                  <button class="btn btn-sm btn-outline-danger js-home-content-delete" type="submit">Xóa</button>
-                </form>
-              </td>
-            </tr>
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="card-header bg-white border-bottom p-0">
+        <ul class="nav nav-tabs-modern d-flex flex-wrap pl-3 m-0" style="padding-left: 1rem;">
+          <li class="nav-item">
+            <a class="nav-link <%= !activeSection ? 'active' : '' %>" href="/admin/home-content">Tất cả khu vực</a>
+          </li>
+          <% sections.forEach((section) => { %>
+            <li class="nav-item">
+              <a class="nav-link <%= activeSection === section ? 'active' : '' %>" href="/admin/home-content?section=<%= section %>">
+                <%= section %>
+              </a>
+            </li>
           <% }) %>
-        </tbody>
-      </table>
+        </ul>
     </div>
-  <% } %>
+
+    <div class="card-body p-0">
+      <% if (!rows.length) { %>
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-layout-wtf fs-1 d-block mb-3 opacity-50"></i>
+            Chưa có nội dung động trên trang chủ khu vực này.
+        </div>
+      <% } else { %>
+        <div class="table-responsive">
+          <table class="table-modern">
+            <thead>
+              <tr>
+                <th width="60">ID</th>
+                <th>Khu vực (Section)</th>
+                <th width="100" class="text-center">Thứ tự</th>
+                <th>Hiển thị (Label)</th>
+                <th width="120" class="text-center">Hình ảnh</th>
+                <th width="180">Trạng thái CSS</th>
+                <th class="text-end">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% rows.forEach((row) => { %>
+                <tr>
+                  <td class="fw-semibold text-muted">#<%= row.id %></td>
+                  <td><span class="badge bg-light text-dark border font-monospace"><%= row.section %></span></td>
+                  <td class="text-center fw-bold"><%= row.position %></td>
+                  <td><%= row.label || '<span class="text-muted fst-italic">Không có</span>' %></td>
+                  <td class="text-center">
+                    <% if (row.image_url) { %>
+                      <div class="bg-light rounded p-1 border d-inline-block shadow-sm">
+                          <img src="<%= row.image_url %>" alt="<%= row.label || row.section %>" style="height: 48px; width: 72px; object-fit: contain; border-radius: 4px;" />
+                      </div>
+                    <% } else { %>
+                      <span class="- text-muted small"><i class="bi bi-image"></i></span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center justify-content-start gap-2">
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked="<%= row.is_active ? 'true' : 'false' %>"
+                        aria-label="<%= row.is_active ? 'Đang hiển thị trên trang chủ' : 'Đang ẩn khỏi trang chủ' %>"
+                        class="pm-admin-switch js-home-content-toggle shadow-sm <%= row.is_active ? 'is-on' : '' %>"
+                        data-id="<%= row.id %>"
+                      ></button>
+                      <span class="small fw-semibold <%= row.is_active ? 'text-success' : 'text-secondary' %>">
+                        <%= row.is_active ? 'Đang bật' : 'Đã ẩn' %>
+                      </span>
+                    </div>
+                  </td>
+                  <td class="text-end">
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a class="btn btn-sm btn-light border text-primary transition hover-lift" href="/admin/home-content/<%= row.id %>/edit" title="Sửa nội dung">
+                          <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <form method="post" action="/admin/home-content/<%= row.id %>" class="m-0">
+                          <input type="hidden" name="_method" value="DELETE" />
+                          <button class="btn btn-sm btn-light border text-danger transition hover-lift js-home-content-delete" type="submit" title="Xóa nội dung">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </div>
+  </div>
 </main>
 
 <script defer src="/assets/js/admin-home-content.js"></script>
