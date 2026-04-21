@@ -43,10 +43,16 @@
                   <div class="h-100 w-100 bg-light"></div>
                 <% } %>
               </div>
-              <div class="card-body text-body">
-                <div class="fw-semibold"><%= p.ten %></div>
-                <div class="text-muted small"><%= p.theLoai ? p.theLoai.ten : '' %></div>
-                <div class="mt-2 price"><%= Number(p.gia).toLocaleString('vi-VN') %> đ</div>
+              <div class="card-body d-flex flex-column text-body" style="min-height: 112px;">
+                <div
+                  class="fw-semibold"
+                  style="min-height: 3rem; line-height: 1.5rem; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;"
+                ><%= p.ten %></div>
+                <div
+                  class="text-muted small"
+                  style="min-height: 1.25rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
+                ><%= p.theLoai ? p.theLoai.ten : '' %></div>
+                <div class="mt-auto pt-2 price"><%= Number(p.gia).toLocaleString('vi-VN') %> đ</div>
               </div>
             </a>
             <div class="card-footer bg-white border-0 pt-0">
