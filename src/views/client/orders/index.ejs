@@ -1,24 +1,51 @@
 <%- include('../partials/head') %>
 <%- include('../partials/nav') %>
 
-<main class="container py-4">
-  <h1 class="h4 mb-3">Lịch sử đơn hàng</h1>
+<main class="container py-5 max-w-4xl mx-auto" style="max-width: 800px;">
+  <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+    <i class="bi bi-clock-history fs-2 text-primary me-3"></i>
+    <h1 class="h3 fw-bold mb-0 text-dark">Lịch sử đơn hàng</h1>
+  </div>
 
   <% if (!orders || orders.length === 0) { %>
-    <div class="alert alert-secondary">Chưa có đơn hàng.</div>
+    <div class="alert alert-secondary border-0 bg-light text-center p-5 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center py-5 mt-4">
+      <div class="bg-white rounded-circle p-4 mb-4 shadow-sm">
+        <i class="bi bi-receipt text-muted" style="font-size: 3rem;"></i>
+      </div>
+      <h5 class="fw-medium text-dark mb-2">Chưa có đơn hàng nào</h5>
+      <p class="text-muted mx-auto mb-4" style="max-width: 400px;">Bạn chưa thực hiện giao dịch nào. Khám phá các sản phẩm nổi bật của chúng tôi ngay nhé!</p>
+      <a href="/san-pham" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm transition hover-lift">Tiếp tục mua sắm</a>
+    </div>
   <% } else { %>
-    <div class="list-group">
+    <div class="d-flex flex-column gap-3 mt-4">
       <% orders.forEach((o) => { %>
-        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="/lich-su-don-hang/<%= o.id %>">
-          <div>#<%= o.id %> - <%= Number(o.gia || 0).toLocaleString('vi-VN') %> đ</div>
-          <div class="text-muted small">
-            <span class="badge <%= statusBadge(o.status) %>"><%= statusLabel(o.status) %></span>
+        <a href="/lich-su-don-hang/<%= o.id %>" class="card border-0 shadow-sm rounded-4 text-decoration-none text-dark hover-shadow transition">
+          <div class="card-body p-4 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+              <div class="bg-light rounded-circle d-flex align-items-center justify-content-center border" style="width: 48px; height: 48px;">
+                <i class="bi bi-box-seam text-secondary fs-5"></i>
+              </div>
+              <div>
+                <div class="fw-bold mb-1">Đơn hàng #<span class="text-danger"><%= o.id %></span></div>
+                <div class="text-muted small fw-medium">Tổng tiền: <%= Number(o.gia || 0).toLocaleString('vi-VN') %> đ</div>
+              </div>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+              <span class="badge <%= statusBadge(o.status) %> px-3 py-2 rounded-pill fw-medium"><%= statusLabel(o.status) %></span>
+              <i class="bi bi-chevron-right text-muted opacity-50"></i>
+            </div>
           </div>
         </a>
       <% }) %>
     </div>
   <% } %>
 </main>
+<style>
+  .hover-shadow:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important; transform: translateY(-2px); }
+  .transition { transition: all 0.3s ease; }
+  .hover-lift:hover { transform: translateY(-3px); }
+</style>
 
 <%- include('../partials/footer') %>
 <%- include('../partials/foot') %>

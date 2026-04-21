@@ -1,44 +1,83 @@
 <%- include('../client/partials/head', { title: 'Đăng ký' }) %>
 <%- include('../client/partials/nav') %>
 
-<main class="container py-5" style="max-width: 720px;">
-  <div class="section-header">
-    <h1 class="h5 mb-0">Đăng ký</h1>
+<main class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 w-100" style="max-width: 760px;">
+    <div class="text-center mb-4">
+      <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+        <i class="bi bi-person-plus-fill fs-2"></i>
+      </div>
+      <h1 class="h3 fw-bold mb-1">Đăng ký tài khoản</h1>
+      <p class="text-muted small">Trở thành thành viên để nhận nhiều ưu đãi hấp dẫn</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="alert alert-danger border-0 d-flex align-items-center rounded-3 bg-danger bg-opacity-10 text-danger">
+        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+        <div><%= error %></div>
+      </div>
+    <% } %>
+
+    <form method="post" action="/dang-ky" class="row g-4">
+      <div class="col-md-6">
+        <label class="form-label fw-semibold text-dark">Họ và Tên</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted"><i class="bi bi-person-badge"></i></span>
+          <input class="form-control bg-light border-start-0 rounded-end-3 py-2 px-3" type="text" name="ten" placeholder="Nguyễn Văn A" required />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold text-dark">Email</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted"><i class="bi bi-envelope"></i></span>
+          <input class="form-control bg-light border-start-0 rounded-end-3 py-2 px-3" type="email" name="email" placeholder="email@example.com" required />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold text-dark">Số điện thoại</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted"><i class="bi bi-telephone"></i></span>
+          <input class="form-control bg-light border-start-0 rounded-end-3 py-2 px-3" type="tel" name="phone" pattern="[0-9]{9,11}" title="Nhập 9-11 chữ số" placeholder="09xxxx..." />
+        </div>
+      </div>
+      <div class="col-md-6"></div> <!-- Padding space for form alignment -->
+
+      <div class="col-md-6">
+        <label class="form-label fw-semibold text-dark">Mật khẩu</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted"><i class="bi bi-lock"></i></span>
+          <input class="form-control bg-light border-start-0 rounded-end-3 py-2 px-3" type="password" name="password" placeholder="Tối thiểu 6 ký tự" required />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold text-dark">Nhập lại mật khẩu</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted"><i class="bi bi-shield-lock"></i></span>
+          <input class="form-control bg-light border-start-0 rounded-end-3 py-2 px-3" type="password" name="password_confirmation" placeholder="Nhập lại mật khẩu ở trên" required />
+        </div>
+      </div>
+
+      <div class="col-12 mt-4">
+        <label class="form-label fw-semibold text-dark">Địa chỉ giao hàng mặc định</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted align-items-start pt-3"><i class="bi bi-geo-alt"></i></span>
+          <textarea class="form-control bg-light border-start-0 rounded-end-3 py-2 px-3" name="address" rows="2" placeholder="Số nhà, đường, phường/xã, quận/huyện..."></textarea>
+        </div>
+      </div>
+      
+      <div class="col-12 mt-5 text-center">
+        <button class="btn pm-btn-red btn-lg w-100 rounded-pill fw-bold shadow-sm py-2 mb-3 transition hover-lift" type="submit">Hoàn tất đăng ký</button>
+        <div class="text-muted">
+          Đã có tài khoản? <a class="text-danger fw-semibold text-decoration-none" href="/dang-nhap">Đăng nhập tại đây</a>
+        </div>
+      </div>
+    </form>
   </div>
-
-  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
-
-  <form method="post" action="/dang-ky" class="row g-3">
-    <div class="col-md-6">
-      <label class="form-label">Tên</label>
-      <input class="form-control" type="text" name="ten" required />
-    </div>
-    <div class="col-md-6">
-      <label class="form-label">Email</label>
-      <input class="form-control" type="email" name="email" required />
-    </div>
-    <div class="col-md-6">
-      <label class="form-label">Mật khẩu</label>
-      <input class="form-control" type="password" name="password" required />
-    </div>
-    <div class="col-md-6">
-      <label class="form-label">Nhập lại mật khẩu</label>
-      <input class="form-control" type="password" name="password_confirmation" required />
-    </div>
-    <div class="col-md-6">
-      <label class="form-label">Số điện thoại</label>
-      <input class="form-control" type="tel" name="phone" pattern="[0-9]{9,11}" title="Nhập 9-11 chữ số" />
-    </div>
-    <div class="col-12">
-      <label class="form-label">Địa chỉ</label>
-      <textarea class="form-control" name="address"></textarea>
-    </div>
-    <div class="col-12 d-flex gap-2">
-      <button class="btn pm-btn-red" type="submit">Đăng ký</button>
-      <a class="btn btn-outline-secondary" href="/dang-nhap">Đăng nhập</a>
-    </div>
-  </form>
 </main>
+<style>
+  .hover-lift:hover { transform: translateY(-3px); }
+  .transition { transition: all 0.3s ease; }
+</style>
 
 <%- include('../client/partials/footer') %>
 <%- include('../client/partials/foot') %>

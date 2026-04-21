@@ -1,28 +1,55 @@
 <%- include('../client/partials/head', { title: 'Đăng nhập' }) %>
 <%- include('../client/partials/nav') %>
 
-<main class="container py-5" style="max-width: 520px;">
-  <div class="section-header">
-    <h1 class="h5 mb-0">Đăng nhập</h1>
+<main class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+  <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 w-100" style="max-width: 480px;">
+    <div class="text-center mb-4">
+      <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+        <i class="bi bi-person-fill fs-2"></i>
+      </div>
+      <h1 class="h3 fw-bold mb-1">Đăng nhập tài khoản</h1>
+      <p class="text-muted small">Vui lòng nhập thông tin để tiếp tục</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="alert alert-danger border-0 d-flex align-items-center rounded-3 bg-danger bg-opacity-10 text-danger">
+        <i class="bi bi-exclamation-octagon-fill me-2 fs-5"></i>
+        <div><%= error %></div>
+      </div>
+    <% } %>
+
+    <form method="post" action="/dang-nhap" class="vstack gap-4">
+      <div>
+        <label class="form-label fw-semibold text-dark">Email đăng nhập</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted"><i class="bi bi-envelope-fill"></i></span>
+          <input class="form-control bg-light border-start-0 rounded-end-3 py-2 px-3" type="email" name="email" placeholder="Nhập địa chỉ email..." required />
+        </div>
+      </div>
+      
+      <div>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label class="form-label fw-semibold text-dark mb-0">Mật khẩu</label>
+          <a href="#" class="small text-danger text-decoration-none">Quên mật khẩu?</a>
+        </div>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted"><i class="bi bi-lock-fill"></i></span>
+          <input class="form-control bg-light border-start-0 rounded-end-3 py-2 px-3" type="password" name="password" placeholder="Nhập mật khẩu..." required />
+        </div>
+      </div>
+      
+      <button class="btn pm-btn-red btn-lg w-100 rounded-pill fw-bold shadow-sm py-2 mt-2 transition hover-lift" type="submit">Đăng nhập</button>
+      
+      <div class="text-center mt-3 text-muted">
+        Chưa có tài khoản? <a class="text-danger fw-semibold text-decoration-none" href="/dang-ky">Đăng ký ngay</a>
+      </div>
+    </form>
   </div>
-
-  <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
-
-  <form method="post" action="/dang-nhap" class="vstack gap-3">
-    <div>
-      <label class="form-label">Email</label>
-      <input class="form-control" type="email" name="email" required />
-    </div>
-    <div>
-      <label class="form-label">Mật khẩu</label>
-      <input class="form-control" type="password" name="password" required />
-    </div>
-    <button class="btn pm-btn-red" type="submit">Đăng nhập</button>
-    <div class="text-muted small">
-      Chưa có tài khoản? <a class="link-secondary" href="/dang-ky">Đăng ký</a>
-    </div>
-  </form>
 </main>
+<style>
+  .hover-lift:hover { transform: translateY(-3px); }
+  .transition { transition: all 0.3s ease; }
+</style>
 
 <%- include('../client/partials/footer') %>
 <%- include('../client/partials/foot') %>

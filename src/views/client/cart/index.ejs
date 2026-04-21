@@ -1,99 +1,157 @@
 <%- include('../partials/head') %>
 <%- include('../partials/nav') %>
 
-<main class="container py-4">
-  <h1 class="h4 mb-3">Giỏ hàng</h1>
+<main class="container py-5">
+  <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+    <i class="bi bi-cart3 fs-2 text-danger me-3"></i>
+    <h1 class="h3 fw-bold mb-0 text-dark">Giỏ hàng của bạn</h1>
+  </div>
 
   <% if (error) { %>
-    <div class="alert alert-danger"><%= error %></div>
+    <div class="alert alert-danger border-0 d-flex align-items-center rounded-3 shadow-sm">
+      <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+      <div><%= error %></div>
+    </div>
   <% } %>
 
   <% if (!items || items.length === 0) { %>
-    <div class="alert alert-secondary">Giỏ hàng trống.</div>
+    <div class="alert alert-secondary border-0 bg-light text-center p-5 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center py-5">
+      <div class="bg-white rounded-circle p-4 mb-4 shadow-sm">
+        <i class="bi bi-cart-x text-muted" style="font-size: 3rem;"></i>
+      </div>
+      <h5 class="fw-medium text-dark mb-2">Giỏ hàng đang trống</h5>
+      <p class="text-muted mx-auto mb-4" style="max-width: 400px;">Có vẻ như bạn chưa chọn sản phẩm nào. Hãy quay lại cửa hàng để tiếp tục mua sắm nhé!</p>
+      <a href="/san-pham" class="btn pm-btn-red rounded-pill px-4 fw-bold shadow-sm transition hover-lift">Tiếp tục mua sắm</a>
+    </div>
   <% } else { %>
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th>Sản phẩm</th>
-            <th>Biến thể</th>
-            <th class="text-end">Giá</th>
-            <th class="text-end">SL</th>
-            <th class="text-end">Tạm tính</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% items.forEach((it) => { %>
-            <tr>
-              <td>
-                <div class="fw-semibold"><%= it.variant?.product?.ten || 'SP' %></div>
-              </td>
-              <td>
-                <span class="text-muted"><%= it.variant?.ten || ('Tuy chon #' + (it.variant?.id || '?')) %></span>
-              </td>
-              <td class="text-end"><%= Number(it.variant?.gia || 0).toLocaleString('vi-VN') %> đ</td>
-              <td class="text-end">
-                <form method="post" action="/giohangs/<%= it.id %>" class="d-flex justify-content-end gap-2">
-                  <input type="hidden" name="_method" value="PUT" />
-                  <input class="form-control form-control-sm" style="width: 84px" type="number" name="so_luong" min="1" value="<%= it.so_luong %>" />
-                  <button class="btn btn-sm btn-outline-primary" type="submit">Cập nhật</button>
-                </form>
-              </td>
-              <td class="text-end"><%= (Number(it.variant?.gia || 0) * Number(it.so_luong || 0)).toLocaleString('vi-VN') %> đ</td>
-              <td class="text-end">
-                <form method="post" action="/giohangs/<%= it.id %>" class="d-inline">
-                  <input type="hidden" name="_method" value="DELETE" />
-                  <button class="btn btn-sm btn-outline-danger" type="submit">Xóa</button>
-                </form>
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
+    <div class="row g-5">
+      <!-- Cart Items Table -->
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+          <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+            <h5 class="fw-bold mb-0">Sản phẩm đã chọn (<%= items.length %>)</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-muted small text-uppercase">
+                  <tr>
+                    <th class="ps-4 fw-medium border-0">Sản phẩm & Tùy chọn</th>
+                    <th class="text-end fw-medium border-0">Đơn giá</th>
+                    <th class="text-center fw-medium border-0" style="width: 140px;">Số lượng</th>
+                    <th class="text-end fw-medium border-0">Tạm tính</th>
+                    <th class="pe-4 border-0"></th>
+                  </tr>
+                </thead>
+                <tbody class="border-top-0">
+                  <% items.forEach((it) => { %>
+                    <tr>
+                      <td class="ps-4 py-3">
+                        <div class="d-flex align-items-center">
+                          <div class="bg-light rounded p-2 me-3 text-muted d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi bi-image fs-3 opacity-50"></i>
+                          </div>
+                          <div>
+                            <div class="fw-bold text-dark mb-1"><%= it.variant?.product?.ten || 'Sản phẩm' %></div>
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-2 py-1"><%= it.variant?.ten || ('Tùy chọn #' + (it.variant?.id || '?')) %></span>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-end py-3 fw-medium">
+                        <%= Number(it.variant?.gia || 0).toLocaleString('vi-VN') %> đ
+                      </td>
+                      <td class="py-3 px-2">
+                        <form method="post" action="/giohangs/<%= it.id %>" class="d-flex justify-content-center align-items-center">
+                          <input type="hidden" name="_method" value="PUT" />
+                          <div class="input-group input-group-sm rounded-3 overflow-hidden shadow-sm border border-light w-100 p-0 m-0 text-nowrap">
+                             <!-- Compact form group wrapper -->
+                            <input class="form-control text-center border-0 fw-bold px-1" style="min-width: 40px; background: #f8f9fa;" type="number" name="so_luong" min="1" value="<%= it.so_luong %>" title="Số lượng" onchange="this.form.submit()" />
+                            <button class="btn bg-white border-start border-light px-2" type="submit" title="Cập nhật"><i class="bi bi-arrow-clockwise text-primary"></i></button>
+                          </div>
+                        </form>
+                      </td>
+                      <td class="text-end py-3 fw-bold text-danger">
+                        <%= (Number(it.variant?.gia || 0) * Number(it.so_luong || 0)).toLocaleString('vi-VN') %> đ
+                      </td>
+                      <td class="text-end pe-4 py-3">
+                        <form method="post" action="/giohangs/<%= it.id %>" class="d-inline border-0 m-0 p-0">
+                          <input type="hidden" name="_method" value="DELETE" />
+                          <button class="btn btn-sm btn-light text-danger rounded-circle p-2 d-inline-flex align-items-center justify-content-center hover-danger transition border-0 shadow-sm opacity-75" type="submit" title="Xóa khỏi giỏ" style="width: 32px; height: 32px;">
+                            <i class="bi bi-trash-fill"></i>
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer bg-white mt-1 pt-3 pb-4 px-4 border-top">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-muted fw-medium">Tổng tiền giỏ hàng (<%= items.length %> sản phẩm):</span>
+              <span class="h4 fw-bold text-danger mb-0"><%= Number(total || 0).toLocaleString('vi-VN') %> <small class="text-muted fs-6 align-text-top text-decoration-underline">đ</small></span>
+            </div>
+          </div>
+        </div>
+        <a href="/san-pham" class="btn btn-outline-secondary rounded-pill px-4 transition hover-lift"><i class="bi bi-arrow-left me-2"></i>Tiếp tục mua hàng</a>
+      </div>
+
+      <!-- Checkout Form -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 position-sticky" style="top: 2rem;">
+          <h5 class="fw-bold mb-4 d-flex align-items-center"><i class="bi bi-card-checklist text-primary me-2"></i> Thông tin đặt hàng</h5>
+          
+          <form method="post" action="/giohangs/checkout" class="vstack gap-3">
+            <div>
+              <label class="form-label fw-semibold small text-muted text-uppercase mb-1">Họ tên người nhận</label>
+              <input class="form-control bg-light border-0 px-3 py-2" name="ten_khach_hang" placeholder="Tên để nhận hàng" required />
+            </div>
+            
+            <div>
+              <label class="form-label fw-semibold small text-muted text-uppercase mb-1">Số điện thoại</label>
+              <input class="form-control bg-light border-0 px-3 py-2" name="phone" type="tel" pattern="[0-9]{9,11}" title="Nhập 9-11 chữ số" placeholder="Ví dụ: 0912345678" required />
+            </div>
+            
+            <div>
+              <label class="form-label fw-semibold small text-muted text-uppercase mb-1">Địa chỉ giao hàng</label>
+              <textarea class="form-control bg-light border-0 px-3 py-2" name="dia_chi" rows="2" placeholder="Số nhà, đường, phường/xã, quận/huyện, thành phố..." required></textarea>
+            </div>
+            
+            <div>
+              <label class="form-label fw-semibold small text-muted text-uppercase mb-1">Email <span class="fw-normal text-muted text-lowercase">(không bắt buộc)</span></label>
+              <input class="form-control bg-light border-0 px-3 py-2" type="email" name="email" placeholder="Để nhận thông báo đơn hàng" />
+            </div>
+            
+            <div>
+              <label class="form-label fw-semibold small text-muted text-uppercase mb-1">Ghi chú đơn hàng</label>
+              <textarea class="form-control bg-light border-0 px-3 py-2" name="ghi_chu" rows="2" placeholder="Ghi chú thêm về giao hàng (ví dụ: giao giờ hành chính...)"></textarea>
+            </div>
+            
+            <hr class="my-2 border-light">
+            
+            <div class="d-flex justify-content-between mb-3 mt-1">
+              <span class="text-dark fw-bold fs-5">Cần thanh toán:</span>
+              <span class="fw-bold text-danger fs-5"><%= Number(total || 0).toLocaleString('vi-VN') %> đ</span>
+            </div>
+            
+            <button class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm d-flex justify-content-center align-items-center transition hover-lift" type="submit">
+              Xác Nhan Đặt Hàng <i class="bi bi-chevron-right ms-2 fs-5"></i>
+            </button>
+            <div class="text-center mt-2 small text-muted">
+              <i class="bi bi-shield-check text-success me-1"></i> Thông tin của bạn được bảo mật an toàn.
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <div class="d-flex justify-content-end">
-      <div class="h5">Tổng: <%= Number(total || 0).toLocaleString('vi-VN') %> đ</div>
-    </div>
-
-    <hr />
-
-    <h2 class="h6">Đặt hàng</h2>
-    <form method="post" action="/giohangs/checkout" class="row g-2">
-      <div class="col-md-6">
-        <label class="form-label">Tên</label>
-        <input class="form-control" name="ten_khach_hang" required />
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">SĐT</label>
-        <input
-          class="form-control"
-          name="phone"
-          type="tel"
-          pattern="[0-9]{9,11}"
-          title="Nhập 9-11 chữ số"
-          required
-        />
-      </div>
-      <div class="col-12">
-        <label class="form-label">Địa chỉ</label>
-        <input class="form-control" name="dia_chi" required />
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">Email</label>
-        <input class="form-control" name="email" />
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">Ghi chú</label>
-        <input class="form-control" name="ghi_chu" />
-      </div>
-      <div class="col-12">
-        <button class="btn btn-primary" type="submit">Tạo đơn hàng</button>
-      </div>
-    </form>
   <% } %>
 </main>
+<style>
+  .hover-lift:hover { transform: translateY(-3px); }
+  .transition { transition: all 0.3s ease; }
+  .hover-danger:hover { background-color: #dc3545 !important; color: white !important; opacity: 1; }
+</style>
 
 <%- include('../partials/footer') %>
 <%- include('../partials/foot') %>
