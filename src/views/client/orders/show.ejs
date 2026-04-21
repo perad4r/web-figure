@@ -49,12 +49,36 @@
           
           <% let hasAction = false; %>
           <% if ([0,1].includes(order.status)) { hasAction = true; %>
-            <form method="post" action="/lich-su-don-hang/<%= order.id %>/huy" class="w-100">
-              <input type="hidden" name="_method" value="PATCH" />
-              <button class="btn btn-outline-danger bg-white w-100 rounded-pill fw-medium shadow-sm transition hover-danger" type="submit">
+              <button type="button" class="btn btn-outline-danger bg-white w-100 rounded-pill fw-medium shadow-sm transition hover-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">
                 <i class="bi bi-x-circle me-1"></i> Yêu cầu hủy đơn
               </button>
-            </form>
+              
+              <!-- Cancel Order Confirmation Modal -->
+              <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true" style="text-align: left;">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content border-0 shadow rounded-4 overflow-hidden">
+                    <div class="modal-header bg-danger bg-opacity-10 border-bottom-0 pb-3 pt-4 px-4">
+                      <h5 class="modal-title fw-bold text-danger d-flex align-items-center" id="cancelOrderModalLabel">
+                          <i class="bi bi-exclamation-triangle-fill fs-4 me-2"></i> Xác nhận hủy đơn hàng
+                      </h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4 text-dark fs-6">
+                      Bạn có chắc chắn muốn hủy bỏ đơn hàng <strong>#<%= order.id %></strong> này không?<br>
+                      <span class="text-muted small mt-2 d-block">Lưu ý: Hành động này không thể hoàn tác sau khi đã thực hiện.</span>
+                    </div>
+                    <div class="modal-footer bg-light border-top-0 p-3 d-flex justify-content-between">
+                      <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-medium border shadow-sm transition hover-lift" data-bs-dismiss="modal">Không, giữ lại</button>
+                      <form method="post" action="/lich-su-don-hang/<%= order.id %>/huy" class="m-0">
+                        <input type="hidden" name="_method" value="PATCH" />
+                        <button class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm transition hover-lift" type="submit">
+                          Đồng ý hủy đơn
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
           <% } %>
           
           <% if (order.status === 3) { hasAction = true; %>
