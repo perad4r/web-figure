@@ -39,7 +39,7 @@
             <div class="d-flex flex-column">
               <% items.forEach((it) => { %>
                 <div class="p-3 p-md-4 border-bottom position-relative bg-white transition" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
-                  <div class="row align-items-center gy-3 m-0">
+                  <div class="row align-items-center gy-3 m-0 cart-item-row" data-price="<%= it.variant?.gia || 0 %>">
                     
                     <!-- Product Image and Context -->
                     <div class="col-12 col-md-5 p-0 d-flex align-items-center">
@@ -68,7 +68,7 @@
                             <i class="bi bi-dash fs-4 fw-bold"></i>
                           </button>
                           
-                          <input class="form-control text-center border-0 fw-bold px-0 bg-transparent flex-grow-1 shadow-none" style="font-size: 1.15rem; min-width: 40px; color: #212529;" type="number" name="so_luong" min="1" value="<%= it.so_luong %>" title="Số lượng" readonly />
+                          <input class="form-control text-center border-0 fw-bold px-0 bg-transparent flex-grow-1 shadow-none" style="font-size: 1.15rem; min-width: 40px; color: #212529;" type="number" name="so_luong" min="1" value="<%= it.so_luong %>" title="Số lượng" autocomplete="off" />
                           
                           <button class="btn border-0 rounded-circle p-0 d-flex align-items-center justify-content-center bg-white shadow-sm btn-increase hover-lift transition" type="button" style="width: 36px; height: 36px; color: #495057;">
                             <i class="bi bi-plus fs-4 fw-bold"></i>
@@ -80,7 +80,7 @@
                     <!-- Actions and Subtotal -->
                     <div class="col-5 col-md-2 p-0 d-flex justify-content-end align-items-center gap-2 gap-md-3">
                       <!-- Desktop Subtotal -->
-                      <div class="text-end fw-bold text-danger fs-5 d-none d-md-block flex-grow-1">
+                      <div class="text-end fw-bold text-danger fs-5 d-none d-md-block flex-grow-1 item-subtotal">
                         <%= (Number(it.variant?.gia || 0) * Number(it.so_luong || 0)).toLocaleString('vi-VN') %> <small class="text-decoration-underline fs-6 mt-1">đ</small>
                       </div>
                       
@@ -102,7 +102,7 @@
           <div class="card-footer bg-light mt-0 pt-4 pb-4 px-3 px-md-4 border-top">
             <div class="d-flex justify-content-between align-items-center">
               <span class="text-secondary fw-semibold fs-5">Tổng tiền giỏ hàng:</span>
-              <span class="fs-3 fw-bold text-danger mb-0"><%= Number(total || 0).toLocaleString('vi-VN') %> <small class="text-muted fs-5 align-text-top text-decoration-underline ms-1">đ</small></span>
+              <span class="fs-3 fw-bold text-danger mb-0 cart-total"><%= Number(total || 0).toLocaleString('vi-VN') %> <small class="text-muted fs-5 align-text-top text-decoration-underline ms-1">đ</small></span>
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@
             
             <div class="d-flex justify-content-between mb-3 mt-1">
               <span class="text-dark fw-bold fs-5">Cần thanh toán:</span>
-              <span class="fw-bold text-danger fs-5"><%= Number(total || 0).toLocaleString('vi-VN') %> đ</span>
+              <span class="fw-bold text-danger fs-5 checkout-total"><%= Number(total || 0).toLocaleString('vi-VN') %> đ</span>
             </div>
             
             <button class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm d-flex justify-content-center align-items-center transition hover-lift" type="submit">
@@ -170,22 +170,94 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    
+    function updateCartTotals() {
+      let total = 0;
+      document.querySelectorAll('.app-quantity-form').forEach(form => {
+        const row = form.closest('.cart-item-row');
+        if (!row) return;
+        const price = Number(row.dataset.price || 0);
+        const qty = Number(form.querySelector('input[name="so_luong"]').value || 1);
+        const subtotal = price * qty;
+        
+        // Update item subtotal
+        const itemSubtotalEl = row.querySelector('.item-subtotal');
+        if (itemSubtotalEl) {
+            itemSubtotalEl.innerHTML = subtotal.toLocaleString('vi-VN') + ' <small class="text-decoration-underline fs-6 mt-1">đ</small>';
+        }
+        total += subtotal;
+      });
+      
+      // Update cart total
+      const cartTotalEl = document.querySelector('.cart-total');
+      if (cartTotalEl) {
+          cartTotalEl.innerHTML = total.toLocaleString('vi-VN') + ' <small class="text-muted fs-5 align-text-top text-decoration-underline ms-1">đ</small>';
+      }
+      
+      // Update checkout total
+      const checkoutTotalEl = document.querySelector('.checkout-total');
+      if (checkoutTotalEl) {
+          checkoutTotalEl.innerHTML = total.toLocaleString('vi-VN') + ' đ';
+      }
+    }
+
     document.querySelectorAll('.app-quantity-form').forEach(form => {
       const input = form.querySelector('input[name="so_luong"]');
       const min = parseInt(input.min || 1);
       
-      form.querySelector('.btn-decrease').addEventListener('click', () => {
+      async function submitChange(newQty) {
+          try {
+              input.disabled = true;
+              
+              const body = new URLSearchParams();
+              body.set('so_luong', String(newQty));
+              body.set('_method', 'PUT');
+              
+              const res = await fetch(form.action, {
+                  method: 'POST',
+                  headers: { 
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                      'Accept': 'application/json' 
+                  },
+                  body: body.toString()
+              });
+              
+              if (res.ok) {
+                  input.value = newQty;
+                  updateCartTotals();
+              } else {
+                  console.error('Update failed');
+                  input.value = parseInt(input.defaultValue) || min;
+              }
+          } catch(e) {
+              console.error(e);
+          } finally {
+              input.disabled = false;
+          }
+      }
+
+      form.querySelector('.btn-decrease').addEventListener('click', (e) => {
+        e.preventDefault();
         let val = parseInt(input.value) || min;
         if (val > min) {
-          input.value = val - 1;
-          form.submit();
+          submitChange(val - 1);
         }
       });
   
-      form.querySelector('.btn-increase').addEventListener('click', () => {
+      form.querySelector('.btn-increase').addEventListener('click', (e) => {
+        e.preventDefault();
         let val = parseInt(input.value) || min;
-        input.value = val + 1;
-        form.submit();
+        submitChange(val + 1);
+      });
+      
+      input.addEventListener('change', (e) => {
+         let val = parseInt(input.value);
+         if (val >= min) {
+             submitChange(val);
+         } else {
+             input.value = min;
+             submitChange(min);
+         }
       });
     });
   });
