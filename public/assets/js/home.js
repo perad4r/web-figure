@@ -57,4 +57,29 @@
       },
     });
   }
+
+  const brandTrack = document.getElementById('brandLogoTrack');
+  if (brandTrack && typeof window.Swiper === 'function') {
+    const brandSlideCount = brandTrack.querySelectorAll('.swiper-slide').length;
+
+    new window.Swiper(brandTrack, {
+      loop: brandSlideCount > 1,
+      speed: 4500,
+      allowTouchMove: true,
+      freeMode: true,
+      grabCursor: true,
+      slidesPerView: 'auto',
+      spaceBetween: 40,
+      centeredSlides: false,
+      centerInsufficientSlides: true,
+      autoplay:
+        brandSlideCount > 1
+          ? {
+              delay: 0,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }
+          : false,
+    });
+  }
 })();
