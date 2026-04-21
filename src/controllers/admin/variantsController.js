@@ -84,6 +84,7 @@ async function newForm(req, res) {
 
 async function create(req, res) {
   const hang_id = Number(req.body.hang_id || 0);
+  const ten = String(req.body.ten || '').trim();
   const gia = Number(req.body.gia || 0);
   const ton_kho = Number(req.body.ton_kho || 0);
 
@@ -92,11 +93,11 @@ async function create(req, res) {
     getDefaultOptionIds(),
   ]);
 
-  if (!hang_id) {
+  if (!hang_id || !ten) {
     return res.status(400).render('admin/variants/new', {
       title: 'New Variant',
       products,
-      error: 'Missing product',
+      error: 'Missing product or variant name',
     });
   }
 
@@ -112,6 +113,7 @@ async function create(req, res) {
 
   await BienTheHang.query().insert({
     hang_id,
+    ten,
     ...defaultOptionIds,
     hinh_anh,
     gia,
@@ -146,6 +148,7 @@ async function update(req, res) {
   if (!row) return res.status(404).render('client/errors/404', { title: 'Not Found' });
 
   const hang_id = Number(req.body.hang_id || 0);
+  const ten = String(req.body.ten || '').trim();
   const gia = Number(req.body.gia || 0);
   const ton_kho = Number(req.body.ton_kho || 0);
 
@@ -154,12 +157,12 @@ async function update(req, res) {
     getDefaultOptionIds(),
   ]);
 
-  if (!hang_id) {
+  if (!hang_id || !ten) {
     return res.status(400).render('admin/variants/edit', {
       title: 'Edit Variant',
       row,
       products,
-      error: 'Missing product',
+      error: 'Missing product or variant name',
     });
   }
 
@@ -172,7 +175,7 @@ async function update(req, res) {
     });
   }
 
-  const patch = { hang_id, ...defaultOptionIds, gia, ton_kho };
+  const patch = { hang_id, ten, ...defaultOptionIds, gia, ton_kho };
   if (req.file) patch.hinh_anh = `variants/${req.file.filename}`;
 
   await row.$query().patch(patch);

@@ -30,7 +30,7 @@
                 <div class="fw-semibold"><%= it.variant?.product?.ten || 'SP' %></div>
               </td>
               <td>
-                <span class="text-muted">Tùy chọn #<%= it.variant?.id || '?' %></span>
+                <span class="text-muted"><%= it.variant?.ten || ('Tuy chon #' + (it.variant?.id || '?')) %></span>
               </td>
               <td class="text-end"><%= Number(it.variant?.gia || 0).toLocaleString('vi-VN') %> đ</td>
               <td class="text-end">
