@@ -31,11 +31,18 @@
         <div class="col-6 col-md-4 col-lg-3">
           <div class="card product-card h-100">
             <a class="text-decoration-none" href="/san-pham/<%= p.id %>">
-              <% if (p.hinh_anh) { %>
-                <img class="card-img-top" src="<%= p.hinh_anh.startsWith('/') ? p.hinh_anh : ('/uploads/' + p.hinh_anh) %>" alt="<%= p.ten %>" />
-              <% } else { %>
-                <div class="bg-light" style="height: 180px;"></div>
-              <% } %>
+              <div class="overflow-hidden bg-light" style="aspect-ratio: 1 / 1;">
+                <% if (p.hinh_anh) { %>
+                  <img
+                    class="card-img-top h-100 w-100"
+                    style="object-fit: cover;"
+                    src="<%= p.hinh_anh.startsWith('/') ? p.hinh_anh : ('/uploads/' + p.hinh_anh) %>"
+                    alt="<%= p.ten %>"
+                  />
+                <% } else { %>
+                  <div class="h-100 w-100 bg-light"></div>
+                <% } %>
+              </div>
               <div class="card-body text-body">
                 <div class="fw-semibold"><%= p.ten %></div>
                 <div class="text-muted small"><%= p.theLoai ? p.theLoai.ten : '' %></div>
