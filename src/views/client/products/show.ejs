@@ -9,9 +9,16 @@
   <div class="row g-4">
     <div class="col-md-5">
       <% if (product.hinh_anh) { %>
-        <img class="img-fluid rounded border" src="<%= product.hinh_anh.startsWith('/') ? product.hinh_anh : ('/uploads/' + product.hinh_anh) %>" alt="" />
+        <div class="border rounded bg-white d-flex align-items-center justify-content-center overflow-hidden" style="height: 420px;">
+          <img
+            class="w-100 h-100"
+            style="object-fit: contain;"
+            src="<%= product.hinh_anh.startsWith('/') ? product.hinh_anh : ('/uploads/' + product.hinh_anh) %>"
+            alt=""
+          />
+        </div>
       <% } else { %>
-        <div class="bg-light rounded border" style="height: 360px;"></div>
+        <div class="bg-light rounded border" style="height: 420px;"></div>
       <% } %>
     </div>
     <div class="col-md-7">
