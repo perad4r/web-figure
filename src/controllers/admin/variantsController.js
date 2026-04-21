@@ -13,6 +13,22 @@ async function withSelectedOption(options, id, loader, labelKey = 'ten') {
   return [{ ...row, _softDeleted: true, [labelKey]: `[DELETED] ${row[labelKey]}` }, ...options];
 }
 
+async function getDefaultOptionIds() {
+  const [defaultColor, defaultSize] = await Promise.all([
+    Mau.query().orderBy('id', 'asc').first(),
+    KichCo.query().orderBy('id', 'asc').first(),
+  ]);
+
+  if (!defaultColor || !defaultSize) {
+    return null;
+  }
+
+  return {
+    mau_id: defaultColor.id,
+    kich_co_id: defaultSize.id,
+  };
+}
+
 async function syncParentStock(hangId) {
   if (!hangId) return;
   const parent = await Hang.queryWithDeleted().findById(hangId);
@@ -57,41 +73,38 @@ async function index(req, res) {
 }
 
 async function newForm(req, res) {
-  const [products, colors, sizes] = await Promise.all([
-    Hang.query().orderBy('id', 'desc'),
-    Mau.query().orderBy('id', 'desc'),
-    KichCo.query().orderBy('id', 'desc'),
-  ]);
+  const products = await Hang.query().orderBy('id', 'desc');
 
   return res.render('admin/variants/new', {
     title: 'New Variant',
     products,
-    colors,
-    sizes,
     error: null,
   });
 }
 
 async function create(req, res) {
   const hang_id = Number(req.body.hang_id || 0);
-  const mau_id = Number(req.body.mau_id || 0);
-  const kich_co_id = Number(req.body.kich_co_id || 0);
   const gia = Number(req.body.gia || 0);
   const ton_kho = Number(req.body.ton_kho || 0);
 
-  const [products, colors, sizes] = await Promise.all([
+  const [products, defaultOptionIds] = await Promise.all([
     Hang.query().orderBy('id', 'desc'),
-    Mau.query().orderBy('id', 'desc'),
-    KichCo.query().orderBy('id', 'desc'),
+    getDefaultOptionIds(),
   ]);
 
-  if (!hang_id || !mau_id || !kich_co_id) {
+  if (!hang_id) {
     return res.status(400).render('admin/variants/new', {
       title: 'New Variant',
       products,
-      colors,
-      sizes,
-      error: 'Missing product/color/size',
+      error: 'Missing product',
+    });
+  }
+
+  if (!defaultOptionIds) {
+    return res.status(400).render('admin/variants/new', {
+      title: 'New Variant',
+      products,
+      error: 'Thiếu dữ liệu mặc định cho biến thể. Hãy giữ lại ít nhất 1 màu và 1 kích cỡ trong DB.',
     });
   }
 
@@ -99,8 +112,7 @@ async function create(req, res) {
 
   await BienTheHang.query().insert({
     hang_id,
-    mau_id,
-    kich_co_id,
+    ...defaultOptionIds,
     hinh_anh,
     gia,
     ton_kho,
@@ -117,22 +129,13 @@ async function editForm(req, res) {
   const row = await BienTheHang.queryWithDeleted().findById(id);
   if (!row) return res.status(404).render('client/errors/404', { title: 'Not Found' });
 
-  let [products, colors, sizes] = await Promise.all([
-    Hang.query().orderBy('id', 'desc'),
-    Mau.query().orderBy('id', 'desc'),
-    KichCo.query().orderBy('id', 'desc'),
-  ]);
-
+  let products = await Hang.query().orderBy('id', 'desc');
   products = await withSelectedOption(products, row.hang_id, (rid) => Hang.queryWithDeleted().findById(rid));
-  colors = await withSelectedOption(colors, row.mau_id, (rid) => Mau.queryWithDeleted().findById(rid));
-  sizes = await withSelectedOption(sizes, row.kich_co_id, (rid) => KichCo.queryWithDeleted().findById(rid));
 
   return res.render('admin/variants/edit', {
     title: 'Edit Variant',
     row,
     products,
-    colors,
-    sizes,
     error: null,
   });
 }
@@ -143,29 +146,33 @@ async function update(req, res) {
   if (!row) return res.status(404).render('client/errors/404', { title: 'Not Found' });
 
   const hang_id = Number(req.body.hang_id || 0);
-  const mau_id = Number(req.body.mau_id || 0);
-  const kich_co_id = Number(req.body.kich_co_id || 0);
   const gia = Number(req.body.gia || 0);
   const ton_kho = Number(req.body.ton_kho || 0);
 
-  const [products, colors, sizes] = await Promise.all([
+  const [products, defaultOptionIds] = await Promise.all([
     Hang.query().orderBy('id', 'desc'),
-    Mau.query().orderBy('id', 'desc'),
-    KichCo.query().orderBy('id', 'desc'),
+    getDefaultOptionIds(),
   ]);
 
-  if (!hang_id || !mau_id || !kich_co_id) {
+  if (!hang_id) {
     return res.status(400).render('admin/variants/edit', {
       title: 'Edit Variant',
       row,
       products,
-      colors,
-      sizes,
-      error: 'Missing product/color/size',
+      error: 'Missing product',
     });
   }
 
-  const patch = { hang_id, mau_id, kich_co_id, gia, ton_kho };
+  if (!defaultOptionIds) {
+    return res.status(400).render('admin/variants/edit', {
+      title: 'Edit Variant',
+      row,
+      products,
+      error: 'Thiếu dữ liệu mặc định cho biến thể. Hãy giữ lại ít nhất 1 màu và 1 kích cỡ trong DB.',
+    });
+  }
+
+  const patch = { hang_id, ...defaultOptionIds, gia, ton_kho };
   if (req.file) patch.hinh_anh = `variants/${req.file.filename}`;
 
   await row.$query().patch(patch);

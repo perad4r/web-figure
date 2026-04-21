@@ -7,8 +7,11 @@
 
   <form method="post" action="/admin/variants/<%= row.id %>" class="vstack gap-2" enctype="multipart/form-data">
     <input type="hidden" name="_method" value="PUT" />
+    <div class="alert alert-info mb-0">
+      Màu sắc và kích cỡ đã được tắt khỏi giao diện. Bản ghi này vẫn giữ dữ liệu nền để hệ thống cũ hoạt động ổn định.
+    </div>
     <div class="row g-2">
-      <div class="col-md-6">
+      <div class="col-md-8">
         <label class="form-label">Sản phẩm</label>
         <select class="form-select" name="hang_id" required>
           <% products.forEach((p) => { %>
@@ -16,21 +19,9 @@
           <% }) %>
         </select>
       </div>
-      <div class="col-md-3">
-        <label class="form-label">Màu</label>
-        <select class="form-select" name="mau_id" required>
-          <% colors.forEach((c) => { %>
-            <option value="<%= c.id %>" <%= c.id === row.mau_id ? 'selected' : '' %>><%= c.ten %></option>
-          <% }) %>
-        </select>
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">Kích cỡ</label>
-        <select class="form-select" name="kich_co_id" required>
-          <% sizes.forEach((s) => { %>
-            <option value="<%= s.id %>" <%= s.id === row.kich_co_id ? 'selected' : '' %>><%= s.ten %></option>
-          <% }) %>
-        </select>
+      <div class="col-md-4">
+        <label class="form-label">Loại tùy chọn</label>
+        <input class="form-control" value="Tự động mặc định" disabled />
       </div>
     </div>
     <div class="row g-2">

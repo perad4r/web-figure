@@ -45,7 +45,7 @@
         <% (order.details || []).forEach((d) => { %>
           <tr>
             <td><%= d.product?.ten || 'SP' %></td>
-            <td class="text-muted"><%= d.color?.ten || '?' %> / <%= d.size?.ten || '?' %></td>
+            <td class="text-muted">Tùy chọn nội bộ</td>
             <td class="text-end"><%= Number(d.gia || 0).toLocaleString('vi-VN') %> đ</td>
             <td class="text-end"><%= d.so_luong %></td>
           </tr>

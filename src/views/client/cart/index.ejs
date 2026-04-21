@@ -30,9 +30,7 @@
                 <div class="fw-semibold"><%= it.variant?.product?.ten || 'SP' %></div>
               </td>
               <td>
-                <span class="text-muted">
-                  <%= it.variant?.color?.ten || '?' %> / <%= it.variant?.size?.ten || '?' %>
-                </span>
+                <span class="text-muted">Tùy chọn #<%= it.variant?.id || '?' %></span>
               </td>
               <td class="text-end"><%= Number(it.variant?.gia || 0).toLocaleString('vi-VN') %> đ</td>
               <td class="text-end">
@@ -46,7 +44,7 @@
               <td class="text-end">
                 <form method="post" action="/giohangs/<%= it.id %>" class="d-inline">
                   <input type="hidden" name="_method" value="DELETE" />
-                  <button class="btn btn-sm btn-outline-danger" type="submit">Xoá</button>
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Xóa</button>
                 </form>
               </td>
             </tr>

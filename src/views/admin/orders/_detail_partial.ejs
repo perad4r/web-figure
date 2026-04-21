@@ -1,9 +1,9 @@
 <div>
   <div class="mb-3">
     <div><strong>Đơn hàng #<%= row.id %></strong></div>
-    <div>Khách: <%= row.ten_khach_hang %> — <%= row.phone %></div>
+    <div>Khách: <%= row.ten_khach_hang %> - <%= row.phone %></div>
     <div>Địa chỉ: <%= row.dia_chi %></div>
-    <div>Email: <%= row.email || '—' %></div>
+    <div>Email: <%= row.email || '-' %></div>
     <div>
       Trạng thái:
       <span class="badge <%= statusBadge(row.status) %>"><%= statusLabel(row.status) %></span>
@@ -27,7 +27,7 @@
       <% (row.details || []).forEach((d) => { %>
         <tr>
           <td><%= d.product?.ten || '' %></td>
-          <td class="text-muted"><%= d.color?.ten || '?' %> / <%= d.size?.ten || '?' %></td>
+          <td class="text-muted">Tùy chọn nội bộ</td>
           <td class="text-end"><%= Number(d.gia || 0).toLocaleString('vi-VN') %></td>
           <td class="text-end"><%= d.so_luong %></td>
         </tr>

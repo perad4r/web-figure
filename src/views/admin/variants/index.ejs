@@ -35,8 +35,7 @@
           <tr>
             <th>#</th>
             <th>Sản phẩm</th>
-            <th>Màu</th>
-            <th>Kích cỡ</th>
+            <th>Tùy chọn</th>
             <th class="text-end">Giá</th>
             <th class="text-end">Tồn kho</th>
             <th></th>
@@ -47,8 +46,7 @@
             <tr>
               <td><%= r.id %></td>
               <td><%= r.product?.ten || '' %></td>
-              <td><%= r.color?.ten || '' %></td>
-              <td><%= r.size?.ten || '' %></td>
+              <td class="text-muted">Tùy chọn #<%= r.id %></td>
               <td class="text-end"><%= Number(r.gia || 0).toLocaleString('vi-VN') %></td>
               <td class="text-end"><%= r.ton_kho %></td>
               <td class="text-end">

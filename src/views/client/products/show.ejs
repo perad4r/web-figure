@@ -30,12 +30,11 @@
       <% if (user && product.variants && product.variants.length > 0) { %>
         <form method="post" action="/giohangs" class="row g-2 align-items-end mb-3">
           <div class="col-md-7">
-            <label class="form-label">Chọn biến thể</label>
+            <label class="form-label">Chọn tùy chọn</label>
             <select class="form-select" name="variant_id" required>
-              <% product.variants.forEach((v) => { %>
+              <% product.variants.forEach((v, index) => { %>
                 <option value="<%= v.id %>">
-                  <%= v.color ? v.color.ten : '?' %> / <%= v.size ? v.size.ten : '?' %>
-                  - <%= Number(v.gia).toLocaleString('vi-VN') %> đ (tồn kho <%= v.ton_kho %>)
+                  Tùy chọn <%= index + 1 %> - <%= Number(v.gia).toLocaleString('vi-VN') %> đ (tồn kho <%= v.ton_kho %>)
                 </option>
               <% }) %>
             </select>
@@ -82,13 +81,10 @@
         <div class="text-muted">Chưa có biến thể.</div>
       <% } else { %>
         <div class="list-group">
-          <% product.variants.forEach((v) => { %>
+          <% product.variants.forEach((v, index) => { %>
             <div class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                <div class="fw-semibold">
-                  <%= v.color ? v.color.ten : 'Màu?' %> /
-                  <%= v.size ? v.size.ten : 'Size?' %>
-                </div>
+                <div class="fw-semibold">Tùy chọn <%= index + 1 %></div>
                 <div class="small text-muted">Tồn kho: <%= v.ton_kho %></div>
               </div>
               <div class="text-end">
