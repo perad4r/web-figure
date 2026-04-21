@@ -1,121 +1,282 @@
 <%- include('../partials/head') %>
 <%- include('../partials/nav') %>
 
-<main class="container py-4">
-  <div class="mb-3">
-    <a href="/san-pham" class="text-decoration-none">&larr; Quay lại</a>
+<main class="container py-5">
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Trang chủ</a></li>
+      <li class="breadcrumb-item"><a href="/san-pham" class="text-decoration-none text-muted">Sản phẩm</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><%= product.ten %></li>
+    </ol>
+  </nav>
+
+  <div class="row g-5">
+    <!-- Image Section -->
+    <div class="col-lg-6">
+      <div class="position-sticky" style="top: 2rem;">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+          <% if (product.hinh_anh) { %>
+            <div class="bg-white d-flex align-items-center justify-content-center p-4" style="aspect-ratio: 1/1;">
+              <img
+                class="img-fluid"
+                style="max-height: 100%; object-fit: contain; transition: transform 0.3s; cursor: zoom-in;"
+                onmouseover="this.style.transform='scale(1.05)'"
+                onmouseout="this.style.transform='scale(1)'"
+                src="<%= product.hinh_anh.startsWith('/') ? product.hinh_anh : ('/uploads/' + product.hinh_anh) %>"
+                alt="<%= product.ten %>"
+              />
+            </div>
+          <% } else { %>
+            <div class="bg-light d-flex align-items-center justify-content-center p-4 text-muted" style="aspect-ratio: 1/1;">
+              <i class="bi bi-image" style="font-size: 5rem; opacity: 0.2;"></i>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details Section -->
+    <div class="col-lg-6">
+      <div class="mb-4">
+        <% if (product.theLoai) { %>
+          <span class="badge bg-secondary mb-3 px-3 py-2 rounded-pill fw-medium"><%= product.theLoai.ten %></span>
+        <% } %>
+        <h1 class="h2 fw-bold text-dark mb-3 lh-sm"><%= product.ten %></h1>
+        
+        <div class="d-flex align-items-center mb-3">
+          <div class="d-flex text-warning me-2">
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-half"></i>
+          </div>
+          <span class="text-muted small">(<%= reviews ? reviews.length : 0 %> đánh giá)</span>
+        </div>
+
+        <div class="h2 fw-bold price mb-4"><%= Number(product.gia).toLocaleString('vi-VN') %> <span class="fs-5 text-muted fw-normal text-decoration-underline align-top">đ</span></div>
+      </div>
+
+      <div class="card border-0 bg-light rounded-4 mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted fw-medium fs-6">Tình trạng kho hàng:</span>
+            <% if (product.ton_kho > 0) { %>
+              <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-pill fs-6"><i class="bi bi-check-circle-fill me-2"></i>Còn <%= Number(product.ton_kho) %> sản phẩm</span>
+            <% } else { %>
+              <span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-3 py-2 rounded-pill fs-6"><i class="bi bi-x-circle-fill me-2"></i>Hết hàng</span>
+            <% } %>
+          </div>
+
+          <% if (user && product.variants && product.variants.length > 0) { %>
+            <hr class="my-4 text-muted opacity-25">
+            <form method="post" action="/giohangs" class="mb-0">
+              <div class="mb-4">
+                <label class="form-label fw-bold mb-3 d-flex align-items-center">
+                  <i class="bi bi-funnel text-danger me-2"></i> Tùy chọn sản phẩm
+                </label>
+                <div class="d-flex flex-column gap-3">
+                  <% product.variants.forEach((v, index) => { %>
+                    <div class="form-check m-0 custom-radio rounded-3 p-3 bg-white position-relative hover-shadow transition">
+                      <input class="form-check-input mt-2 ms-1 position-absolute" type="radio" name="variant_id" id="variant_<%= v.id %>" value="<%= v.id %>" required <%= index === 0 ? 'checked' : '' %>>
+                      <label class="form-check-label ps-4 ms-2 d-flex justify-content-between align-items-center w-100 cursor-pointer stretched-link m-0" for="variant_<%= v.id %>">
+                        <div>
+                          <span class="fw-semibold d-block fs-6 text-dark"><%= v.ten || ('Tùy chọn ' + (index + 1)) %></span>
+                          <small class="text-muted"><i class="bi bi-box me-1"></i> Kho: <%= v.ton_kho %></small>
+                        </div>
+                        <span class="fw-bold price fs-5 mb-0"><%= Number(v.gia).toLocaleString('vi-VN') %> đ</span>
+                      </label>
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+
+              <div class="row g-3 mt-4 align-items-end">
+                <div class="col-4 col-sm-3">
+                  <label class="form-label fw-bold small text-muted text-uppercase letter-spacing-1">Số lượng</label>
+                  <input class="form-control form-control-lg text-center fw-semibold border-0 shadow-sm" type="number" name="so_luong" min="1" value="1" />
+                </div>
+                <div class="col-8 col-sm-9 d-flex">
+                  <button class="btn pm-btn-red btn-lg w-100 py-3 fw-bold rounded-3 shadow-sm d-flex justify-content-center align-items-center transition hover-lift" type="submit">
+                    <i class="bi bi-cart-plus fs-4 me-2"></i> Thêm vào giỏ hàng
+                  </button>
+                </div>
+              </div>
+            </form>
+          <% } else if (!product.variants || product.variants.length === 0) { %>
+             <div class="alert alert-warning border-0 rounded-3 mb-0 mt-4 d-flex align-items-center shadow-sm">
+                <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
+                <div>
+                   <strong class="d-block">Sản phẩm chưa sẵn sàng</strong>
+                   <span class="small">Sản phẩm hiện chưa có tùy chọn mua hàng. Vui lòng quay lại sau.</span>
+                </div>
+             </div>
+          <% } else if (!user) { %>
+            <hr class="my-4 text-muted opacity-25">
+            <div class="alert alert-info border-0 rounded-3 mb-0 d-flex align-items-center shadow-sm bg-info bg-opacity-10 text-info-emphasis">
+              <i class="bi bi-info-circle-fill fs-3 me-3 text-info"></i>
+              <div>
+                <strong class="d-block mb-1">Cần đăng nhập</strong>
+                <span class="small">Vui lòng <a href="/login" class="alert-link fw-bold">đăng nhập</a> hoặc <a href="/register" class="alert-link fw-bold">đăng ký</a> để mua sản phẩm này.</span>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Description Tabs -->
+      <nav class="mt-5">
+        <div class="nav nav-tabs border-bottom-0 gap-2 px-1" id="nav-tab" role="tablist">
+          <button class="nav-link active border-0 bg-light text-dark fw-bold rounded-top-3 px-4 py-3" id="nav-desc-tab" data-bs-toggle="tab" data-bs-target="#nav-desc" type="button" role="tab" aria-controls="nav-desc" aria-selected="true">
+            <i class="bi bi-card-text me-2"></i> Chi tiết sản phẩm
+          </button>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active p-4 pb-5 bg-white border border-light rounded-bottom-4 rounded-end-4 shadow-sm" id="nav-desc" role="tabpanel" aria-labelledby="nav-desc-tab">
+          <% if (product.mo_ta) { %>
+            <div class="lh-lg product-description" style="white-space: pre-wrap; color: #4a5568;"><%= product.mo_ta %></div>
+          <% } else { %>
+            <div class="text-muted fst-italic text-center py-5 d-flex flex-column align-items-center">
+              <i class="bi bi-file-earmark-x fs-1 opacity-25 mb-3"></i>
+              Chưa có mô tả chi tiết cho sản phẩm này.
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="row g-4">
-    <div class="col-md-5">
-      <% if (product.hinh_anh) { %>
-        <div class="border rounded bg-white d-flex align-items-center justify-content-center overflow-hidden" style="height: 420px;">
-          <img
-            class="w-100 h-100"
-            style="object-fit: contain;"
-            src="<%= product.hinh_anh.startsWith('/') ? product.hinh_anh : ('/uploads/' + product.hinh_anh) %>"
-            alt=""
-          />
-        </div>
-      <% } else { %>
-        <div class="bg-light rounded border" style="height: 420px;"></div>
+  <hr class="my-5 opacity-10">
+
+  <!-- Reviews Section -->
+  <section class="max-w-4xl mx-auto py-3">
+    <div class="d-flex justify-content-between align-items-center mb-5 border-bottom pb-3">
+      <h2 class="h3 fw-bold m-0 text-dark">
+        <i class="bi bi-star-fill text-warning me-2"></i> Ý kiến khách hàng
+      </h2>
+      
+      <% if (canReview) { %>
+        <button class="btn pm-btn-red rounded-pill px-4 shadow-sm hover-lift transition" type="button" data-bs-toggle="collapse" data-bs-target="#reviewFormCollapse" aria-expanded="false" aria-controls="reviewFormCollapse">
+          <i class="bi bi-pencil-square me-1"></i> Viết đánh giá của bạn
+        </button>
       <% } %>
     </div>
-    <div class="col-md-7">
-      <h1 class="h4"><%= product.ten %></h1>
-      <div class="text-muted mb-2"><%= product.theLoai ? product.theLoai.ten : '' %></div>
-      <div class="h5 mb-3 price"><%= Number(product.gia).toLocaleString('vi-VN') %> đ</div>
-      <div class="text-muted mb-3">Tổng tồn kho: <%= Number(product.ton_kho || 0) %></div>
 
-      <% if (user && product.variants && product.variants.length > 0) { %>
-        <form method="post" action="/giohangs" class="row g-2 align-items-end mb-3">
-          <div class="col-md-7">
-            <label class="form-label">Chọn tùy chọn</label>
-            <select class="form-select" name="variant_id" required>
-              <% product.variants.forEach((v, index) => { %>
-                <option value="<%= v.id %>">
-                  <%= v.ten || ('Tuy chon ' + (index + 1)) %> - <%= Number(v.gia).toLocaleString('vi-VN') %> đ (tồn kho <%= v.ton_kho %>)
-                </option>
-              <% }) %>
-            </select>
+    <% if (canReview) { %>
+      <div class="collapse mb-5" id="reviewFormCollapse">
+        <div class="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5 mx-auto" style="max-width: 800px;">
+          <div class="text-center mb-4">
+            <h4 class="h4 fw-bold">Bạn thấy sản phẩm này thế nào?</h4>
+            <p class="text-muted">Đánh giá của bạn sẽ giúp những người mua khác lựa chọn tốt hơn</p>
           </div>
-          <div class="col-md-3">
-            <label class="form-label">Số lượng</label>
-            <input class="form-control" type="number" name="so_luong" min="1" value="1" />
-          </div>
-          <div class="col-md-2 d-grid">
-            <button class="btn pm-btn-red" type="submit">Thêm vào giỏ</button>
-          </div>
-        </form>
-      <% } %>
-
-      <% if (product.mo_ta) { %>
-        <div class="mb-3"><%= product.mo_ta %></div>
-      <% } %>
-
-      <% if (canReview) { %>
-        <section class="mt-4 mb-4">
-          <h2 class="h6">Viết đánh giá</h2>
-          <form method="post" action="/danhgia/client" class="vstack gap-2">
+          <form method="post" action="/danhgia/client" class="vstack gap-4">
             <input type="hidden" name="hang_id" value="<%= product.id %>" />
             <input type="hidden" name="return_url" value="/san-pham/<%= product.id %>" />
-            <div class="row g-2">
-              <div class="col-md-3">
-                <label class="form-label">Điểm</label>
-                <input class="form-control" type="number" min="1" max="5" name="rating" value="5" />
+            
+            <div class="text-center bg-light p-4 rounded-3">
+              <label class="form-label fw-bold text-dark mb-3">Chọn mức đánh giá</label>
+              <div class="d-flex flex-column align-items-center gap-3">
+                <input type="range" class="form-range" style="max-width: 300px;" min="1" max="5" step="1" name="rating" id="ratingRange" value="5" oninput="document.getElementById('ratingValue').innerText = this.value">
+                <div class="badge bg-warning text-dark px-4 py-2 fs-5 rounded-pill shadow-sm">
+                  <span id="ratingValue">5</span> <i class="bi bi-star-fill ms-1"></i> / 5 <i class="bi bi-star-fill ms-1"></i>
+                </div>
               </div>
             </div>
+            
             <div>
-              <label class="form-label">Nội dung</label>
-              <textarea class="form-control" name="danh_gia" rows="4" required></textarea>
+              <label class="form-label fw-bold">Chi tiết đánh giá</label>
+              <textarea class="form-control form-control-lg bg-light border-0 shadow-none rounded-3" name="danh_gia" rows="4" placeholder="Ví dụ: Sản phẩm đẹp, chất lượng rất tốt, chủ shop nhiệt tình..." required></textarea>
             </div>
-            <div>
-              <button class="btn btn-danger" type="submit">Gửi đánh giá</button>
+            
+            <div class="d-flex justify-content-center mt-2">
+              <button class="btn btn-dark btn-lg px-5 rounded-pill fw-bold hover-lift transition" type="submit">Gửi Đánh Giá <i class="bi bi-send ms-2"></i></button>
             </div>
           </form>
-        </section>
-      <% } %>
+        </div>
+      </div>
+    <% } %>
 
-      <h2 class="h6 mt-4">Biến thể</h2>
-      <% if (!product.variants || product.variants.length === 0) { %>
-        <div class="text-muted">Chưa có biến thể.</div>
-      <% } else { %>
-        <div class="list-group">
-          <% product.variants.forEach((v, index) => { %>
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <div class="fw-semibold"><%= v.ten || ('Tuy chon ' + (index + 1)) %></div>
-                <div class="small text-muted">Tồn kho: <%= v.ton_kho %></div>
-              </div>
-              <div class="text-end">
-                <div><%= Number(v.gia).toLocaleString('vi-VN') %> đ</div>
+    <% if (!reviews || reviews.length === 0) { %>
+      <div class="alert alert-secondary border-0 bg-white text-center p-5 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center py-5">
+        <div class="bg-light rounded-circle p-4 mb-4">
+          <i class="bi bi-chat-square-quote text-muted" style="font-size: 3rem;"></i>
+        </div>
+        <h5 class="fw-medium text-dark mb-2">Chưa có bài đánh giá nào</h5>
+        <p class="text-muted mx-auto" style="max-width: 400px;">Hãy trở thành người đầu tiên mua trải nghiệm và chia sẻ cảm nhận về sản phẩm này nhé!</p>
+      </div>
+    <% } else { %>
+      <div class="row g-4 flex-wrap">
+        <% reviews.forEach((review) => { %>
+          <div class="col-12 col-md-6 mb-2">
+            <div class="card border-0 shadow-sm rounded-4 h-100 hover-shadow transition">
+              <div class="card-body p-4 position-relative">
+                <i class="bi bi-quote text-light position-absolute top-0 end-0 me-3 mt-2" style="font-size: 4rem; opacity: 0.5; z-index: 0"></i>
+                <div class="position-relative" style="z-index: 1;">
+                  <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom border-light">
+                    <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center fs-5 fw-bold shadow-sm" style="width: 50px; height: 50px;">
+                      <%= review.user_name ? review.user_name.charAt(0).toUpperCase() : 'K' %>
+                    </div>
+                    <div>
+                      <div class="fw-bold fs-6 text-dark"><%= review.user_name || ('Khách hàng #' + (review.user_id || review.id)) %></div>
+                      <div class="d-flex text-warning small gap-1 mt-1">
+                        <% for(let i=1; i<=5; i++) { %>
+                          <i class="bi <%= i <= (review.rating || 5) ? 'bi-star-fill' : 'bi-star' %>"></i>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="card-text text-secondary lh-lg mb-0">"<%= review.danh_gia %>"</p>
+                </div>
               </div>
             </div>
-          <% }) %>
-        </div>
-      <% } %>
-
-      <section class="mt-5">
-        <h2 class="h6 mb-3">Đánh giá từ khách hàng</h2>
-        <% if (!reviews || reviews.length === 0) { %>
-          <div class="alert alert-secondary">Chưa có đánh giá.</div>
-        <% } else { %>
-          <div class="vstack gap-3">
-            <% reviews.forEach((review) => { %>
-              <div class="border rounded p-3">
-                <div class="d-flex justify-content-between gap-2">
-                  <div class="fw-semibold">Khách hàng #<%= review.user_id || review.id %></div>
-                  <div class="text-muted small"><%= review.rating || '' %>/5</div>
-                </div>
-                <div class="mt-2"><%= review.danh_gia %></div>
-              </div>
-            <% }) %>
           </div>
-        <% } %>
-      </section>
-    </div>
-  </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </section>
+
 </main>
+
+<style>
+  /* Custom styles for product details */
+  .cursor-pointer { cursor: pointer; }
+  .hover-shadow:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important; z-index: 10; }
+  .transition { transition: all 0.3s ease; }
+  .hover-lift:hover { transform: translateY(-3px); }
+  .letter-spacing-1 { letter-spacing: 1px; }
+  
+  .product-description p { margin-bottom: 0.5rem; }
+  .product-description ul { padding-left: 1.5rem; margin-bottom: 1rem; }
+  
+  .custom-radio input[type="radio"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+  }
+  
+  .custom-radio {
+    border: 2px solid #e9ecef !important;
+    transition: all 0.2s ease;
+  }
+  
+  .custom-radio input[type="radio"]:checked + label {
+    color: var(--pm-red);
+  }
+  
+  .custom-radio:has(input[type="radio"]:checked) {
+    border-color: var(--pm-red) !important;
+    background-color: rgba(237, 93, 130, 0.05) !important;
+  }
+  
+  .custom-radio:hover {
+    border-color: #dee2e6 !important;
+  }
+  .custom-radio:has(input[type="radio"]:checked):hover {
+    border-color: var(--pm-red) !important;
+  }
+</style>
 
 <%- include('../partials/footer') %>
 <%- include('../partials/foot') %>
