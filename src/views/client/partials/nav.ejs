@@ -30,38 +30,71 @@
   </div>
 </header>
 
-<nav class="pm-nav py-2 mb-4">
-  <div class="container d-flex align-items-center flex-wrap gap-2">
-    <div class="position-relative">
-      <button id="categoryComp" class="btn btn-outline-secondary me-2 text-nowrap">
-        <i class="bi bi-list"></i> Danh mục
-      </button>
-      <div id="category-menu" class="p-3 shadow">
-        <ul class="list-unstyled mb-0">
-          <li><a href="/san-pham" class="text-decoration-none text-dark d-block py-1">Tất cả sản phẩm</a></li>
-          <% (categories || []).forEach((c) => { %>
-            <li><a href="/san-pham?the_loai_id=<%= c.id %>" class="text-decoration-none text-dark d-block py-1"><%= c.ten %></a></li>
-          <% }) %>
-        </ul>
+<nav class="pm-nav bg-white border-bottom shadow-sm mb-4 sticky-top text-sm" style="z-index: 1030;">
+  <div class="container d-flex align-items-center justify-content-between py-2">
+    <!-- Left: Categories & Core Links -->
+    <div class="d-flex align-items-center gap-2 gap-md-4">
+      <div class="position-relative">
+        <button id="categoryComp" class="btn btn-light rounded-pill px-3 py-2 fw-medium border-0 shadow-sm d-flex align-items-center gap-2 transition hover-bg-light">
+          <i class="bi bi-grid-fill text-danger"></i> <span class="d-none d-sm-inline">Danh mục</span>
+        </button>
+        <!-- Custom Dropdown controlled by app.js -->
+        <div id="category-menu" class="shadow-lg rounded-4 overflow-hidden border-0 mt-2" style="display: none; position: absolute; top: 100%; left: 0; background: white; z-index: 1000; min-width: 250px;">
+          <div class="p-2">
+            <a href="/san-pham" class="d-flex align-items-center px-3 py-2 text-decoration-none text-dark fw-bold rounded transition hover-bg-light">
+              <i class="bi bi-collection me-2 text-muted"></i> Tất cả sản phẩm
+            </a>
+            <hr class="my-1 text-muted opacity-25">
+            <% (categories || []).forEach((c) => { %>
+              <a href="/san-pham?the_loai_id=<%= c.id %>" class="d-block px-3 py-2 text-decoration-none text-dark rounded transition hover-bg-light">
+                <i class="bi bi-chevron-right text-muted small me-1"></i> <%= c.ten %>
+              </a>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-none d-md-flex flex-nowrap overflow-auto gap-1">
+        <a href="/san-pham" class="nav-link px-3 py-2 fw-bold text-danger border-bottom border-danger border-2 text-nowrap">Trang chủ</a>
+        <a href="#" class="nav-link px-3 py-2 text-muted text-nowrap hover-dark transition rounded-pill">Khuyến mãi</a>
+        <a href="#" class="nav-link px-3 py-2 text-muted text-nowrap hover-dark transition rounded-pill">Hỗ trợ</a>
       </div>
     </div>
 
-    <div class="d-flex flex-nowrap overflow-auto gap-2">
-      <a href="/san-pham" class="nav-link px-2 px-md-3 fw-bold border-bottom border-danger text-nowrap">Trang chủ</a>
-      <a href="#" class="nav-link px-2 px-md-3 text-nowrap">Facebook</a>
-    </div>
-
-    <div class="ms-md-auto mt-2 mt-md-0 d-flex flex-wrap gap-2 w-100 w-md-auto justify-content-start justify-content-md-end">
+    <!-- Right: User Actions -->
+    <div class="d-flex align-items-center gap-2">
       <% if (user) { %>
-        <a class="btn btn-sm btn-outline-secondary text-nowrap" href="/lich-su-don-hang">Đơn hàng</a>
-        <a class="btn btn-sm btn-outline-secondary text-nowrap" href="/ho-so">Hồ sơ</a>
-        <form method="post" action="/dang-xuat" class="mb-0">
-          <button class="btn btn-sm btn-outline-secondary text-nowrap" type="submit">Đăng xuất</button>
-        </form>
+        <div class="dropdown">
+          <button class="btn btn-light border-0 rounded-pill px-3 py-2 fw-medium d-flex align-items-center gap-2 transition shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle fs-5 text-secondary"></i>
+            <span class="d-none d-sm-inline"><%= user.ten || 'Tài khoản' %></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2 rounded-4 p-2">
+            <li><a class="dropdown-item py-2 rounded transition hover-bg-light d-flex align-items-center" href="/ho-so"><i class="bi bi-person me-2 text-muted"></i>Hồ sơ</a></li>
+            <li><a class="dropdown-item py-2 rounded transition hover-bg-light d-flex align-items-center" href="/lich-su-don-hang"><i class="bi bi-receipt me-2 text-muted"></i>Đơn hàng</a></li>
+            <% if (user.quyen_han === 'admin') { %>
+                <li><hr class="dropdown-divider my-1"></li>
+                <li><a class="dropdown-item py-2 text-danger fw-bold rounded transition hover-bg-light d-flex align-items-center" href="/admin"><i class="bi bi-speedometer2 me-2"></i>Quản Trị</a></li>
+            <% } %>
+            <li><hr class="dropdown-divider my-1"></li>
+            <li>
+              <form method="post" action="/dang-xuat" class="m-0">
+                <button class="dropdown-item py-2 text-danger rounded transition hover-bg-light d-flex align-items-center" type="submit"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</button>
+              </form>
+            </li>
+          </ul>
+        </div>
       <% } else { %>
-        <a class="btn btn-sm btn-outline-secondary text-nowrap" href="/dang-nhap">Đăng nhập</a>
-        <a class="btn btn-sm pm-btn-red text-nowrap" href="/dang-ky">Đăng ký</a>
+        <a class="btn btn-link text-decoration-none text-dark fw-medium px-2 px-md-3" href="/dang-nhap">Đăng nhập</a>
+        <a class="btn pm-btn-red rounded-pill px-3 px-md-4 fw-medium shadow-sm transition hover-lift text-nowrap" href="/dang-ky">Đăng ký</a>
       <% } %>
     </div>
   </div>
 </nav>
+
+<style>
+  .hover-dark:hover { color: #212529 !important; background-color: #f8f9fa; }
+  .hover-bg-light:hover { background-color: #f8f9fa !important; }
+  .hover-lift:hover { transform: translateY(-2px); }
+  .transition { transition: all 0.2s ease; }
+</style>
