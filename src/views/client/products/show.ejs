@@ -16,10 +16,10 @@
       <div class="position-sticky" style="top: 2rem;">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
           <% if (product.hinh_anh) { %>
-            <div class="bg-white d-flex align-items-center justify-content-center p-4" style="aspect-ratio: 1/1;">
+            <div class="bg-white p-3" style="aspect-ratio: 1/1;">
               <img
-                class="img-fluid"
-                style="max-height: 100%; object-fit: contain; transition: transform 0.3s; cursor: zoom-in;"
+                class="w-100 h-100"
+                style="object-fit: contain; transition: transform 0.3s; cursor: zoom-in;"
                 onmouseover="this.style.transform='scale(1.05)'"
                 onmouseout="this.style.transform='scale(1)'"
                 src="<%= product.hinh_anh.startsWith('/') ? product.hinh_anh : ('/uploads/' + product.hinh_anh) %>"
@@ -27,7 +27,7 @@
               />
             </div>
           <% } else { %>
-            <div class="bg-light d-flex align-items-center justify-content-center p-4 text-muted" style="aspect-ratio: 1/1;">
+            <div class="bg-light d-flex align-items-center justify-content-center p-3 text-muted" style="aspect-ratio: 1/1;">
               <i class="bi bi-image" style="font-size: 5rem; opacity: 0.2;"></i>
             </div>
           <% } %>
