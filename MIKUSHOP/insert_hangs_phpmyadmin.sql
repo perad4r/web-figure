@@ -71,4 +71,42 @@ INSERT INTO `hangs` (`ten`, `gia`, `ton_kho`, `hinh_anh`, `mo_ta`, `the_loai_id`
 ('Umamusume Pretty Derby - Admire Vega (Bandai Spirits)', 460000, 0, 'products/A067.jpg', NULL, 1, NULL, NOW(), NOW()),
 ('Zoro EggHead Shukko Bandai – One Piece Figure', 500000, 0, 'products/A068.jpg', NULL, 1, NULL, NOW(), NOW());
 
+UPDATE `hangs`
+SET `the_loai_id` = CASE
+  WHEN CAST(SUBSTRING(`hinh_anh`, 11, 3) AS UNSIGNED) <= 34 THEN 1
+  ELSE 2
+END,
+`updated_at` = NOW()
+WHERE `hinh_anh` LIKE 'products/A%';
+
+INSERT INTO `maus` (`id`, `ten`, `hex_code`, `deleted_at`, `created_at`, `updated_at`)
+SELECT 1, 'Mac dinh', NULL, NULL, NOW(), NOW()
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM `maus`
+  WHERE `id` = 1
+);
+
+INSERT INTO `kich_cos` (`id`, `ten`, `deleted_at`, `created_at`, `updated_at`)
+SELECT 1, 'Mac dinh', NULL, NOW(), NOW()
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM `kich_cos`
+  WHERE `id` = 1
+);
+
+INSERT INTO `bien_the_hangs` (`hang_id`, `mau_id`, `kich_co_id`, `ten`, `hinh_anh`, `gia`, `ton_kho`, `created_at`, `updated_at`)
+SELECT `id`, 1, 1, `ten`, NULL, `gia`, 100, NOW(), NOW()
+FROM `hangs`
+WHERE `hinh_anh` LIKE 'products/A%.jpg'
+   OR `hinh_anh` LIKE 'products/A%.jpeg'
+   OR `hinh_anh` LIKE 'products/A%.png';
+
+UPDATE `hangs`
+SET `ton_kho` = 100,
+    `updated_at` = NOW()
+WHERE `hinh_anh` LIKE 'products/A%.jpg'
+   OR `hinh_anh` LIKE 'products/A%.jpeg'
+   OR `hinh_anh` LIKE 'products/A%.png';
+
 COMMIT;

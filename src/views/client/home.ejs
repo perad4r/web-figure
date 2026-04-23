@@ -11,10 +11,17 @@
   const sections = safeArray(categoriesWithProducts).filter(
     (category) => Array.isArray(category.products) && category.products.length
   );
-  const heroCategory = sections[0] || null;
-  const heroProducts = heroCategory ? heroCategory.products.slice(0, 5) : safeArray(featuredProducts).slice(0, 5);
-  const heroSectionTitle = heroCategory?.ten || 'Sản phẩm nổi bật';
-  const heroSectionLink = heroCategory ? `/san-pham?the_loai_id=${heroCategory.id}` : '/san-pham';
+  const productSections = sections.length
+    ? sections.map((category) => ({
+        title: category.ten,
+        link: `/san-pham?the_loai_id=${category.id}`,
+        products: category.products.slice(0, 5),
+      }))
+    : [{
+        title: 'Sản phẩm nổi bật',
+        link: '/san-pham',
+        products: safeArray(featuredProducts).slice(0, 5),
+      }];
   const categoryCards = safeArray(categoriesWithProducts).slice(0, 6);
   const heroBannerItems = safeArray(heroBanners);
   const promoCardItems = safeArray(promoCards);
@@ -325,22 +332,22 @@
         </div>
       </section>
 
-      <% if (heroProducts.length) { %>
+      <% productSections.forEach((section) => { if (section.products.length) { %>
         <section class="mt-3 space-y-6">
           <div class="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center sm:gap-4">
             <div class="inline-flex max-w-full rounded-r-full bg-pink-600 px-4 py-2 text-base font-bold text-white shadow-md sm:px-6 sm:text-lg">
-              <%= heroSectionTitle %>
+              <%= section.title %>
             </div>
             <a
-              href="<%= heroSectionLink %>"
+              href="<%= section.link %>"
               class="text-sm font-medium text-pink-600 transition-colors hover:text-pink-700 sm:pr-4"
             >
-              Xem thêm <%= heroSectionTitle %> &rarr;
+              Xem thêm <%= section.title %> &rarr;
             </a>
           </div>
 
           <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-            <% heroProducts.forEach((product) => { %>
+            <% section.products.forEach((product) => { %>
               <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
                 <a href="/san-pham/<%= product.id %>" class="flex h-full flex-col text-inherit">
                   <div class="relative overflow-hidden bg-zinc-100 pt-[100%]">
@@ -378,7 +385,7 @@
             <% }) %>
           </div>
         </section>
-      <% } %>
+      <% } }) %>
 
       <section class="mt-3 grid gap-6 border-t border-black/10 py-12 md:grid-cols-2 lg:grid-cols-4">
         <div class="flex flex-col items-center px-4 text-center">
