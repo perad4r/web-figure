@@ -49,7 +49,9 @@
               <% rows.forEach((r) => { %>
                 <tr>
                   <td class="fw-semibold text-muted">#<%= r.id %></td>
-                  <td class="fw-bold text-dark"><%= r.ten %></td>
+                  <td class="fw-bold text-dark">
+                    <div class="text-clamp-2" title="<%= r.ten %>"><%= r.ten %></div>
+                  </td>
                   <td><span class="badge bg-light text-secondary border"><%= r.theLoai ? r.theLoai.ten : 'Không có' %></span></td>
                   <td class="text-end fw-bold text-primary"><%= Number(r.gia || 0).toLocaleString('vi-VN') %></td>
                   <td class="text-end">
