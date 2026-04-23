@@ -53,8 +53,10 @@
               <% rows.forEach((r) => { %>
                 <tr>
                   <td class="fw-semibold text-muted">#<%= r.id %></td>
-                  <td><span class="badge bg-light text-secondary border"><%= r.product?.ten || 'Không rõ' %></span></td>
-                  <td class="fw-bold text-dark"><%= r.ten || ('Tuỳ chọn #' + r.id) %></td>
+                  <td><div class="text-clamp-2" title="<%= r.product?.ten || 'Không rõ' %>"><span class="badge bg-light text-secondary border text-wrap"><%= r.product?.ten || 'Không rõ' %></span></div></td>
+                  <td class="fw-bold text-dark">
+                    <div class="text-clamp-2" title="<%= r.ten || ('Tuỳ chọn #' + r.id) %>"><%= r.ten || ('Tuỳ chọn #' + r.id) %></div>
+                  </td>
                   <td class="text-end fw-bold text-primary"><%= Number(r.gia || 0).toLocaleString('vi-VN') %></td>
                   <td class="text-end">
                     <% if (r.ton_kho > 0) { %>
