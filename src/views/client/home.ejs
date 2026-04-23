@@ -228,7 +228,7 @@
       }
     </style>
   </head>
-  <body class="pm-home pb-20 md:pb-0">
+  <body class="pm-home">
     <%- include('./partials/nav') %>
 
     <main class="mx-auto max-w-7xl space-y-24 px-4 sm:px-6 lg:px-8">
@@ -475,36 +475,6 @@
     </main>
 
     <%- include('./partials/footer') %>
-
-    <nav class="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-black/5 bg-white/95 px-4 py-3 shadow-[0_-4px_20px_rgba(240,98,146,0.08)] backdrop-blur-lg md:hidden">
-      <a
-        href="/"
-        class="flex flex-col items-center justify-center rounded-xl bg-pink-50 px-4 py-1 text-pink-600 transition-transform active:scale-90"
-      >
-        <i class="bi bi-house-fill mb-1 text-xl"></i>
-        <span class="text-[10px] font-medium">Home</span>
-      </a>
-      <a href="/san-pham" class="flex flex-col items-center justify-center text-zinc-400 transition-colors hover:text-pink-400">
-        <i class="bi bi-grid mb-1 text-xl"></i>
-        <span class="text-[10px] font-medium">Category</span>
-      </a>
-      <a href="/giohangs" class="relative flex flex-col items-center justify-center text-zinc-400 transition-colors hover:text-pink-400">
-        <i class="bi bi-bag mb-1 text-xl"></i>
-        <span class="text-[10px] font-medium">Cart</span>
-        <% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
-          <span class="absolute right-2 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-pink-600 text-[10px] font-bold text-white">
-            <%= cartCount %>
-          </span>
-        <% } %>
-      </a>
-      <a
-        href="<%= (typeof user !== 'undefined' && user) ? '/ho-so' : '/dang-nhap' %>"
-        class="flex flex-col items-center justify-center text-zinc-400 transition-colors hover:text-pink-400"
-      >
-        <i class="bi bi-person mb-1 text-xl"></i>
-        <span class="text-[10px] font-medium">Profile</span>
-      </a>
-    </nav>
 
     <script defer src="/vendor/swiper/swiper-bundle.min.js"></script>
     <script defer src="/assets/js/home.js"></script>

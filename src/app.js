@@ -80,6 +80,10 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path;
+  next();
+});
 
 const methodOverride = require('./middleware/methodOverride');
 app.use(methodOverride);

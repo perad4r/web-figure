@@ -1,0 +1,48 @@
+<style>
+  @media (max-width: 767.98px) {
+    body {
+      padding-bottom: 5.5rem;
+    }
+  }
+</style>
+
+<%
+  const mobileNavPath = typeof currentPath !== 'undefined' ? currentPath : '';
+  const isHome = mobileNavPath === '/';
+  const isProducts = mobileNavPath === '/san-pham' || mobileNavPath.startsWith('/san-pham/');
+  const isCart = mobileNavPath === '/giohangs';
+  const isProfile = mobileNavPath === '/ho-so' || mobileNavPath === '/dang-nhap';
+%>
+
+<nav class="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-black/5 bg-white/95 px-4 py-3 shadow-[0_-4px_20px_rgba(240,98,146,0.08)] backdrop-blur-lg md:hidden">
+  <a
+    href="/"
+    class="flex flex-col items-center justify-center rounded-xl px-4 py-1 transition-transform active:scale-90 <%= isHome ? 'bg-pink-50 text-pink-600' : 'text-zinc-400 hover:text-pink-400' %>"
+  >
+    <i class="bi bi-house-fill mb-1 text-xl"></i>
+    <span class="text-[10px] font-medium">Home</span>
+  </a>
+  <a
+    href="/san-pham"
+    class="flex flex-col items-center justify-center rounded-xl px-4 py-1 transition-transform active:scale-90 <%= isProducts ? 'bg-pink-50 text-pink-600' : 'text-zinc-400 hover:text-pink-400' %>"
+  >
+    <i class="bi bi-grid mb-1 text-xl"></i>
+    <span class="text-[10px] font-medium">Category</span>
+  </a>
+  <a href="/giohangs" class="relative flex flex-col items-center justify-center rounded-xl px-4 py-1 transition-transform active:scale-90 <%= isCart ? 'bg-pink-50 text-pink-600' : 'text-zinc-400 hover:text-pink-400' %>">
+    <i class="bi bi-bag mb-1 text-xl"></i>
+    <span class="text-[10px] font-medium">Cart</span>
+    <% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
+      <span class="absolute right-2 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-pink-600 text-[10px] font-bold text-white">
+        <%= cartCount %>
+      </span>
+    <% } %>
+  </a>
+  <a
+    href="<%= (typeof user !== 'undefined' && user) ? '/ho-so' : '/dang-nhap' %>"
+    class="flex flex-col items-center justify-center rounded-xl px-4 py-1 transition-transform active:scale-90 <%= isProfile ? 'bg-pink-50 text-pink-600' : 'text-zinc-400 hover:text-pink-400' %>"
+  >
+    <i class="bi bi-person mb-1 text-xl"></i>
+    <span class="text-[10px] font-medium">Profile</span>
+  </a>
+</nav>
