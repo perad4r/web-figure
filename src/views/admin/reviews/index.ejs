@@ -42,7 +42,7 @@
                   <td>
                     <div class="d-flex align-items-center gap-2">
                       <i class="bi bi-box text-secondary"></i>
-                      <span class="text-dark fw-medium text-truncate d-inline-block" style="max-width: 15vw;" title="<%= r.product?.ten || '' %>"><%= r.product?.ten || 'Không rõ SP' %></span>
+                      <div class="text-dark fw-medium text-clamp-2" title="<%= r.product?.ten || '' %>"><%= r.product?.ten || 'Không rõ SP' %></div>
                     </div>
                   </td>
                   <td>
@@ -55,7 +55,7 @@
                        <% } %>
                      </div>
                   </td>
-                  <td><p class="mb-0 text-muted small" style="max-width: 300px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"><%= r.danh_gia %></p></td>
+                  <td><div class="text-muted small text-clamp-2" title="<%= r.danh_gia %>"><%= r.danh_gia %></div></td>
                   <td class="text-end">
                     <div class="d-flex gap-2 justify-content-end">
                       <% if (!showDeleted) { %>

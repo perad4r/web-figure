@@ -44,7 +44,9 @@
       <tbody>
         <% (row.details || []).forEach((d) => { %>
           <tr>
-            <td><%= d.product?.ten || '' %></td>
+            <td>
+              <div class="text-clamp-2" title="<%= d.product?.ten || '' %>"><%= d.product?.ten || '' %></div>
+            </td>
             <td class="text-muted">Tùy chọn nội bộ</td>
             <td class="text-end"><%= Number(d.gia || 0).toLocaleString('vi-VN') %></td>
             <td class="text-end"><%= d.so_luong %></td>

@@ -107,7 +107,9 @@
                   <td class="fw-semibold text-muted">#<%= row.id %></td>
                   <td><span class="badge bg-light text-dark border font-monospace"><%= row.section %></span></td>
                   <td class="text-center fw-bold"><%= row.position %></td>
-                  <td><%= row.label || '<span class="text-muted fst-italic">Không có</span>' %></td>
+                  <td>
+                    <div class="text-clamp-2" title="<%= row.label || 'Không có' %>"><%= row.label || 'Không có' %></div>
+                  </td>
                   <td class="text-center">
                     <% if (row.image_url) { %>
                       <div class="bg-light rounded p-1 border d-inline-block shadow-sm">
