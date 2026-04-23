@@ -4,6 +4,57 @@
       padding-bottom: 5.5rem;
     }
   }
+
+  .pm-mobile-nav {
+    z-index: 1050;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 -4px 20px rgba(240, 98, 146, 0.08);
+    backdrop-filter: blur(16px);
+  }
+
+  .pm-mobile-nav-link {
+    min-width: 64px;
+    border-radius: 0.75rem;
+    color: #a1a1aa;
+    text-decoration: none;
+    transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .pm-mobile-nav-link:hover,
+  .pm-mobile-nav-link:focus {
+    color: #f06292;
+  }
+
+  .pm-mobile-nav-link:active {
+    transform: scale(0.9);
+  }
+
+  .pm-mobile-nav-link.is-active {
+    background: #fdf2f8;
+    color: #db2777;
+  }
+
+  .pm-mobile-nav-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .pm-mobile-nav-label {
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .pm-mobile-nav-badge {
+    top: 0;
+    right: 0.35rem;
+    width: 1rem;
+    height: 1rem;
+    background: #db2777;
+    font-size: 10px;
+    line-height: 1rem;
+  }
 </style>
 
 <%
@@ -14,35 +65,37 @@
   const isProfile = mobileNavPath === '/ho-so' || mobileNavPath === '/dang-nhap';
 %>
 
-<nav class="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-black/5 bg-white/95 px-4 py-3 shadow-[0_-4px_20px_rgba(240,98,146,0.08)] backdrop-blur-lg md:hidden">
+<nav class="pm-mobile-nav position-fixed bottom-0 start-0 w-100 d-md-none">
+  <div class="d-flex align-items-center justify-content-around px-3 py-3">
   <a
     href="/"
-    class="flex flex-col items-center justify-center rounded-xl px-4 py-1 transition-transform active:scale-90 <%= isHome ? 'bg-pink-50 text-pink-600' : 'text-zinc-400 hover:text-pink-400' %>"
+    class="pm-mobile-nav-link d-flex flex-column align-items-center justify-content-center gap-1 px-3 py-1 <%= isHome ? 'is-active' : '' %>"
   >
-    <i class="bi bi-house-fill mb-1 text-xl"></i>
-    <span class="text-[10px] font-medium">Home</span>
+    <i class="bi bi-house-fill pm-mobile-nav-icon"></i>
+    <span class="pm-mobile-nav-label">Home</span>
   </a>
   <a
     href="/san-pham"
-    class="flex flex-col items-center justify-center rounded-xl px-4 py-1 transition-transform active:scale-90 <%= isProducts ? 'bg-pink-50 text-pink-600' : 'text-zinc-400 hover:text-pink-400' %>"
+    class="pm-mobile-nav-link d-flex flex-column align-items-center justify-content-center gap-1 px-3 py-1 <%= isProducts ? 'is-active' : '' %>"
   >
-    <i class="bi bi-grid mb-1 text-xl"></i>
-    <span class="text-[10px] font-medium">Category</span>
+    <i class="bi bi-grid pm-mobile-nav-icon"></i>
+    <span class="pm-mobile-nav-label">Category</span>
   </a>
-  <a href="/giohangs" class="relative flex flex-col items-center justify-center rounded-xl px-4 py-1 transition-transform active:scale-90 <%= isCart ? 'bg-pink-50 text-pink-600' : 'text-zinc-400 hover:text-pink-400' %>">
-    <i class="bi bi-bag mb-1 text-xl"></i>
-    <span class="text-[10px] font-medium">Cart</span>
+  <a href="/giohangs" class="pm-mobile-nav-link position-relative d-flex flex-column align-items-center justify-content-center gap-1 px-3 py-1 <%= isCart ? 'is-active' : '' %>">
+    <i class="bi bi-bag pm-mobile-nav-icon"></i>
+    <span class="pm-mobile-nav-label">Cart</span>
     <% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
-      <span class="absolute right-2 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-pink-600 text-[10px] font-bold text-white">
+      <span class="pm-mobile-nav-badge position-absolute d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-white">
         <%= cartCount %>
       </span>
     <% } %>
   </a>
   <a
     href="<%= (typeof user !== 'undefined' && user) ? '/ho-so' : '/dang-nhap' %>"
-    class="flex flex-col items-center justify-center rounded-xl px-4 py-1 transition-transform active:scale-90 <%= isProfile ? 'bg-pink-50 text-pink-600' : 'text-zinc-400 hover:text-pink-400' %>"
+    class="pm-mobile-nav-link d-flex flex-column align-items-center justify-content-center gap-1 px-3 py-1 <%= isProfile ? 'is-active' : '' %>"
   >
-    <i class="bi bi-person mb-1 text-xl"></i>
-    <span class="text-[10px] font-medium">Profile</span>
+    <i class="bi bi-person pm-mobile-nav-icon"></i>
+    <span class="pm-mobile-nav-label">Profile</span>
   </a>
+  </div>
 </nav>
